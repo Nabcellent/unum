@@ -1,0 +1,50 @@
+//  Used to fetch results by rank per stream, exam and subject
+
+SELECT grade,
+       student_id,
+       subject_id,
+       exam_id,
+       average,
+       @rank := IF(@prev_grade = grade AND @prev_subject = subject_id AND @prev_exam = exam_id, @rank + 1, 1) AS `rank`,
+       @prev_grade := grade,
+       @prev_subject := subject_id,
+       @prev_exam := exam_id
+FROM (SELECT g.name AS grade,
+             s.id   AS student_id,
+             r.subject_id,
+             r.exam_id,
+             r.average
+      FROM grades g
+               INNER JOIN students s ON s.grade_id = g.id
+               INNER JOIN results r ON r.student_id = s.id
+      ORDER BY g.name, r.subject_id, r.exam_id, r.average DESC) AS subquery
+         CROSS JOIN (SELECT @rank := 0, @prev_grade := NULL, @prev_subject := NULL, @prev_exam := NULL) AS vars;
+
+
+//  Used to update results rank per stream, exam and subject
+
+UPDATE results AS r
+    JOIN (
+        SELECT id,
+               grade,
+               student_id,
+               subject_id,
+               exam_id,
+               average,
+               @rank := IF(@prev_grade = grade AND @prev_subject = subject_id AND @prev_exam = exam_id, @rank + 1, 1) AS `rank`,
+               @prev_grade := grade,
+               @prev_subject := subject_id,
+               @prev_exam := exam_id
+        FROM (SELECT r.id,
+                     g.name AS grade,
+                     s.id   AS student_id,
+                     r.subject_id,
+                     r.exam_id,
+                     r.average
+              FROM grades g
+                       INNER JOIN students s ON s.grade_id = g.id
+                       INNER JOIN results r ON r.student_id = s.id
+              ORDER BY g.name, r.subject_id, r.exam_id, r.average DESC) AS subquery
+                 CROSS JOIN (SELECT @rank := 0, @prev_grade := NULL, @prev_subject := NULL, @prev_exam := NULL) AS vars
+    ) AS ranked_results ON r.id = ranked_results.id
+SET r.rank = ranked_results.`rank`;

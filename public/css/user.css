@@ -1,0 +1,10 @@
+.report-preview tr {
+    border: 0
+}
+.report-preview u > img {
+    max-height: 50px;
+}
+
+.nice-select.w-100 {
+    width: 100%;
+}
