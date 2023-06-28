@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResultController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('/grades/{grade}')->group(function() {
+    Route::get('/subjects', [GradeController::class, 'subjects']);
+    Route::get('/results', [GradeController::class, 'results']);
+    Route::get('/students', [GradeController::class, 'results']);
+});
+
+Route::get('/students/{student}/results', [StudentController::class, 'results']);
+
+Route::prefix('/results')->group(function() {
+    Route::post('/subject', [ResultController::class, 'storeSubject']);
+    Route::post('/students/{student}', [ResultController::class, 'storeStudent']);
+});
+
+Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function() {
+    Route::get('/preview', [ReportController::class, 'preview']);
 });
