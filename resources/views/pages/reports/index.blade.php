@@ -147,9 +147,7 @@
                 saveReports(student_id) {
                     this.loading = true
 
-                    axios.post(`/reports/save`, {
-                        class: this.grade_id,
-                        cat: this.exam_id,
+                    axios.post(`/api/reports/exams/${ this.exam_id }/grades/${ this.grade_id }`, {
                         student_id
                     }).then(({ data }) => {
                         if (data.status === 'success') {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Misc\PDF;
 use App\Models\Exam;
 use App\Models\ExamDate;
 use App\Models\Grade;
@@ -10,6 +11,7 @@ use App\Settings\ExamSettings;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -25,40 +27,99 @@ class ReportController extends Controller
         return view('pages.reports.index', $data);
     }
 
-    public function preview(Request $request, Exam $exam, Grade $grade, ExamSettings $examSettings)
+    public function loadReports(Grade $grade, int $examId, int $studentId = null): Grade
     {
-        $data = $request->validate([
-            "student_id" => "sometimes|exists:students,id"
-        ]);
-        $data['exam_id'] = $exam->id;
-
-        $grade->load([
-            "students" => function($qry) use ($data) {
-                if (isset($data['student_id'])) {
-                    $qry = $qry->whereKey($data['student_id']);
+        return $grade->load([
+            "students" => function($qry) use ($examId, $studentId) {
+                if (isset($studentId)) {
+                    $qry = $qry->whereKey($studentId);
                 }
 
                 return $qry->select(['id', 'grade_id', 'user_id', 'class_no'])->with([
                     'user:id,first_name,middle_name,last_name',
-                    'averageResult' => function($qry) use ($data) {
+                    'averageResult' => function($qry) use ($examId) {
                         return $qry->select(['id', 'student_id', 'exam_id', 'average', 'quarter', 'sports_grade', 'conduct', 'passes'])
-                            ->whereExamId($data['exam_id']);
+                            ->whereExamId($examId);
                     },
-                    'results'       => function($qry) use ($data) {
+                    'results'       => function($qry) use ($examId) {
                         return $qry->select(['id', 'student_id', 'exam_id', 'subject_id', 'course_work_mark', 'exam_mark', 'average', 'quarter'])
-                            ->whereExamId($data['exam_id'])->with(['subject:id,name']);
+                            ->whereExamId($examId)->with(['subject:id,name']);
                     }
                 ])->orderBy('class_no');
             }
         ]);
+    }
 
-        return json_encode(["reports" => $grade->students->map(fn(Student $student) => [
+    public function preview(Request $request, Exam $exam, Grade $grade): JsonResponse
+    {
+        $request->validate([
+            "student_id" => "sometimes|exists:students,id"
+        ]);
+
+        $grade = $this->loadReports($grade, $exam->id, $request->input('student_id'));
+
+        return response()->json(["reports" => $grade->students->map(fn(Student $student) => [
             "student_id" => $student->id,
             "html"       => $this->prepareHTML($student->toArray(), $grade, $exam)
         ])]);
     }
 
-    private function prepareHTML(array $student, Grade $grade, Exam $exam)
+    public function store(Request $request, Exam $exam, Grade $grade): JsonResponse
+    {
+        $request->validate([
+            "student_id" => "sometimes|exists:students,id"
+        ]);
+
+        $grade = $this->loadReports($grade, $exam->id, $request->input('student_id'));
+
+        $grade->students->each(function(Student $student) use ($exam, $grade) {
+            $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
+
+            // set header and footer fonts
+            $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+            // set margins
+            $pdf->SetMargins(10, 5, 10);
+            $pdf->SetHeaderMargin(15);
+
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, 10);
+
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+            // set font
+            $pdf->SetFont("times", "", 15);
+            $pdf->AddPage('P', 'A4');
+
+            $html = $this->prepareHTML($student->toArray(), $grade, $exam);
+
+            $pdf->writeHTML($html, true, false, true);
+
+            // Create the directory path recursively if it doesn't exist
+            $filePath = public_path("/reports/".now()->year."/{$exam->name->value}/$grade->full_name/$student->id.pdf");
+
+            if (!file_exists(dirname($filePath))) {
+                mkdir(dirname($filePath), 0777, true);
+            }
+
+            $pdf->Output($filePath, 'F');
+        });
+
+        if ($grade->students->count() > 1) {
+            $message = "Reports saved successfully!";
+        } else {
+            $message = "Report saved successfully!";
+        }
+
+        return response()->json(["status" => "success", "msg" => $message]);
+    }
+
+    private function prepareHTML(array $student, Grade $grade, Exam $exam): string
     {
         $examDates = ExamDate::latest('class')->first();
 
@@ -107,8 +168,7 @@ class ReportController extends Controller
                          <tr>
                              <td style="font-family:times; font-size:13pt; font-weight: bold;">DATE</td>
                              <td>:</td>
-                             <td width="200px"  style="font-family:times; font-size:13pt; font-weight: bold;">
-                             '.$date->format('j').'<sup>'.strtoupper($date->format('S')).'</sup> '.strtoupper($date->format(' F Y')).'
+                             <td width="200px"  style="font-family:times; font-size:13pt; font-weight: bold;">'.$date->format('j').'<sup>'.strtoupper($date->format('S')).'</sup> '.strtoupper($date->format(' F Y')).'
                              </td>
                             <td  colspan="3" align="right" width="320px" style="font-family:times; font-size:13pt; font-weight: bold;">'.$term.'</td>
 
@@ -185,7 +245,8 @@ class ReportController extends Controller
                 </table>
                 <table border="0" cellspacing="1" cellpadding="2" >
                     <tr><td  height="25px" width="200">&nbsp;</td></tr>
-                    <tr><td width="200" valign="bottom" style="font-family: times; font-size: 13pt; font-weight: bold; text-align:left; " >';
+                    <tr>
+                        <td width="200" valign="bottom" style="font-family: times; font-size: 13pt; font-weight: bold; text-align:left; " >';
 
         if ($exam->name != \App\Enums\Exam::CAT_6) {
             $html .= ' <u><img src="/images/signatures/akm.jpg"  alt="HoS sign..." align="left" height="49" ></u><br>Head of Section';
@@ -193,7 +254,12 @@ class ReportController extends Controller
             $html .= ' <u><img src="/images/signatures/jm.jpg"  alt="Principal sign..." align="left" height="51"></u><br>Principal';
         }
 
-        $html .= '</td></tr>
+        $html .= '</td>
+                    <td width="160" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
+                    <td width="200" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTENDANCE:</b></td>
+                    <td width="100" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b><i>35 of 37</i> days</b></td>
+                    <td width="50" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
+                </tr>
             </table>
         </html>';
 

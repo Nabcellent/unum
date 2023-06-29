@@ -32,4 +32,5 @@ Route::prefix('/results')->group(function() {
 
 Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function() {
     Route::get('/preview', [ReportController::class, 'preview']);
+    Route::post('/', [ReportController::class, 'store']);
 });
