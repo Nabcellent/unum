@@ -53,20 +53,20 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
  * @property-read int|null $results_count
  * @property-read \App\Models\Student $student
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult query()
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereAverage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereConduct($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereExamId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult wherePasses($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereQuarter($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereRank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereSportsGrade($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereStudentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AverageResult whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereAverage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereConduct($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereExamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult wherePasses($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereQuarter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereRank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereSportsGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 	class IdeHelperAverageResult {}
@@ -78,7 +78,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property \App\Enums\Exam $name
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AverageResult> $averageResults
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $averageResults
  * @property-read int|null $average_results_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
  * @property-read int|null $results_count
@@ -178,7 +178,7 @@ namespace App\Models{
  * @property int|null $rank
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\AverageResult $averageResult
+ * @property-read \App\Models\CumulativeResult $averageResult
  * @property-read \App\Models\Exam $exam
  * @property-read \App\Models\Student $student
  * @property-read \App\Models\Subject $subject
@@ -239,8 +239,8 @@ namespace App\Models{
  * @property string|null $previous_school
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\AverageResult|null $averageResult
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AverageResult> $averageResults
+ * @property-read \App\Models\CumulativeResult|null $averageResult
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $averageResults
  * @property-read int|null $average_results_count
  * @property-read \App\Models\Grade $grade
  * @property-read \App\Models\Result|null $result

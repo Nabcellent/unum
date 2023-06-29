@@ -64,13 +64,13 @@ class Student extends Model
         return $this->hasOne(Result::class);
     }
 
-    public function averageResults(): HasMany
+    public function cumulativeResults(): HasMany
     {
-        return $this->hasMany(AverageResult::class);
+        return $this->hasMany(CumulativeResult::class);
     }
 
-    public function averageResult(): HasOne
+    public function cumulativeResult(): HasOne
     {
-        return $this->hasOne(AverageResult::class);
+        return $this->hasOne(CumulativeResult::class);
     }
 }

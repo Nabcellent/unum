@@ -112,7 +112,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="/reports" class="group">
+                            <a href="{{ route('admin.attendances') }}" class="group">
                                 <div class="flex items-center">
                                     <i class="fa-solid fa-list-ol group-hover:!text-primary"></i>
                                     <span

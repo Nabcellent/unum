@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
@@ -21,6 +22,9 @@ Route::prefix('/grades/{grade}')->group(function() {
     Route::get('/subjects', [GradeController::class, 'subjects']);
     Route::get('/results', [GradeController::class, 'results']);
     Route::get('/students', [GradeController::class, 'results']);
+
+    Route::get('/attendances', [AttendanceController::class, 'index']);
+    Route::put('/attendances', [AttendanceController::class, 'upsert']);
 });
 
 Route::get('/students/{student}/results', [StudentController::class, 'results']);

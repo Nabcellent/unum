@@ -37,7 +37,7 @@ class ReportController extends Controller
 
                 return $qry->select(['id', 'grade_id', 'user_id', 'class_no'])->with([
                     'user:id,first_name,middle_name,last_name',
-                    'averageResult' => function($qry) use ($examId) {
+                    'cumulativeResult' => function($qry) use ($examId) {
                         return $qry->select(['id', 'student_id', 'exam_id', 'average', 'quarter', 'sports_grade', 'conduct', 'passes'])
                             ->whereExamId($examId);
                     },
@@ -134,7 +134,7 @@ class ReportController extends Controller
             $term = '&nbsp;';
         }
 
-        $classAverage = round($exam->averageResults()->withWhereHas('student', function($qry) use ($grade) {
+        $classAverage = round($exam->cumulativeResults()->withWhereHas('student', function($qry) use ($grade) {
             return $qry->whereHas('grade', function($qry) use ($grade) {
                 return $qry->whereName($grade->name);
             });

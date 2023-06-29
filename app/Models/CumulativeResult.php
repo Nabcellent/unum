@@ -12,7 +12,7 @@ use Throwable;
 /**
  * @mixin IdeHelperAverageResult
  */
-class AverageResult extends Model
+class CumulativeResult extends Model
 {
     use HasFactory;
 
@@ -22,6 +22,7 @@ class AverageResult extends Model
         "sports_grade",
         "conduct",
         "passes",
+        "days_attended",
     ];
 
     public function results(): HasMany
@@ -47,18 +48,18 @@ class AverageResult extends Model
     {
         DB::transaction(function() use ($examId) {
             DB::statement("
-                UPDATE average_results AS ar
+                UPDATE cumulative_results AS ar
                     JOIN (SELECT id,
                                  RANK() OVER (PARTITION BY exam_id ORDER BY average DESC) AS `rank`
-                          FROM average_results
+                          FROM cumulative_results
                           WHERE exam_id = $examId) AS ranks ON ar.id = ranks.id
                 SET ar.rank = ranks.rank;
            ");
 
             DB::statement("
-                UPDATE average_results AS ar
+                UPDATE cumulative_results AS ar
                     JOIN (SELECT id, NTILE(4) OVER (PARTITION BY exam_id ORDER BY `rank`) AS quartile
-                          FROM average_results
+                          FROM cumulative_results
                           WHERE exam_id = $examId) AS quartile_results ON ar.id = quartile_results.id
                 SET ar.quarter = quartile_results.quartile;
             ");
@@ -81,7 +82,7 @@ class AverageResult extends Model
     {
         DB::transaction(function() {
             DB::statement("
-                UPDATE average_results ar
+                UPDATE cumulative_results ar
                 SET passes = (
                     SELECT COUNT(*)
                     FROM results r

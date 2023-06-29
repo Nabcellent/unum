@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AverageResult;
+use App\Models\CumulativeResult;
 use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,12 +68,13 @@ class StudentController extends Controller
     public function results(Request $request, Student $student): JsonResponse
     {
         $data = [
-            'results' => $student->results()->whereExamId($request->integer('exam_id'))->with('subject')
+            'results'           => $student->results()->whereExamId($request->integer('exam_id'))->with('subject')
                 ->get(['id', 'subject_id', 'student_id', 'course_work_mark', 'exam_mark', 'average', 'quarter', 'rank']),
-            'average_result' => AverageResult::firstWhere([
-                'exam_id' => $request->integer('exam_id'),
-                'student_id' => $student->id
-            ])
+            'cumulative_result' => CumulativeResult::select(['average', 'quarter', 'passes', 'conduct', 'sports_grade', 'days_attended'])
+                ->firstWhere([
+                    'exam_id'    => $request->integer('exam_id'),
+                    'student_id' => $student->id
+                ])
         ];
 
         return response()->json($data);

@@ -38,9 +38,9 @@ class Result extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function averageResult(): BelongsTo
+    public function cumulativeResult(): BelongsTo
     {
-        return $this->belongsTo(AverageResult::class, 'student_id', 'student_id')
+        return $this->belongsTo(CumulativeResult::class, 'student_id', 'student_id')
             ->whereColumn('exam_id', '=', 'exam_id');
     }
 

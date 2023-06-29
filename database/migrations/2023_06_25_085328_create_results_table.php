@@ -34,7 +34,7 @@ return new class extends Migration {
 
         //  Store student averages per exam.
         /*DB::statement("
-            CREATE VIEW average_results_view AS
+            CREATE VIEW cumulative_results_view AS
             SELECT r.student_id,
                    r.exam_id,
                    AVG(r.average) AS average_subject
@@ -48,7 +48,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-//        DB::statement("DROP VIEW IF EXISTS average_results_view;");
+//        DB::statement("DROP VIEW IF EXISTS cumulative_results_view;");
 
         Schema::dropIfExists('results');
     }

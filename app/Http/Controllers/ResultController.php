@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AverageResult;
+use App\Models\CumulativeResult;
 use App\Models\Grade;
 use App\Models\Result;
 use App\Models\Student;
@@ -55,7 +55,7 @@ class ResultController extends Controller
         $grade = Grade::find($data['grade_id']);
 
         Result::updateRankingAndQuarters($data['exam_id'], $data['subject_id'], $grade->name);
-        AverageResult::updatePassesRankingAndQuarters($data['exam_id']);
+        CumulativeResult::updatePassesRankingAndQuarters($data['exam_id']);
 
         return response()->json(['status' => 'success', 'msg' => 'Results saved successfully!']);
     }
@@ -66,12 +66,13 @@ class ResultController extends Controller
     public function storeStudent(Request $request, Student $student): JsonResponse
     {
         $data = $request->validate([
-            "results.*.exam_mark"         => "required|integer|max:99",
-            "results.*.course_work_mark"  => "nullable|integer|max:99",
-            "results.*.subject_id"        => "required|exists:subjects,id",
-            "exam_id"                     => "required|exists:exams,id",
-            "average_result.conduct"      => "in:A,B,C,D,E",
-            "average_result.sports_grade" => "in:A,B,C,D,E",
+            "results.*.exam_mark"             => "required|integer|max:99",
+            "results.*.course_work_mark"      => "nullable|integer|max:99",
+            "results.*.subject_id"            => "required|exists:subjects,id",
+            "exam_id"                         => "required|exists:exams,id",
+            "cumulative_result.conduct"       => "in:A,B,C,D,E",
+            "cumulative_result.sports_grade"  => "nullable|in:A,B,C,D,E",
+            "cumulative_result.days_attended" => "nullable|integer",
         ]);
 
         $data['results'] = array_map(fn($mark) => [
@@ -83,52 +84,20 @@ class ResultController extends Controller
         Result::upsert($data['results'], [], ['course_work_mark', 'exam_mark']);
 
         $passes = $student->result()->whereExamId($data['exam_id'])->where('average', '>=', 40)->count();
-        $averageResult = $student->averageResults()->firstWhere(['exam_id' => $data['exam_id']]);
+        $cumulativeResult = $student->cumulativeResults()->firstWhere(['exam_id' => $data['exam_id']]);
 
-        if($averageResult->passes != $passes) {
-            $data['average_result']['passes'] = $passes;
+        if ($cumulativeResult->passes != $passes) {
+            $data['cumulative_result']['passes'] = $passes;
         }
 
-        $averageResult->update($data['average_result']);
+        $cumulativeResult->update($data['cumulative_result']);
 
         foreach ($data['results'] as $result) {
             Result::updateRankingAndQuarters($data['exam_id'], $result['subject_id'], $student->grade->name);
         }
 
-        AverageResult::updateRankingAndQuarters($data['exam_id']);
+        CumulativeResult::updateRankingAndQuarters($data['exam_id']);
 
         return response()->json(['status' => 'success', 'msg' => 'Results saved successfully!']);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Result $result)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Result $result)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Result $result)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Result $result)
-    {
-        //
     }
 }

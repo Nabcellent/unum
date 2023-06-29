@@ -12,16 +12,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('average_results', function(Blueprint $table) {
+        Schema::create('cumulative_results', function(Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnUpdate();
             $table->decimal('average', 4)->nullable();
             $table->tinyInteger('quarter')->nullable();
-            $table->char('sports_grade', 1)->nullable();
-            $table->char('conduct', 1)->nullable();
             $table->tinyInteger('passes')->nullable();
             $table->tinyInteger('rank')->nullable();
+            $table->char('conduct', 1)->nullable();
+            $table->char('sports_grade', 1)->nullable();
+            $table->tinyInteger('days_attended')->nullable();
+            $table->tinyInteger('total_days')->nullable();
             $table->timestamps();
 
             $table->unique(['student_id', 'exam_id']);
@@ -33,6 +35,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('average_results');
+        Schema::dropIfExists('cumulative_results');
     }
 };

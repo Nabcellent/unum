@@ -97,28 +97,28 @@
                     <tr>
                         <td class="py-1" style="text-align: end">Sports</td>
                         <td class="py-1 w-1/5">
-                            <select x-ref="sportsSelect" x-model="average_result.sports_grade" class="small">
+                            <select x-ref="sportsSelect" x-model="cumulative_result.sports_grade" class="small">
                                 <template x-for="grade in grades" :key="grade">
                                     <option :value="grade" x-text="grade"
-                                            :selected="average_result.sports_grade === grade"></option>
+                                            :selected="cumulative_result.sports_grade === grade"></option>
                                 </template>
                             </select>
                         </td>
                         <td style="text-align: end">Quarter</td>
-                        <td class="w-1/5" x-text="average_result.quarter ?? '-'"></td>
+                        <td class="w-1/5" x-text="cumulative_result.quarter ?? '-'"></td>
                     </tr>
                     <tr>
                         <td class="py-1" style="text-align: end">Conduct</td>
                         <td class="py-1 w-1/5">
-                            <select x-ref="conductSelect" x-model="average_result.conduct" class="small">
+                            <select x-ref="conductSelect" x-model="cumulative_result.conduct" class="small">
                                 <template x-for="grade in grades" :key="grade">
                                     <option :value="grade" x-text="grade"
-                                            :selected="average_result.conduct === grade"></option>
+                                            :selected="cumulative_result.conduct === grade"></option>
                                 </template>
                             </select>
                         </td>
                         <td style="text-align: end">Average</td>
-                        <td class="w-1/5" x-text="average_result.average ?? '-'">
+                        <td class="w-1/5" x-text="cumulative_result.average ?? '-'">
                     </tr>
                     <tr>
                         <td class="py-1" style="text-align: end">Attendance</td>
@@ -132,12 +132,13 @@
                                 placeholder="Enter attendance"
                                 :disabled="!results.length"
                                 class="form-input px-2"
-                                x-model="student.attendance"
+                                x-model="cumulative_result.days_attended"
                                 maxlength="2"
+                                aria-label
                             />
                         </td>
                         <td style="text-align: end">Passes</td>
-                        <td class="w-1/5" x-text="average_result.passes ?? '-'"></td>
+                        <td class="w-1/5" x-text="cumulative_result.passes ?? '-'"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -164,7 +165,7 @@
                 exam_id: '<?= $currentExam ?>',
                 grade_id: null,
                 results: [],
-                average_result: {},
+                cumulative_result: {},
                 student_id: null,
                 students: [],
                 student: {},
@@ -201,7 +202,7 @@
                         axios.get(`/api/students/${ this.student_id }/results`, { params: { exam_id: this.exam_id, } })
                             .then(({ data }) => {
                                 this.results = data.results
-                                this.average_result = data.average_result
+                                this.cumulative_result = data.cumulative_result
 
                                 setTimeout(() => {
                                     this.sportsGradeSelectInstance.update()
@@ -250,9 +251,10 @@
                             course_work_mark: r.course_work_mark,
                             exam_mark: r.exam_mark
                         })),
-                        average_result: {
-                            conduct: this.average_result.conduct,
-                            sports_grade: this.average_result.sports_grade,
+                        cumulative_result: {
+                            conduct: this.cumulative_result.conduct,
+                            sports_grade: this.cumulative_result.sports_grade,
+                            days_attended: this.cumulative_result.days_attended
                         },
                         attendance: this.attendance
                     }

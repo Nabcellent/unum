@@ -22,8 +22,8 @@ class Exam extends Model
         return $this->hasMany(Result::class);
     }
 
-    public function averageResults(): HasMany
+    public function cumulativeResults(): HasMany
     {
-        return $this->hasMany(AverageResult::class);
+        return $this->hasMany(CumulativeResult::class);
     }
 }
