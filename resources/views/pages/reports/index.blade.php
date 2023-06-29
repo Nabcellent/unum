@@ -37,10 +37,10 @@
                             </template>
                         </select>
                         <button id="btn-clear-student" type="button" x-tooltip="Disable/Enable Student"
-                                :disabled="!student_id" @click="clearStudentSelect()"
+                                :disabled="!student_id || fetchingReport" @click="disableStudentSelect()"
                                 class="btn btn-outline-primary ltr:rounded-l-none rtl:rounded-r-none">
-                            <i class="fa-solid fa-circle-xmark fa-xl" x-show="studentSelectDisabled"></i>
-                            <i class="fa-solid fa-circle-check fa-xl" x-show="!studentSelectDisabled"></i>
+                            <i class="fa-solid fa-circle-xmark fa-xl" x-show="!buttonIcon"></i>
+                            <i class="fa-solid fa-circle-check fa-xl" x-show="buttonIcon"></i>
                         </button>
                     </div>
                 </div>
@@ -90,6 +90,7 @@
                 studentSelectInstance: null,
                 reports: [],
                 studentSelectDisabled: true,
+                buttonIcon: false,
 
                 init() {
                     //  Nice select
@@ -121,7 +122,7 @@
 
                 updateClass() {
                     if (this.student_id) this.student_id = null
-                    if (this.studentSelectDisabled) this.studentSelectDisabled = false
+                    this.studentSelectDisabled = false
 
                     axios.get(`/api/grades/${ this.grade_id }/students`)
                         .then(({ data }) => {
@@ -135,11 +136,10 @@
                         })
                 },
 
-                clearStudentSelect() {
-                    this.studentSelectDisabled = !this.studentSelectDisabled
+                disableStudentSelect() {
                     this.studentSelectInstance[this.studentSelectDisabled ? 'enable' : 'disable']()
-
-                    if (this.studentSelectDisabled) this.studentSelectInstance.clear()
+                    this.studentSelectDisabled = !this.studentSelectDisabled
+                    this.buttonIcon = !this.buttonIcon
 
                     this.updatePreview()
                 },
