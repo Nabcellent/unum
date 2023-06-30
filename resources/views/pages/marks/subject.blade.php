@@ -91,7 +91,27 @@
                 </table>
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-between">
+                <div class="relative inline-flex align-middle">
+                    <button type="button" x-tooltip="First Subject" @click="goToFirstSubject"
+                            :disabled="!canFirstSubject"
+                            class="btn btn-warning ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Subject" @click="goToPreviousSubject"
+                            :disabled="!canPrevSubject">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Subject" @click="goToNextSubject"
+                            :disabled="!canNextSubject">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                    <button type="button" x-tooltip="Last Subject" @click="goToLastSubject"
+                            :disabled="!canLastSubject"
+                            class="btn btn-warning ltr:rounded-r-full rtl:rounded-l-full ltr:rounded-l-none rtl:rounded-r-none">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </button>
+                </div>
                 <button type="button" class="btn btn-primary" @click="saveMarks"
                         :disabled="!students.length || loading">
                     <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
@@ -122,6 +142,10 @@
                 subjects: [],
                 students: [],
                 subjectNice: null,
+                canFirstSubject: false,
+                canLastSubject: false,
+                canNextSubject: false,
+                canPrevSubject: false,
 
                 init() {
                     this.subjectNice = NiceSelect.bind(this.$refs.subjectNice, {searchable: true,})
@@ -148,6 +172,59 @@
                     }
 
                     if (el.value.length === 2) nextInput()
+                },
+
+                subjectUpdatedEvent() {
+                    setTimeout(() => {
+                        this.subjectNice.update()
+
+                        this.updateTable()
+                    }, 50)
+                },
+
+                goToFirstSubject() {
+                    this.subjects[0].selected = true
+                    this.subject_id = this.subjects[0].id
+
+                    this.subjectUpdatedEvent()
+                },
+
+                goToPreviousSubject() {
+                    const currentIndex = this.subjects.findIndex(s => s.id === this.subject_id)
+                    const prevIndex = (currentIndex - 1) % this.subjects.length
+
+                    this.subjects = this.subjects.map((s, i) => ({...s, selected: i === prevIndex}))
+                    this.subject_id = this.subjects[prevIndex].id
+
+                    this.subjectUpdatedEvent()
+                },
+
+                goToNextSubject() {
+                    const currentIndex = this.subjects.findIndex(s => s.id === this.subject_id)
+                    const nextIndex = (currentIndex + 1) % this.subjects.length
+
+                    this.subjects = this.subjects.map((s, i) => ({...s, selected: i === nextIndex}))
+                    this.subject_id = this.subjects[nextIndex].id
+
+                    this.subjectUpdatedEvent()
+                },
+
+                goToLastSubject() {
+                    this.subjects = this.subjects.map((s, i) => ({...s, selected: i === this.subjects.length - 1}))
+                    this.subject_id = this.subjects[this.subjects.length - 1].id
+
+                    this.subjectUpdatedEvent()
+                },
+
+                updatePagination() {
+                    const subjectsExist = this.students.length > 0 && !this.loading
+                    const isLastSubject = this.subject_id === this.subjects[this.subjects.length - 1].id
+                    const isFirstSubject = this.subject_id === this.subjects[0].id
+
+                    this.canFirstSubject = subjectsExist && !isFirstSubject
+                    this.canLastSubject = subjectsExist && !isLastSubject
+                    this.canPrevSubject = subjectsExist && !isFirstSubject
+                    this.canNextSubject = subjectsExist && !isLastSubject
                 },
 
                 updateTable() {
@@ -179,11 +256,7 @@
                                 this.subjects = data.map(d => ({...d, selected: d.id === data[0].id}))
                                 this.subject_id = data[0]?.id
 
-                                setTimeout(() => {
-                                    this.subjectNice.update()
-
-                                    this.updateTable()
-                                }, 50)
+                                this.subjectUpdatedEvent()
                             }).catch(err => console.error(err))
                     }
                 },

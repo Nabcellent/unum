@@ -38,8 +38,6 @@
         </div>
 
         <form @submit.prevent="saveMarks" class="panel mt-5 border-0">
-            <h6 class="text-xs font-bold text-right mb-3" x-show="student.student_id"
-                x-text="'STUDENT ID: '+ student.student_id"></h6>
             <div class="table-responsive mb-3 overflow-visible">
                 <table class="table-striped table-hover">
                     <thead>
@@ -99,7 +97,7 @@
                     <tr>
                         <td class="py-1" style="text-align: end">Sports</td>
                         <td class="py-1 w-1/5">
-                            <select x-ref="sportsSelect" x-model="cumulative_result.sports_grade" class="small">
+                            <select x-ref="sportsSelect" x-model="cumulative_result.sports_grade" class="small" aria-label>
                                 <template x-for="grade in grades" :key="grade">
                                     <option :value="grade" x-text="grade"
                                             :selected="cumulative_result.sports_grade === grade"></option>
@@ -155,20 +153,20 @@
                 <div class="relative inline-flex align-middle">
                     <button type="button" x-tooltip="First Student" @click="goToFirstStudent"
                             :disabled="!canFirstStudent"
-                            class="btn btn-dark ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
+                            class="btn btn-warning ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
                         <i class="fa-solid fa-angles-left"></i>
                     </button>
-                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Previous Student" @click="goToPreviousStudent"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Student" @click="goToPreviousStudent"
                             :disabled="!canPrevStudent">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Next Student" @click="goToNextStudent"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Student" @click="goToNextStudent"
                             :disabled="!canNextStudent">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
                     <button type="button" x-tooltip="Last Student" @click="goToLastStudent"
                             :disabled="!canLastStudent"
-                            class="btn btn-dark ltr:rounded-r-full rtl:rounded-l-full ltr:rounded-l-none rtl:rounded-r-none">
+                            class="btn btn-warning ltr:rounded-r-full rtl:rounded-l-full ltr:rounded-l-none rtl:rounded-r-none">
                         <i class="fa-solid fa-angles-right"></i>
                     </button>
                 </div>
@@ -295,12 +293,14 @@
                 },
 
                 updatePagination() {
-                    const studentsExist = this.students.length > 0
+                    const studentsExist = this.students.length > 0 && !this.loading
+                    const isLastStudent = this.student_id === this.students[this.students.length - 1].id
+                    const isFirstStudent = this.student_id === this.students[0].id
 
-                    this.canFirstStudent = studentsExist && this.student_id !== this.students[0].id
-                    this.canPrevStudent = studentsExist
-                    this.canNextStudent = studentsExist
-                    this.canLastStudent = studentsExist && this.student_id !== this.students[this.students.length - 1].id
+                    this.canFirstStudent = studentsExist && !isFirstStudent
+                    this.canLastStudent = studentsExist && !isLastStudent
+                    this.canPrevStudent = studentsExist && !isFirstStudent
+                    this.canNextStudent = studentsExist && !isLastStudent
                 },
 
                 updateForm() {
@@ -348,12 +348,6 @@
                     }
 
                     this.loading = true
-
-                    if (!this.student.result_id) {
-                        this.student.exam = this.exam_id
-                    }
-
-                    this.student.grade_id = this.grade_id
 
                     const data = {
                         exam_id: this.exam_id,

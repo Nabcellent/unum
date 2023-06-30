@@ -86,15 +86,15 @@
                             <button
                                 type="button"
                                 class="nav-link group"
-                                :class="{'active' : activeDropdown === 'users'}"
-                                @click="activeDropdown === 'users' ? activeDropdown = null : activeDropdown = 'users'"
+                                :class="{'active' : activeDropdown === 'marks'}"
+                                @click="activeDropdown === 'marks' ? activeDropdown = null : activeDropdown = 'marks'"
                             >
                                 <div class="flex items-center">
                                     <i class="fa-solid fa-list-ol group-hover:!text-primary"></i>
                                     <span
                                         class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Mark Entry</span>
                                 </div>
-                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'users'}">
+                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'marks'}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
@@ -102,7 +102,7 @@
                                     </svg>
                                 </div>
                             </button>
-                            <ul x-cloak x-show="activeDropdown === 'users'" x-collapse class="sub-menu text-gray-500">
+                            <ul x-cloak x-show="activeDropdown === 'marks'" x-collapse class="sub-menu text-gray-500">
                                 <li>
                                     <a href="{{ route('admin.assessment.subject') }}">Per Subject</a>
                                 </li>
