@@ -58,6 +58,7 @@
                                 <input
                                     :id="`cw-${i}`"
                                     @input="onMarkChange(i, 'cw', $event.target)"
+                                    aria-label
                                     type="number"
                                     max="99"
                                     min="0"
@@ -71,6 +72,7 @@
                                 <input
                                     :id="`exam-${i}`"
                                     @input="onMarkChange(i, 'exam', $event.target)"
+                                    aria-label
                                     type="number"
                                     max="99"
                                     min="0"

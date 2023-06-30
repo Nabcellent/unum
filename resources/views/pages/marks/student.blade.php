@@ -58,7 +58,7 @@
                             <td class="py-1" x-text="r.subject.name"></td>
                             <td class="py-1 w-32">
                                 <input
-                                    id="cw"
+                                    :id="`cw-${i}`"
                                     type="number"
                                     max="99"
                                     min="0"
@@ -67,12 +67,13 @@
                                     class="form-input w-16 px-2 py-1"
                                     x-model="r.course_work_mark"
                                     maxlength="2"
-                                    @change="validateMark"
+                                    aria-label
+                                    @input="onMarkChange(i, 'cw', $event.target)"
                                 />
                             </td>
                             <td class="py-1">
                                 <input
-                                    id="exam"
+                                    :id="`exam-${i}`"
                                     type="number"
                                     max="99"
                                     min="0"
@@ -81,7 +82,8 @@
                                     class="form-input w-16 px-2 py-1"
                                     x-model="r.exam_mark"
                                     maxlength="2"
-                                    @change="validateMark"
+                                    aria-label
+                                    @input="onMarkChange(i, 'exam', $event.target)"
                                 />
                             </td>
                             <td class="py-1" x-text="r.average"></td>
@@ -151,17 +153,21 @@
 
             <div class="mt-5 flex items-center justify-between">
                 <div class="relative inline-flex align-middle">
-                    <button type="button" x-tooltip="First Student"
+                    <button type="button" x-tooltip="First Student" @click="goToFirstStudent"
+                            :disabled="!canFirstStudent"
                             class="btn btn-dark ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
                         <i class="fa-solid fa-angles-left"></i>
                     </button>
-                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Previous Student">
+                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Previous Student" @click="goToPreviousStudent"
+                            :disabled="!canPrevStudent">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Next Student">
+                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Next Student" @click="goToNextStudent"
+                            :disabled="!canNextStudent">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
-                    <button type="button" x-tooltip="Last Student"
+                    <button type="button" x-tooltip="Last Student" @click="goToLastStudent"
+                            :disabled="!canLastStudent"
                             class="btn btn-dark ltr:rounded-r-full rtl:rounded-l-full ltr:rounded-l-none rtl:rounded-r-none">
                         <i class="fa-solid fa-angles-right"></i>
                     </button>
@@ -196,29 +202,40 @@
                 studentSelectInstance: null,
                 grades: ['A', 'B', 'C', 'D', 'E'],
                 loading: false,
+                canFirstStudent: false,
+                canLastStudent: false,
+                canNextStudent: false,
+                canPrevStudent: false,
 
                 init() {
-                    //  Default
                     document.querySelectorAll('.selectize').forEach(select => NiceSelect.bind(select));
 
-                    //  Searchable
                     this.studentSelectInstance = NiceSelect.bind(this.$refs.studentSelect, {searchable: true,})
                     this.sportsGradeSelectInstance = NiceSelect.bind(this.$refs.sportsSelect);
                     this.conductGradeSelectInstance = NiceSelect.bind(this.$refs.conductSelect);
                 },
 
-                validateMark(e) {
-                    let value = parseInt(e.target.value);
+                onMarkChange(i, markName, el) {
+                    const nextInput = () => {
+                        if (markName === 'exam') i++
 
-                    if (value > 99) {
-                        // If the number is more than 99, set it to 99
-                        e.target.value = 99;
-                        this.showMessage('Mark must be less than 100', 'error')
-                    } else if (value < 0) {
-                        // If the number is less than 0, set it to 0
-                        e.target.value = 0;
-                        this.showMessage('Mark cannot be negative', 'error')
+                        const nextInputIdentifier = markName === 'cw' ? 'exam' : 'cw';
+                        const nextInputElement = document.getElementById(`${nextInputIdentifier}-${i}`);
+
+                        if (nextInputElement) {
+                            nextInputElement.focus();
+                        }
                     }
+
+                    if (el.value > 99 || el.value < 0) {
+                        el.value = el.value > 99 ? 99 : ''
+
+                        this.showMessage(`The value must be between 0 and 99.`, 'error')
+
+                        return
+                    }
+
+                    if (el.value.length === 2) nextInput()
                 },
 
                 onAttendanceChange(e) {
@@ -233,6 +250,57 @@
 
                         this.showMessage(`Attendance mustn't be a negative number.`, 'error');
                     }
+                },
+
+                studentUpdatedEvent() {
+                    setTimeout(() => {
+                        this.updateForm()
+
+                        this.studentSelectInstance.update()
+                    }, 50)
+                },
+
+                goToFirstStudent() {
+                    this.students[0].selected = true
+                    this.student_id = this.students[0].id
+
+                    this.studentUpdatedEvent()
+                },
+
+                goToPreviousStudent() {
+                    const currentIndex = this.students.findIndex(s => s.id === this.student_id)
+                    const prevIndex = (currentIndex - 1) % this.students.length
+
+                    this.students = this.students.map((s, i) => ({...s, selected: i === prevIndex}))
+                    this.student_id = this.students[prevIndex].id
+
+                    this.studentUpdatedEvent()
+                },
+
+                goToNextStudent() {
+                    const currentIndex = this.students.findIndex(s => s.id === this.student_id)
+                    const nextIndex = (currentIndex + 1) % this.students.length
+
+                    this.students = this.students.map((s, i) => ({...s, selected: i === nextIndex}))
+                    this.student_id = this.students[nextIndex].id
+
+                    this.studentUpdatedEvent()
+                },
+
+                goToLastStudent() {
+                    this.students = this.students.map((s, i) => ({...s, selected: i === this.students.length - 1}))
+                    this.student_id = this.students[this.students.length - 1].id
+
+                    this.studentUpdatedEvent()
+                },
+
+                updatePagination() {
+                    const studentsExist = this.students.length > 0
+
+                    this.canFirstStudent = studentsExist && this.student_id !== this.students[0].id
+                    this.canPrevStudent = studentsExist
+                    this.canNextStudent = studentsExist
+                    this.canLastStudent = studentsExist && this.student_id !== this.students[this.students.length - 1].id
                 },
 
                 updateForm() {
@@ -252,6 +320,8 @@
                                     this.sportsGradeSelectInstance.update()
                                     this.conductGradeSelectInstance.update()
                                 }, 100)
+
+                                this.updatePagination()
                             }).catch(err => console.error(err))
                     }
                 },
@@ -265,11 +335,7 @@
 
                             if (data[0]) this.student_id = data[0].id
 
-                            setTimeout(() => {
-                                this.studentSelectInstance.update()
-
-                                this.updateForm()
-                            }, 50)
+                            this.studentUpdatedEvent()
                         })
                 },
 
