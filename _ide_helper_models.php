@@ -12,31 +12,7 @@
 
 namespace App\Models{
 /**
- * App\Models\Attendance
- *
- * @property int $id
- * @property int $student_id
- * @property int $days_attended
- * @property int $total_days
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance query()
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereDaysAttended($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereStudentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereTotalDays($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Attendance whereUpdatedAt($value)
- * @mixin \Eloquent
- */
-	class IdeHelperAttendance {}
-}
-
-namespace App\Models{
-/**
- * App\Models\AverageResult
+ * App\Models\CumulativeResult
  *
  * @property int $id
  * @property int $student_id
@@ -47,6 +23,8 @@ namespace App\Models{
  * @property string|null $conduct
  * @property int|null $passes
  * @property int|null $rank
+ * @property int|null $days_attended
+ * @property int|null $total_days
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Exam $exam
@@ -59,6 +37,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereAverage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereConduct($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereDaysAttended($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereExamId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult wherePasses($value)
@@ -66,10 +45,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereRank($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereSportsGrade($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereTotalDays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeResult whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class IdeHelperAverageResult {}
+	class IdeHelperCumulativeResult {}
 }
 
 namespace App\Models{
@@ -78,8 +58,8 @@ namespace App\Models{
  *
  * @property int $id
  * @property \App\Enums\Exam $name
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $averageResults
- * @property-read int|null $average_results_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $cumulativeResults
+ * @property-read int|null $cumulative_results_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
  * @property-read int|null $results_count
  * @method static \Illuminate\Database\Eloquent\Builder|Exam newModelQuery()
@@ -101,7 +81,7 @@ namespace App\Models{
  * @property string $entry_completed
  * @property string $quarters_completed
  * @property string $reports_completed
- * @property string $report_exam_date
+ * @property \Illuminate\Support\Carbon $report_exam_date
  * @property string|null $report_next_term
  * @property int $cat_days
  * @method static \Illuminate\Database\Eloquent\Builder|ExamDate newModelQuery()
@@ -178,7 +158,7 @@ namespace App\Models{
  * @property int|null $rank
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\CumulativeResult $averageResult
+ * @property-read \App\Models\CumulativeResult $cumulativeResult
  * @property-read \App\Models\Exam $exam
  * @property-read \App\Models\Student $student
  * @property-read \App\Models\Subject $subject
@@ -239,9 +219,9 @@ namespace App\Models{
  * @property string|null $previous_school
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\CumulativeResult|null $averageResult
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $averageResults
- * @property-read int|null $average_results_count
+ * @property-read \App\Models\CumulativeResult|null $cumulativeResult
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $cumulativeResults
+ * @property-read int|null $cumulative_results_count
  * @property-read \App\Models\Grade $grade
  * @property-read \App\Models\Result|null $result
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results

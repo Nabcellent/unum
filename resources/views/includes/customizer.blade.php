@@ -55,7 +55,7 @@
                     </svg>
                 </a>
                 <h4 class="mb-1 dark:text-white">TEMPLATE CUSTOMIZER</h4>
-                <p class="text-white-dark">Set preferences that will be cookied for your live preview demonstration.</p>
+                <p class="text-white-dark">Set preferences that will be cookied for your dashboard.</p>
             </div>
             <div class="mb-3 rounded-md border border-dashed border-[#e0e6ed] p-3 dark:border-[#1b2e4b]">
                 <h5 class="mb-1 text-base leading-none dark:text-white">Color Scheme</h5>

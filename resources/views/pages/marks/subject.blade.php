@@ -56,7 +56,8 @@
                             <td class="py-1 w-1/4" x-text="student.name"></td>
                             <td class="py-1 w-32">
                                 <input
-                                    id="cw"
+                                    :id="`cw-${i}`"
+                                    @input="onMarkChange(i, 'cw', $event.target)"
                                     type="number"
                                     max="99"
                                     min="0"
@@ -64,12 +65,12 @@
                                     placeholder="%"
                                     class="form-input w-16 px-2 py-1"
                                     x-model="student.result.course_work_mark"
-                                    maxlength="2"
                                 />
                             </td>
                             <td class="py-1">
                                 <input
-                                    id="exam"
+                                    :id="`exam-${i}`"
+                                    @input="onMarkChange(i, 'exam', $event.target)"
                                     type="number"
                                     max="99"
                                     min="0"
@@ -77,7 +78,6 @@
                                     placeholder="%"
                                     class="form-input w-16 px-2 py-1"
                                     x-model="student.result.exam_mark"
-                                    maxlength="2"
                                 />
                             </td>
                             <td class="py-1" x-text="student.result?.average"></td>
@@ -122,18 +122,49 @@
                 subjectNice: null,
 
                 init() {
-                    this.subjectNice = NiceSelect.bind(this.$refs.subjectNice, { searchable: true, })
+                    this.subjectNice = NiceSelect.bind(this.$refs.subjectNice, {searchable: true,})
+                },
+
+                onMarkChange(i, markName, el) {
+                    const nextInput = () => {
+                        if (markName === 'exam') i++
+
+                        const nextInputIdentifier = markName === 'cw' ? 'exam' : 'cw';
+                        const nextInputElement = document.getElementById(`${nextInputIdentifier}-${i}`);
+
+                        if (nextInputElement) {
+                            nextInputElement.focus();
+                        }
+                    }
+
+                    if (el.value > 99 || el.value < 0) {
+                        el.value = el.value > 99 ? 99 : ''
+
+                        this.showMessage(`The value must be between 0 and 99.`, 'error')
+
+                        return
+                    }
+
+                    if (el.value.length === 2) nextInput()
                 },
 
                 updateTable() {
                     if (this.exam_id && this.grade_id && this.subject_id) {
-                        axios.get(`/api/grades/${ this.grade_id }/results`, {
+                        axios.get(`/api/grades/${this.grade_id}/results`, {
                             params: {
                                 exam_id: this.exam_id,
                                 subject_id: this.subject_id,
                             }
-                        }).then(({ data }) => this.students = data)
-                            .catch(err => console.error(err))
+                        }).then(({data}) => this.students = data.map(s => {
+                            if (!s.result) {
+                                s.result = {
+                                    course_work_mark: null,
+                                    exam_mark: null,
+                                }
+                            }
+
+                            return s
+                        })).catch(err => console.error(err))
                     }
                 },
 
@@ -141,9 +172,9 @@
                     this.subjects = []
 
                     if (this.grade_id) {
-                        axios.get(`/api/grades/${ this.grade_id }/subjects`)
-                            .then(({ data }) => {
-                                this.subjects = data.map(d => ({ ...d, selected: d.id === data[0].id }))
+                        axios.get(`/api/grades/${this.grade_id}/subjects`)
+                            .then(({data}) => {
+                                this.subjects = data.map(d => ({...d, selected: d.id === data[0].id}))
                                 this.subject_id = data[0]?.id
 
                                 setTimeout(() => {
@@ -158,7 +189,7 @@
                 saveMarks() {
                     for (const s of this.students) {
                         if (!s.result.exam_mark) {
-                            this.showMessage(`Please key in EXAM marks for ${ s.class_no }. ${ s.name }.`, 'error');
+                            this.showMessage(`Please key in EXAM marks for ${s.class_no}. ${s.name}.`, 'error');
                             return true;
                         }
                     }
@@ -171,8 +202,8 @@
                         exam_id: this.exam_id,
                         grade_id: this.grade_id
                     }, {
-                        header: { 'Content-Type': 'application/json' }
-                    }).then(({ data }) => {
+                        header: {'Content-Type': 'application/json'}
+                    }).then(({data}) => {
                         console.log(data)
                         if (data.status === 'error') {
                             this.showMessage(data.msg, 'error');
@@ -182,7 +213,7 @@
                             this.showMessage(data.msg)
 
                             this.updateTable()
-                            window.scrollTo({ top: 0 });
+                            window.scrollTo({top: 0});
                         }
 
                         this.loading = false

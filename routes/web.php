@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MarkController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResultController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,8 +25,8 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     Route::get('/', [DashboardController::class, 'index'])->name('.dashboard');
 
     Route::prefix('/marks')->name('.assessment')->group(function() {
-        Route::get('/student', [AssessmentController::class, 'getStudent'])->name('.student');
-        Route::get('/subject', [AssessmentController::class, 'getSubject'])->name('.subject');
+        Route::get('/student', [ResultController::class, 'createOrEditStudent'])->name('.student');
+        Route::get('/subject', [ResultController::class, 'createOrEditSubject'])->name('.subject');
     });
 
     Route::prefix('/attendances')->name('.attendances')->group(function() {

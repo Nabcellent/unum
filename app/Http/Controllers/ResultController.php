@@ -3,36 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\CumulativeResult;
+use App\Models\Exam;
 use App\Models\Grade;
 use App\Models\Result;
 use App\Models\Student;
+use App\Settings\ExamSettings;
+use App\Settings\TermSetting;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Throwable;
 
 class ResultController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function createOrEditStudent(ExamSettings $examSettings, TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        //
+        $data = [
+            "grades"      => Grade::get(),
+            "exams"       => Exam::get(['id', 'name']),
+            "currentExam" => $examSettings->current,
+            "termDays"    => $termSetting->days
+        ];
+
+        return view('pages.marks.student', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function createOrEditSubject(ExamSettings $examSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        //
+        $data = [
+            "grades"      => Grade::get(),
+            "exams"       => Exam::get(['id', 'name']),
+            "currentExam" => $examSettings->current,
+        ];
+
+        return view('pages.marks.subject', $data);
     }
 
     /**
      * Store a newly created resource in storage.
      * @throws Throwable
      */
-    public function storeSubject(Request $request)
+    public function storeSubject(Request $request): JsonResponse
     {
         $data = $request->validate([
             "marks.*.id"               => "integer",
@@ -73,6 +86,7 @@ class ResultController extends Controller
             "cumulative_result.conduct"       => "in:A,B,C,D,E",
             "cumulative_result.sports_grade"  => "nullable|in:A,B,C,D,E",
             "cumulative_result.days_attended" => "nullable|integer",
+            "cumulative_result.total_days"    => "nullable|integer",
         ]);
 
         $data['results'] = array_map(fn($mark) => [

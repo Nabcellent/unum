@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Throwable;
 
 /**
- * @mixin IdeHelperAverageResult
+ * @mixin IdeHelperCumulativeResult
  */
 class CumulativeResult extends Model
 {
@@ -23,6 +23,7 @@ class CumulativeResult extends Model
         "conduct",
         "passes",
         "days_attended",
+        "total_days",
     ];
 
     public function results(): HasMany

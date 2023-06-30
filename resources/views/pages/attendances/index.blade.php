@@ -132,10 +132,10 @@
                         e.target.value = this.term_days
                         student.cumulative_result.days_attended = this.term_days
 
-                        this.showMessage(`Attendance For ${student.name} mustn't be above ${this.term_days} days.`, 'error');
+                        this.showMessage(`Attendance For ${ student.name } mustn't be above ${ this.term_days } days.`, 'error');
 
                         nextStudent()
-                    } else if(e.target.value < 0) {
+                    } else if (e.target.value < 0) {
                         e.target.value = ''
                         student.cumulative_result.days_attended = null
 
@@ -148,10 +148,10 @@
                 saveAttendances() {
                     this.loading = true
 
-                    axios.put(`/api/grades/${ this.grade_id }/attendances`, this.students.map(s => s.cumulative_result), {
-                        header: { 'Content-Type': 'application/json' }
-                    }).then(({ data }) => {
-                        console.log(data)
+                    axios.put(`/api/grades/${ this.grade_id }/attendances`, this.students.map(s => ({
+                        ...s.cumulative_result,
+                        total_days: this.term_days
+                    }))).then(({ data }) => {
                         if (data.status === 'error') {
                             this.showMessage(data.msg, 'error');
 

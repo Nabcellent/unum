@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Marks')
+@section('title', 'Mark Entry')
 @section('content')
-    <div x-data="marks">
+    <div x-data="marks" class="2xl:px-48">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <h2 class="text-xl">Marks</h2>
+            <h2 class="text-xl">Enter Marks Per Student</h2>
         </div>
 
         <div class="panel">
@@ -123,19 +123,24 @@
                     <tr>
                         <td class="py-1" style="text-align: end">Attendance</td>
                         <td class="py-1 w-1/5">
-                            <input
-                                id="exam"
-                                type="number"
-                                max="99"
-                                min="0"
-                                step="1"
-                                placeholder="Enter attendance"
-                                :disabled="!results.length"
-                                class="form-input px-2"
-                                x-model="cumulative_result.days_attended"
-                                maxlength="2"
-                                aria-label
-                            />
+                            <div class="flex items-center">
+                                <input
+                                    id="exam"
+                                    type="number"
+                                    max="99"
+                                    min="0"
+                                    step="1"
+                                    :placeholder="term_days"
+                                    :disabled="!results.length"
+                                    class="form-input px-2 mr-2"
+                                    x-model="cumulative_result.days_attended"
+                                    maxlength="2"
+                                    aria-label
+                                    @keyup="onAttendanceChange"
+                                />
+                                <span
+                                    x-text="`${Math.round(cumulative_result.days_attended / term_days * 100)}%`"></span>
+                            </div>
                         </td>
                         <td style="text-align: end">Passes</td>
                         <td class="w-1/5" x-text="cumulative_result.passes ?? '-'"></td>
@@ -144,7 +149,23 @@
                 </table>
             </div>
 
-            <div class="mt-5 flex items-center justify-end">
+            <div class="mt-5 flex items-center justify-between">
+                <div class="relative inline-flex align-middle">
+                    <button type="button" x-tooltip="First Student"
+                            class="btn btn-dark ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Previous Student">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark rounded-none" x-tooltip="Next Student">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                    <button type="button" x-tooltip="Last Student"
+                            class="btn btn-dark ltr:rounded-r-full rtl:rounded-l-full ltr:rounded-l-none rtl:rounded-r-none">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </button>
+                </div>
                 <button type="button" class="btn btn-primary" @click="saveMarks"
                         :disabled="!results.length || loading">
                     <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
@@ -162,15 +183,18 @@
         document.addEventListener('alpine:init', () => {
             // Marks
             Alpine.data('marks', () => ({
-                exam_id: '<?= $currentExam ?>',
+                exam_id: '{{ $currentExam }}',
                 grade_id: null,
+                term_days: {{ $termDays }},
                 results: [],
-                cumulative_result: {},
+                cumulative_result: {
+                    days_attended: null
+                },
                 student_id: null,
                 students: [],
                 student: {},
                 studentSelectInstance: null,
-                grades: [ 'A', 'B', 'C', 'D', 'E' ],
+                grades: ['A', 'B', 'C', 'D', 'E'],
                 loading: false,
 
                 init() {
@@ -178,7 +202,7 @@
                     document.querySelectorAll('.selectize').forEach(select => NiceSelect.bind(select));
 
                     //  Searchable
-                    this.studentSelectInstance = NiceSelect.bind(this.$refs.studentSelect, { searchable: true, })
+                    this.studentSelectInstance = NiceSelect.bind(this.$refs.studentSelect, {searchable: true,})
                     this.sportsGradeSelectInstance = NiceSelect.bind(this.$refs.sportsSelect);
                     this.conductGradeSelectInstance = NiceSelect.bind(this.$refs.conductSelect);
                 },
@@ -197,12 +221,32 @@
                     }
                 },
 
+                onAttendanceChange(e) {
+                    if (e.target.value > this.term_days) {
+                        e.target.value = this.term_days
+                        this.cumulative_result.days_attended = this.term_days
+
+                        this.showMessage(`Attendance mustn't be above ${this.term_days} days.`, 'error');
+                    } else if (e.target.value < 0) {
+                        e.target.value = ''
+                        this.cumulative_result.days_attended = null
+
+                        this.showMessage(`Attendance mustn't be a negative number.`, 'error');
+                    }
+                },
+
                 updateForm() {
                     if (this.exam_id && this.grade_id && this.student_id) {
-                        axios.get(`/api/students/${ this.student_id }/results`, { params: { exam_id: this.exam_id, } })
-                            .then(({ data }) => {
+                        axios.get(`/api/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
+                            .then(({data}) => {
                                 this.results = data.results
                                 this.cumulative_result = data.cumulative_result
+
+                                if (!this.cumulative_result) {
+                                    s.cumulative_result = {
+                                        days_attended: null
+                                    }
+                                }
 
                                 setTimeout(() => {
                                     this.sportsGradeSelectInstance.update()
@@ -215,10 +259,11 @@
                 updateClass() {
                     this.results = []
 
-                    axios.get(`/api/grades/${ this.grade_id }/students`)
-                        .then(({ data }) => {
+                    axios.get(`/api/grades/${this.grade_id}/students`)
+                        .then(({data}) => {
                             this.students = data
-                            this.student_id = data[0].id
+
+                            if (data[0]) this.student_id = data[0].id
 
                             setTimeout(() => {
                                 this.studentSelectInstance.update()
@@ -230,8 +275,8 @@
 
                 saveMarks() {
                     for (const r of this.results) {
-                        if ([ 1, 2, 3 ].includes(r.subject_id) && (!r.course_work_mark || !r.exam_mark)) {
-                            this.showMessage(`${ r.subject.name } mark is required.`, 'error');
+                        if ([1, 2, 3].includes(r.subject_id) && (!r.course_work_mark || !r.exam_mark)) {
+                            this.showMessage(`${r.subject.name} mark is required.`, 'error');
                             return true;
                         }
                     }
@@ -254,16 +299,17 @@
                         cumulative_result: {
                             conduct: this.cumulative_result.conduct,
                             sports_grade: this.cumulative_result.sports_grade,
-                            days_attended: this.cumulative_result.days_attended
+                            days_attended: this.cumulative_result.days_attended,
+                            total_days: this.cumulative_result.total_days ?? this.term_days,
                         },
                         attendance: this.attendance
                     }
 
-                    axios.post(`/api/results/students/${ this.student_id }`, data).then(({ data }) => {
+                    axios.post(`/api/results/students/${this.student_id}`, data).then(({data}) => {
                         if (data.status === 'error') {
                             this.showMessage(data.msg, 'error');
 
-                            console.log(data.error)
+                            console.error(data)
                         } else {
                             this.showMessage(data.msg)
 

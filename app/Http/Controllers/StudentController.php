@@ -68,13 +68,31 @@ class StudentController extends Controller
     public function results(Request $request, Student $student): JsonResponse
     {
         $data = [
-            'results'           => $student->results()->whereExamId($request->integer('exam_id'))->with('subject')
-                ->get(['id', 'subject_id', 'student_id', 'course_work_mark', 'exam_mark', 'average', 'quarter', 'rank']),
-            'cumulative_result' => CumulativeResult::select(['average', 'quarter', 'passes', 'conduct', 'sports_grade', 'days_attended'])
-                ->firstWhere([
-                    'exam_id'    => $request->integer('exam_id'),
-                    'student_id' => $student->id
-                ])
+            'results' => $student->results()
+                ->whereExamId($request->integer('exam_id'))
+                ->with('subject')
+                ->get([
+                    'id',
+                    'subject_id',
+                    'student_id',
+                    'course_work_mark',
+                    'exam_mark',
+                    'average',
+                    'quarter',
+                    'rank'
+                ]),
+            'cumulative_result' => CumulativeResult::select([
+                'average',
+                'quarter',
+                'passes',
+                'conduct',
+                'sports_grade',
+                'days_attended',
+                'total_days'
+            ])->firstWhere([
+                'exam_id' => $request->integer('exam_id'),
+                'student_id' => $student->id
+            ])
         ];
 
         return response()->json($data);

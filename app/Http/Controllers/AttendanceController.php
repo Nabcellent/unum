@@ -52,10 +52,11 @@ class AttendanceController extends Controller
             '*.id' => "nullable|exists:cumulative_results",
             '*.student_id' => "required|exists:students,id",
             '*.exam_id' => "required|exists:exams,id",
-            '*.days_attended' => "required|min:0|max:$termSetting->days",
+            '*.days_attended' => "required|integer|min:0|max:$termSetting->days",
+            '*.total_days' => "required|integer",
         ]);
 
-        CumulativeResult::upsert($attendances, ['student_id', 'exam_id'], ['days_attended']);
+        CumulativeResult::upsert($attendances, ['student_id', 'exam_id'], ['days_attended', 'total_days']);
 
         return response()->json(['status' => 'success', 'msg' => 'Attendances saved successfully!']);
     }

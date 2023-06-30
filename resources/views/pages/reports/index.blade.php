@@ -46,7 +46,7 @@
                 </div>
                 <div class="flex justify-end items-center">
                     <button id="addonsRight" type="button" class="btn btn-primary w-full"
-                            :disabled="(!student_id && !grade_id) || student_id || loading" @click="saveReports()">
+                            :disabled="reports.length < 1 || loading||!studentSelectDisabled" @click="saveReports()">
                         <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
                         <i class="fa-solid fa-download ltr:mr-2 rtl:ml-2" x-show="!loading"></i>
                         Save All Reports
@@ -108,7 +108,12 @@
 
                         axios.get(`/api/reports/exams/${ this.exam_id }/grades/${ this.grade_id }/preview`, { params: params })
                             .then(({ data }) => {
-                                this.reports = data.reports
+                                if (data.status === 'alert') {
+                                    this.showMessage(data.msg, data.type)
+                                }
+                                if (data.status === 'success') {
+                                    this.reports = data.reports
+                                }
 
                                 this.fetchingReport = false
                             })

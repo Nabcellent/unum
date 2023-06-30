@@ -92,7 +92,7 @@
                                 <div class="flex items-center">
                                     <i class="fa-solid fa-list-ol group-hover:!text-primary"></i>
                                     <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Marks Entry</span>
+                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Mark Entry</span>
                                 </div>
                                 <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'users'}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
