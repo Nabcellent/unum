@@ -10,3 +10,5 @@
 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/user.css') }}"/>
 <link defer rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/animate.css') }}"/>
 <link rel="stylesheet" type="text/css" href="{{ asset('/css/nice-select2.css') }}"/>
+
+@stack('links')

@@ -7,7 +7,6 @@ use App\Models\Exam;
 use App\Models\Grade;
 use App\Models\Result;
 use App\Models\Student;
-use App\Settings\ExamSettings;
 use App\Settings\TermSetting;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -18,24 +17,24 @@ use Throwable;
 
 class ResultController extends Controller
 {
-    public function createOrEditStudent(ExamSettings $examSettings, TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
+    public function createOrEditStudent(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(['id', 'name']),
-            "currentExam" => $examSettings->current,
+            "exams"       => Exam::get(),
+            "currentExam" => $termSetting->current_exam,
             "termDays"    => $termSetting->days
         ];
 
         return view('pages.marks.student', $data);
     }
 
-    public function createOrEditSubject(ExamSettings $examSettings): View|\Illuminate\Foundation\Application|Factory|Application
+    public function createOrEditSubject(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(['id', 'name']),
-            "currentExam" => $examSettings->current,
+            "exams"       => Exam::get(),
+            "currentExam" => $termSetting->current_exam,
         ];
 
         return view('pages.marks.subject', $data);
@@ -83,7 +82,7 @@ class ResultController extends Controller
             "results.*.course_work_mark"      => "nullable|integer|max:99",
             "results.*.subject_id"            => "required|exists:subjects,id",
             "exam_id"                         => "required|exists:exams,id",
-            "cumulative_result.conduct"       => "in:A,B,C,D,E",
+            "cumulative_result.conduct"       => "nullable|in:A,B,C,D,E",
             "cumulative_result.sports_grade"  => "nullable|in:A,B,C,D,E",
             "cumulative_result.days_attended" => "nullable|integer",
             "cumulative_result.total_days"    => "nullable|integer",

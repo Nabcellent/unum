@@ -7,7 +7,7 @@ use App\Models\Exam;
 use App\Models\ExamDate;
 use App\Models\Grade;
 use App\Models\Student;
-use App\Settings\ExamSettings;
+use App\Settings\TermSetting;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -17,12 +17,14 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function index(ExamSettings $examSettings): View|\Illuminate\Foundation\Application|Factory|Application
+    public function index(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        $exams = Exam::get();
+
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(['id', 'name']),
-            "currentExam" => $examSettings->current,
+            "exams"       => $exams,
+            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
         ];
 
         return view('pages.reports.index', $data);

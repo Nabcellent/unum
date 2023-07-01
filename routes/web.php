@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 
 Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->group(function() {
     Route::get('/', [DashboardController::class, 'index'])->name('.dashboard');
@@ -35,6 +34,11 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
 
     Route::prefix('/reports')->name('.reports')->group(function() {
         Route::get('/', [ReportController::class, 'index']);
+    });
+
+    Route::prefix('/settings')->name('.settings')->group(function() {
+        Route::get('/', [SettingController::class, 'index']);
+        Route::put('/{setting}', [SettingController::class, 'update'])->name('.update');
     });
 });
 

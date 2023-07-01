@@ -13,7 +13,7 @@
                     <select class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
                             <option
-                                value="{{ $exam->id }}" @selected($exam->id === $currentExam)>{{ $exam->name }}</option>
+                                value="{{ $exam->id }}" @selected($exam->name === $currentExam)>{{ $exam->name }}</option>
                         @endforeach
                     </select>
                 </div>

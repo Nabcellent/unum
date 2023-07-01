@@ -12,7 +12,7 @@
                     <label for="class">Cat</label>
                     <select class="selectize" x-model="exam_id" @change="updateForm">
                         @foreach($exams as $exam)
-                            <option value="{{ $exam->id }}" @selected($exam->id === $currentExam)>
+                            <option value="{{ $exam->id }}" @selected($exam->name === $currentExam)>
                                 {{ $exam->name }}
                             </option>
                         @endforeach
@@ -66,7 +66,7 @@
                                     x-model="r.course_work_mark"
                                     maxlength="2"
                                     aria-label
-                                    @input="onMarkChange(i, 'cw', $event.target)"
+                                    @input="onMarkChange(i, 'cw', $event.target, r)"
                                 />
                             </td>
                             <td class="py-1">
@@ -81,10 +81,10 @@
                                     x-model="r.exam_mark"
                                     maxlength="2"
                                     aria-label
-                                    @input="onMarkChange(i, 'exam', $event.target)"
+                                    @input="onMarkChange(i, 'exam', $event.target, r)"
                                 />
                             </td>
-                            <td class="py-1" x-text="r.average"></td>
+                            <td class="py-1" x-text="`${r.average ?? ''}%`"></td>
                             <td class="py-1" x-text="r.quarter"></td>
                             <td class="py-1" x-text="r.rank"></td>
                         </tr>
@@ -97,7 +97,8 @@
                     <tr>
                         <td class="py-1" style="text-align: end">Sports</td>
                         <td class="py-1 w-1/5">
-                            <select x-ref="sportsSelect" x-model="cumulative_result.sports_grade" class="small" aria-label>
+                            <select x-ref="sportsSelect" x-model="cumulative_result.sports_grade" class="small"
+                                    aria-label>
                                 <template x-for="grade in grades" :key="grade">
                                     <option :value="grade" x-text="grade"
                                             :selected="cumulative_result.sports_grade === grade"></option>
@@ -118,7 +119,7 @@
                             </select>
                         </td>
                         <td style="text-align: end">Average</td>
-                        <td class="w-1/5" x-text="cumulative_result.average ?? '-'">
+                        <td class="w-1/5" x-text="cumulative_result.average? `${cumulative_result.average}%` : '-'">
                     </tr>
                     <tr>
                         <td class="py-1" style="text-align: end">Attendance</td>
@@ -156,11 +157,13 @@
                             class="btn btn-warning ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
                         <i class="fa-solid fa-angles-left"></i>
                     </button>
-                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Student" @click="goToPreviousStudent"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Student"
+                            @click="goToPreviousStudent"
                             :disabled="!canPrevStudent">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Student" @click="goToNextStudent"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Student"
+                            @click="goToNextStudent"
                             :disabled="!canNextStudent">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
@@ -213,7 +216,7 @@
                     this.conductGradeSelectInstance = NiceSelect.bind(this.$refs.conductSelect);
                 },
 
-                onMarkChange(i, markName, el) {
+                onMarkChange(i, markName, el, result) {
                     const nextInput = () => {
                         if (markName === 'exam') i++
 
@@ -234,6 +237,10 @@
                     }
 
                     if (el.value.length === 2) nextInput()
+
+                    result.average = result.course_work_mark && result.exam_mark
+                        ? Math.round(result.course_work_mark * .3 + result.exam_mark * .7)
+                        : result.exam_mark
                 },
 
                 onAttendanceChange(e) {
@@ -311,7 +318,7 @@
                                 this.cumulative_result = data.cumulative_result
 
                                 if (!this.cumulative_result) {
-                                    s.cumulative_result = {
+                                    this.cumulative_result = {
                                         days_attended: null
                                     }
                                 }

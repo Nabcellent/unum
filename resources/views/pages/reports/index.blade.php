@@ -13,7 +13,7 @@
                     <label for="class" class="mb-0">Cat</label>
                     <select class="selectize" x-model="exam_id" @change="updatePreview">
                         @foreach($exams as $exam)
-                            <option value="{{ $exam->id }}" @selected($exam->id === $currentExam)>
+                            <option value="{{ $exam->id }}" @selected($exam->id === $currentExam->id)>
                                 {{ $exam->name }}
                             </option>
                         @endforeach
@@ -83,7 +83,7 @@
             Alpine.data('reports', () => ({
                 loading: false,
                 fetchingReport: false,
-                exam_id: '<?= $currentExam ?>',
+                exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
                 student_id: null,
                 students: [],

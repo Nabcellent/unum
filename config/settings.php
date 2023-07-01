@@ -1,6 +1,6 @@
 <?php
 
-use App\Settings\ExamSettings;
+use App\Settings\TermSetting;
 
 return [
 
@@ -9,7 +9,7 @@ return [
      * put them (manually) here.
      */
     'settings' => [
-        ExamSettings::class
+        TermSetting::class
     ],
 
     /*

@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title') - {{ config('app.name', 'UNUM') }}</title>
 
+    @vite(['resources/css/app.css'])
+
     @include('includes.links')
 
     <script src="{{ asset('/js/perfect-scrollbar.min.js') }}"></script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CumulativeResult;
 use App\Models\Student;
+use App\Models\Subject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -68,7 +69,7 @@ class StudentController extends Controller
     public function results(Request $request, Student $student): JsonResponse
     {
         $data = [
-            'results' => $student->results()
+            'results'           => $student->results()
                 ->whereExamId($request->integer('exam_id'))
                 ->with('subject')
                 ->get([
@@ -90,10 +91,17 @@ class StudentController extends Controller
                 'days_attended',
                 'total_days'
             ])->firstWhere([
-                'exam_id' => $request->integer('exam_id'),
+                'exam_id'    => $request->integer('exam_id'),
                 'student_id' => $student->id
             ])
         ];
+
+        if ($data['results']->isEmpty()) {
+            $data['results'] = $student->grade->subjects->map(fn(Subject $subject) => [
+                "subject_id"       => $subject->id,
+                "subject"          => $subject
+            ]);
+        }
 
         return response()->json($data);
     }

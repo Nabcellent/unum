@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Marks')
 @section('content')
-    <div x-data="marks">
+    <div x-data="marks" class="2xl:px-48">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <h2 class="text-xl">Marks</h2>
+            <h2 class="text-xl">Enter Marks Per Student</h2>
         </div>
 
         <div class="panel">
@@ -13,7 +13,7 @@
                     <select class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
                             <option
-                                value="{{ $exam->id }}" @selected($exam->id === $currentExam)>{{ $exam->name }}</option>
+                                value="{{ $exam->id }}" @selected($exam->name === $currentExam)>{{ $exam->name }}</option>
                         @endforeach
                     </select>
                 </div>
