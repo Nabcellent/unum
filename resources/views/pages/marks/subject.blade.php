@@ -234,16 +234,20 @@
                                 exam_id: this.exam_id,
                                 subject_id: this.subject_id,
                             }
-                        }).then(({data}) => this.students = data.map(s => {
-                            if (!s.result) {
-                                s.result = {
-                                    course_work_mark: null,
-                                    exam_mark: null,
+                        }).then(({data}) => {
+                            this.students = data.map(s => {
+                                if (!s.result) {
+                                    s.result = {
+                                        course_work_mark: null,
+                                        exam_mark: null,
+                                    }
                                 }
-                            }
 
-                            return s
-                        })).catch(err => console.error(err))
+                                return s
+                            })
+
+                            this.updatePagination()
+                        }).catch(err => console.error(err))
                     }
                 },
 

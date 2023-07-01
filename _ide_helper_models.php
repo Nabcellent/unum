@@ -19,10 +19,10 @@ namespace App\Models{
  * @property int $exam_id
  * @property string|null $average
  * @property int|null $quarter
- * @property string|null $sports_grade
- * @property string|null $conduct
  * @property int|null $passes
  * @property int|null $rank
+ * @property string|null $conduct
+ * @property string|null $sports_grade
  * @property int|null $days_attended
  * @property int|null $total_days
  * @property \Illuminate\Support\Carbon|null $created_at
