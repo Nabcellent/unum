@@ -30,14 +30,12 @@
                     </svg>
                 </a>
             </div>
-            <ul
-                class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold"
-                x-data="{ activeDropdown: 'dashboard' }"
-            >
+            <ul x-data="{ activeDropdown: 'dashboard' }"
+                class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold">
                 <li class="nav-item">
                     <ul>
                         <li class="nav-item">
-                            <a href="/" class="group">
+                            <a href="{{ route('admin.dashboard') }}" class="group">
                                 <div class="flex items-center">
                                     <svg
                                         class="group-hover:!text-primary"
@@ -180,7 +178,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/summaries" class="group">
+                            <a href="{{ route('admin.summaries') }}" class="group">
                                 <div class="flex items-center">
                                     <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" xmlns="http://www.w3.org/2000/svg">

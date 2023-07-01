@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,10 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
 
     Route::prefix('/reports')->name('.reports')->group(function() {
         Route::get('/', [ReportController::class, 'index']);
+    });
+
+    Route::prefix('/summaries')->name('.summaries')->group(function() {
+        Route::get('/', [SummaryController::class, 'index']);
     });
 
     Route::prefix('/settings')->name('.settings')->group(function() {

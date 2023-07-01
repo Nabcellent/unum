@@ -30,14 +30,20 @@
         <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
                 <label for="profession">Next Term Date</label>
-                <input id="profession" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr" x-model="form.report_exam_date"/>
+                <input id="profession" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr"
+                       x-model="form.report_exam_date"/>
             </div>
             <div>
                 <label for="name">Report Exam Date</label>
-                <input id="name" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr" x-model="form.next_term_date"/>
+                <input id="name" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr"
+                       x-model="form.next_term_date"/>
             </div>
-            <div class="mt-3 sm:col-span-2">
-                <button type="button" class="btn btn-primary" @click="saveSettings">Save</button>
+            <div class="mt-3 sm:col-span-2 flex justify-end">
+                <button type="button" class="btn btn-primary" @click="saveSettings" :disabled="loading">
+                    <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
+                    <i class="fa-solid fa-floppy-disk ltr:mr-2 rtl:ml-2" x-show="!loading"></i>
+                    Save Settings
+                </button>
             </div>
         </div>
     </div>
@@ -48,6 +54,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('term_settings', () => ({
+                loading: false,
                 form: {
                     current: {{ $term->current }},
                     days: {{ $term->days }},
@@ -64,10 +71,17 @@
                 },
 
                 saveSettings() {
+                    this.loading = true
+
                     axios.put('/dashboard/settings/term', this.form).then(({data}) => {
                         if (data.status === 'success') {
                             this.showMessage(data.msg)
                         }
+
+                        this.loading = false
+                    }).catch(err => {
+                        this.loading = false
+                        console.error(err)
                     })
                 }
             }))
