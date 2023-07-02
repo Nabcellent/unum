@@ -8,3 +8,6 @@
 .nice-select.w-100 {
     width: 100%;
 }
+select {
+    background-image: none!important;
+}

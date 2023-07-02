@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Misc\PDF;
 use App\Models\Exam;
-use App\Models\ExamDate;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Settings\TermSetting;
@@ -33,14 +32,14 @@ class ReportController extends Controller
     public function loadReports(Grade $grade, int $examId, int $studentId = null): Grade
     {
         return $grade->load([
-            "students" => function($qry) use ($examId, $studentId) {
+            "students" => function ($qry) use ($examId, $studentId) {
                 if (isset($studentId)) {
                     $qry = $qry->whereKey($studentId);
                 }
 
                 return $qry->select(['id', 'grade_id', 'user_id', 'class_no'])->whereHas('results')->with([
                     'user:id,first_name,middle_name,last_name',
-                    'cumulativeResult' => function($qry) use ($examId) {
+                    'cumulativeResult' => function ($qry) use ($examId) {
                         return $qry->select([
                             'id',
                             'student_id',
@@ -54,7 +53,7 @@ class ReportController extends Controller
                             'total_days'
                         ])->whereExamId($examId);
                     },
-                    'results'          => function($qry) use ($examId) {
+                    'results'          => function ($qry) use ($examId) {
                         return $qry->select([
                             'id',
                             'student_id',
@@ -104,7 +103,7 @@ class ReportController extends Controller
 
         $grade = $this->loadReports($grade, $exam->id, $request->input('student_id'));
 
-        $grade->students->each(function(Student $student) use ($exam, $grade) {
+        $grade->students->each(function (Student $student) use ($exam, $grade) {
             $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
 
             // set header and footer fonts
@@ -133,7 +132,7 @@ class ReportController extends Controller
             $pdf->writeHTML($html, true, false, true);
 
             // Create the directory path recursively if it doesn't exist
-            $filePath = public_path("/reports/".now()->year."/{$exam->name->value}/$grade->full_name/$student->id.pdf");
+            $filePath = public_path("/reports/" . now()->year . "/{$exam->name->value}/$grade->full_name/$student->id.pdf");
 
             if (!file_exists(dirname($filePath))) {
                 mkdir(dirname($filePath), 0777, true);
@@ -156,27 +155,25 @@ class ReportController extends Controller
      */
     private function prepareHTML(array $student, Grade $grade, Exam $exam): string
     {
-        $examDates = ExamDate::latest('class')->first();
+        $date = app(TermSetting::class)->report_exam_date;
+        $nextTermDate = app(TermSetting::class)->next_term_date;
 
-        if (!$examDates) {
-            throw new Exception('Exam Dates have not been set.');
+        if (!$date) {
+            throw new Exception('Report exam dates has not been set.');
         }
-
-        $date = $examDates->report_exam_date;
-        $nextTermDate = $examDates->report_next_term;
 
         $promotion = '&nbsp;';
 
         if (in_array($exam->name, [\App\Enums\Exam::CAT_2,
                 \App\Enums\Exam::CAT_4,
                 \App\Enums\Exam::CAT_6]) && $nextTermDate) {
-            $term = "Next term begins : ".$nextTermDate;
+            $term = "Next term begins : " . $nextTermDate;
         } else {
             $term = '&nbsp;';
         }
 
-        $classAverage = round($exam->cumulativeResults()->withWhereHas('student', function($qry) use ($grade) {
-            return $qry->whereHas('grade', function($qry) use ($grade) {
+        $classAverage = round($exam->cumulativeResults()->withWhereHas('student', function ($qry) use ($grade) {
+            return $qry->whereHas('grade', function ($qry) use ($grade) {
                 return $qry->whereName($grade->name);
             });
         })->avg('average'), 2);
@@ -193,29 +190,29 @@ class ReportController extends Controller
                         <tr>
                             <td width="115px"  style="font-family:times,serif; font-size:13pt; font-weight: bold;">NAME</td>
                             <td width="10px">:</td>
-                            <td width="340" valign="middle" style="font-family:times,serif; font-size:13pt; font-weight: bold;">'.$student['full_name'].'</td>
+                            <td width="340" valign="middle" style="font-family:times,serif; font-size:13pt; font-weight: bold;">' . $student['full_name'] . '</td>
                             <td width="90px"  style="font-family:times; font-size:13pt; font-weight: bold;">CLASS</td>
                             <td width="10px">:</td>
-                            <td width="80px"  style="font-family:times; font-size:13pt; font-weight: bold;">'.$grade->full_name.'</td>
+                            <td width="80px"  style="font-family:times; font-size:13pt; font-weight: bold;">' . $grade->full_name . '</td>
                         </tr>
                         <tr>
                             <td  style="font-family:times; font-size:13pt; font-weight: bold;">ASSESSMENT</td>
                             <td>:</td>
-                            <td style="font-family:times; font-size:13pt; font-weight: bold;">'.$exam->name->value.'</td>
+                            <td style="font-family:times; font-size:13pt; font-weight: bold;">' . $exam->name->value . '</td>
                             <td style="font-family:times; font-size:13pt; font-weight: bold;">CLASS NO.</td>
                               <td >:</td>
-                             <td style="font-family:times; font-size:13pt; font-weight: bold;" >'.$student['class_no'].'</td>
+                             <td style="font-family:times; font-size:13pt; font-weight: bold;" >' . $student['class_no'] . '</td>
                         </tr>
                          <tr>
                              <td style="font-family:times; font-size:13pt; font-weight: bold;">DATE</td>
                              <td>:</td>
-                             <td width="200px"  style="font-family:times; font-size:13pt; font-weight: bold;">'.$date->format('j').'<sup>'.strtoupper($date->format('S')).'</sup> '.strtoupper($date->format(' F Y')).'
+                             <td width="200px"  style="font-family:times; font-size:13pt; font-weight: bold;">' . $date->format('j') . '<sup>' . strtoupper($date->format('S')) . '</sup> ' . strtoupper($date->format(' F Y')) . '
                              </td>
-                            <td  colspan="3" align="right" width="320px" style="font-family:times; font-size:13pt; font-weight: bold;">'.$term.'</td>
+                            <td  colspan="3" align="right" width="320px" style="font-family:times; font-size:13pt; font-weight: bold;">' . $term . '</td>
 
                          </tr>
                         <tr >
-                             <td  width="645px" colspan="6">'.$promotion.'</td>
+                             <td  width="645px" colspan="6">' . $promotion . '</td>
                         </tr>
                     </table>
 
@@ -238,11 +235,11 @@ class ReportController extends Controller
         $h = 6;
         foreach ($student['results'] as $result) {
             $html .= '<tr style="page-break-inside:avoid;height:22pt">
-						 <td width="421" style="background-color:#EAEBEC;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;'.$result['subject']['name'].'</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$result['course_work_mark'].'</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$result['exam_mark'].'</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$result['average'].'</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$result['quarter'].'</b></td>
+						 <td width="421" style="background-color:#EAEBEC;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;' . $result['subject']['name'] . '</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $result['course_work_mark'] . '</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $result['exam_mark'] . '</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $result['average'] . '</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $result['quarter'] . '</b></td>
 					</tr>';
             $h = $h + 4;
         }
@@ -251,35 +248,35 @@ class ReportController extends Controller
 						 <td width="421" style="background-color:#48A8F1;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;AVERAGE</b></td>
 						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;</b></td>
 						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;</b></td>
-						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$student['cumulative_result']['average'].'</b></td>
-						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$student['cumulative_result']['quarter'].'</b></td>
+						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $student['cumulative_result']['average'] . '</b></td>
+						 <td width="56" style="background-color:#48A8F1;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $student['cumulative_result']['quarter'] . '</b></td>
 					</tr>
 
 					<tr style="page-break-inside:avoid;height:17pt">
 						 <td width="421" style="background-color:#FFFFFF;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PASSES</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
-						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>'.$student['cumulative_result']['passes'].'</b></td>
+						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $student['cumulative_result']['passes'] . '</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 					</tr>
 					<tr style="page-break-inside:avoid;height:17pt">
 						 <td width="421" style="background-color:#FFFFFF;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLASS AVERAGE</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
-						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>'.$classAverage.'</b></td>
+						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>' . $classAverage . '</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 						 <td width="56" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 					</tr>
 					 <tr style="page-break-inside:avoid;height:17pt">
 						 <td width="421" style="background-color:#EAEBEC;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;SPORTS</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>'.$student['cumulative_result']['sports_grade'].'</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>' . $student['cumulative_result']['sports_grade'] . '</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 					</tr>
 					 <tr style="page-break-inside:avoid;height:17pt">
 						 <td width="421" style="background-color:#EAEBEC;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;CONDUCT</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
-						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>'.$student['cumulative_result']['conduct'].'</b></td>
+						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#000000"><b>' . $student['cumulative_result']['conduct'] . '</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
 					</tr>
@@ -299,7 +296,7 @@ class ReportController extends Controller
                     <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                     <td width="170" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTENDANCE:</b></td>
                     <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black">
-                        <b><i>'.$student['cumulative_result']['days_attended'].' of '.$student['cumulative_result']['total_days'].'</i> days</b>
+                        <b><i>' . $student['cumulative_result']['days_attended'] . ' of ' . $student['cumulative_result']['total_days'] . '</i> days</b>
                     </td>
                     <td width="50" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                 </tr>

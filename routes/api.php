@@ -27,7 +27,10 @@ Route::prefix('/grades/{grade}')->group(function() {
     Route::put('/attendances', [AttendanceController::class, 'upsert']);
 });
 
-Route::get('/students/{student}/results', [StudentController::class, 'results']);
+Route::prefix('/students')->group(function() {
+    Route::get('/{gradeId}', [StudentController::class, 'getByGradeId']);
+    Route::get('/{student}/results', [StudentController::class, 'results']);
+});
 
 Route::prefix('/results')->group(function() {
     Route::post('/subject', [ResultController::class, 'storeSubject']);

@@ -12,8 +12,9 @@
                     <label for="class">Cat</label>
                     <select class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
-                            <option
-                                value="{{ $exam->id }}" @selected($exam->name === $currentExam)>{{ $exam->name }}</option>
+                            <option value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>
+                                {{ $exam->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -136,7 +137,7 @@
             Alpine.data('marks', () => ({
                 loading: false,
                 updateMarksModal: false,
-                exam_id: '<?= $currentExam ?>',
+                exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
                 subject_id: null,
                 subjects: [],

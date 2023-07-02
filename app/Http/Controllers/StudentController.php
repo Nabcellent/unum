@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CumulativeResult;
+use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,9 +17,20 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        //
+        $data = [
+            "grades" => Grade::get(['id', 'stream_id', 'name'])
+        ];
+
+        return view('pages.students.index', $data);
+    }
+
+    public function getByGradeId(int $gradeId): JsonResponse
+    {
+        $students = Student::whereGradeId($gradeId)->with('user:id,first_name,last_name')->get(['id', 'user_id', 'grade_id', 'admission_no', 'class_no', 'dob', 'created_at']);
+
+        return response()->json(['status' => true, 'students' => $students]);
     }
 
     /**
@@ -98,8 +113,8 @@ class StudentController extends Controller
 
         if ($data['results']->isEmpty()) {
             $data['results'] = $student->grade->subjects->map(fn(Subject $subject) => [
-                "subject_id"       => $subject->id,
-                "subject"          => $subject
+                "subject_id" => $subject->id,
+                "subject"    => $subject
             ]);
         }
 

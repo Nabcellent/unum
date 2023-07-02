@@ -17,24 +17,28 @@ use Throwable;
 
 class ResultController extends Controller
 {
-    public function createOrEditStudent(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
+    public function createOrEditStudent(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        $exams = Exam::get();
+
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(),
-            "currentExam" => $termSetting->current_exam,
-            "termDays"    => $termSetting->days
+            "exams"       => $exams,
+            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
+            "termDays"    => $termSettings->days
         ];
 
         return view('pages.marks.student', $data);
     }
 
-    public function createOrEditSubject(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
+    public function createOrEditSubject(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        $exams = Exam::get();
+        
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(),
-            "currentExam" => $termSetting->current_exam,
+            "exams"       => $exams,
+            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
         ];
 
         return view('pages.marks.subject', $data);
