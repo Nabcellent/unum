@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grade;
+use App\Models\Stream;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,9 +15,20 @@ class GradeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        //
+        $data = [
+            "streams" => Stream::all()
+        ];
+
+        return view('pages.classes.index', $data);
+    }
+
+    public function getGrades(): JsonResponse
+    {
+        $grades = Grade::all();
+
+        return response()->json(['status' => true, 'grades' => $grades]);
     }
 
     /**

@@ -18,13 +18,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('/grades/{grade}')->group(function() {
-    Route::get('/subjects', [GradeController::class, 'subjects']);
-    Route::get('/results', [GradeController::class, 'results']);
-    Route::get('/students', [GradeController::class, 'results']);
+Route::prefix('/grades')->group(function() {
+    Route::get('/', [GradeController::class, 'getGrades']);
 
-    Route::get('/attendances', [AttendanceController::class, 'index']);
-    Route::put('/attendances', [AttendanceController::class, 'upsert']);
+    Route::prefix('/{grade}')->group(function() {
+        Route::get('/subjects', [GradeController::class, 'subjects']);
+        Route::get('/results', [GradeController::class, 'results']);
+        Route::get('/students', [GradeController::class, 'results']);
+
+        Route::get('/attendances', [AttendanceController::class, 'index']);
+        Route::put('/attendances', [AttendanceController::class, 'upsert']);
+    });
 });
 
 Route::prefix('/students')->group(function() {

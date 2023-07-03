@@ -2,11 +2,12 @@
 @section('title', 'Students')
 @section('content')
 
-    <div x-data="basic">
+    <div x-data="students">
         <div class="panel">
             <div class="flex md:absolute md:top-[25px] items-center">
                 <select class="form-select me-2 pe-3 z-[2] border-0 border-b-2 rounded-none" x-model="grade_id"
-                        @change="fetchStudents">
+                        @change="fetchStudents" aria-label>
+                    <option value="" selected hidden>Select</option>
                     @foreach($grades as $grade)
                         <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                     @endforeach
@@ -74,7 +75,7 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('basic', () => ({
+            Alpine.data('students', () => ({
                 grade_id: null,
                 datatable: null,
                 students: [],
