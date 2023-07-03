@@ -35,7 +35,7 @@
                                 </svg>
                             </a>
                             <div
-                                class="absolute top-11 z-[10] hidden w-[100px] min-w-[150px] rounded bg-white py-2 text-dark shadow ltr:left-0 rtl:right-0 dark:bg-[#1b2e4b] dark:text-white-light"
+                                class="absolute top-11 z-[10] hidden w-[230px] min-w-[150px] rounded bg-white py-2 text-dark shadow ltr:left-0 rtl:right-0 dark:bg-[#1b2e4b] dark:text-white-light"
                                 :class="columnDropdown && '!block'"
                             >
                                 <ul class="space-y-2 px-4 font-semibold">
