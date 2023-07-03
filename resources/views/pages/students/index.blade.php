@@ -5,7 +5,8 @@
     <div x-data="basic">
         <div class="panel">
             <div class="flex md:absolute md:top-[25px] items-center">
-                <select class="form-select me-2 pe-3 z-[2] border-0 border-b-2 rounded-none" x-model="grade_id" @change="updateClass">
+                <select class="form-select me-2 pe-3 z-[2] border-0 border-b-2 rounded-none" x-model="grade_id"
+                        @change="fetchStudents">
                     @foreach($grades as $grade)
                         <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                     @endforeach
@@ -70,9 +71,11 @@
 
 @push('scripts')
     <script src="{{ asset('/js/simple-datatables.js') }}"></script>
+
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('basic', () => ({
+                grade_id: null,
                 datatable: null,
                 students: [],
                 columns: [
@@ -85,16 +88,39 @@
                 hideCols: [],
                 showCols: [0, 1, 2, 3, 4],
 
-                init() {
-                    this.datatable = new simpleDatatables.DataTable(this.$refs.table, {
-                        data: {
+                dtOptions: {
+                    data: {
+                        headings: [],
+                        data: [],
+                    },
+                    sortable: true,
+                    searchable: true,
+                    perPage: 10,
+                    perPageSelect: [10, 20, 30, 50, 100],
+                    firstLast: true,
+                    firstText:
+                        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
+                    lastText:
+                        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
+                    prevText:
+                        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M15 5L9 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
+                    nextText:
+                        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
+                    labels: {
+                        perPage: '{select}',
+                    },
+                    layout: {
+                        top: '{search}',
+                        bottom: '{info}{select}{pager}',
+                    },
+                },
+
+                initDT(data) {
+                    this.dtOptions = {
+                        data:{
                             headings: this.columns.map(c => c.name),
-                            data: [],
+                            data,
                         },
-                        sortable: true,
-                        searchable: true,
-                        perPage: 10,
-                        perPageSelect: [10, 20, 30, 50, 100],
                         columns: [
                             {
                                 select: 0,
@@ -105,29 +131,18 @@
                                 render: data => this.formatDate(data)
                             },
                         ],
-                        firstLast: true,
-                        firstText:
-                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
-                        lastText:
-                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
-                        prevText:
-                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M15 5L9 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
-                        nextText:
-                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
-                        labels: {
-                            perPage: '{select}',
-                        },
-                        layout: {
-                            top: '{search}',
-                            bottom: '{info}{select}{pager}',
-                        },
-                    });
+                    }
+
+                    this.datatable.init(this.dtOptions)
+                },
+
+                init() {
+                    this.datatable = new simpleDatatables.DataTable(this.$refs.table, this.dtOptions);
 
                     let cols = this.datatable.columns();
+
                     cols.hide(this.hideCols);
                     cols.show(this.showCols);
-
-                    this.fetchStudents()
                 },
 
                 showHideColumns(col, value) {
@@ -146,18 +161,16 @@
                 },
 
                 fetchStudents() {
-                    axios.get('/api/students/7').then(({data}) => {
-                        if (data.status) {
-                            this.datatable.insert(data.students.map(s => ({
-                                "Class No.": String(s.class_no),
-                                "Adm No.": s.admission_no,
-                                "Name": s.name,
-                                "Date of Birth": s.dob,
-                                "Created": s.created_at,
-                            })))
-                        }
-                    })
+                    if (this.grade_id) {
+                        axios.get(`/api/students/${this.grade_id}`).then(({data}) => {
+                            if (data.status) {
+                                this.datatable.destroy()
+                                this.initDT(data.students.map(s => [s.class_no, s.admission_no, s.name, s.dob, s.created_at]))
+                            }
+                        })
+                    }
                 },
+
                 formatDate(date) {
                     if (date) {
                         const dt = new Date(date);
