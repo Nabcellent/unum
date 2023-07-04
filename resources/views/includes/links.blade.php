@@ -7,8 +7,9 @@
 <link href="{{ asset('/vendors/fontawesome/css/all.min.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/perfect-scrollbar.min.css') }}"/>
 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/index.css') }}"/>
-<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/user.css') }}"/>
 <link defer rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/animate.css') }}"/>
 <link rel="stylesheet" type="text/css" href="{{ asset('/css/nice-select2.css') }}"/>
 
 @stack('links')
+
+<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/user.css') }}"/>

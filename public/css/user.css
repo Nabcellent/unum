@@ -11,3 +11,7 @@
 select {
     background-image: none!important;
 }
+
+.ts-control {
+    border-radius: .375rem;
+}

@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,10 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
 
     Route::prefix('/classes')->name('.classes')->group(function () {
         Route::get('/', [GradeController::class, 'index']);
+    });
+
+    Route::prefix('/subjects')->name('.subjects')->group(function () {
+        Route::get('/', [SubjectController::class, 'index']);
     });
 
     Route::prefix('/settings')->name('.settings')->group(function () {

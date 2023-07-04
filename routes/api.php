@@ -5,6 +5,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,13 @@ Route::prefix('/grades')->group(function() {
         Route::get('/attendances', [AttendanceController::class, 'index']);
         Route::put('/attendances', [AttendanceController::class, 'upsert']);
     });
+});
+
+Route::prefix('/subjects')->group(function() {
+    Route::get('/', [SubjectController::class, 'getSubjects']);
+    Route::post('/', [SubjectController::class, 'store']);
+    Route::put('/{subject}', [SubjectController::class, 'update']);
+    Route::delete('/{subject}', [SubjectController::class, 'destroy']);
 });
 
 Route::prefix('/students')->group(function() {

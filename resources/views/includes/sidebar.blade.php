@@ -253,7 +253,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/reports" class="group">
+                    <a href="{{ route('admin.subjects') }}" class="group">
                         <div class="flex items-center">
                             <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -14,6 +14,13 @@ class Subject extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'short_name'
+    ];
+
     /**
      * The grades that belong to the subject.
      */

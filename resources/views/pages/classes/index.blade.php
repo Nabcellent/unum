@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Students')
+@section('title', 'Classes')
 @section('content')
 
     <div x-data="classes" class="xl:px-64 lg:px-40">
