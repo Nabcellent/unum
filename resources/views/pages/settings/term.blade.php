@@ -31,12 +31,12 @@
             <div>
                 <label for="profession">Next Term Date</label>
                 <input id="profession" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr"
-                       x-model="form.report_exam_date"/>
+                       x-model="form.next_term_date"/>
             </div>
             <div>
                 <label for="name">Report Exam Date</label>
                 <input id="name" type="date" placeholder="YYYY-MM-DD" class="form-input flatpickr"
-                       x-model="form.next_term_date"/>
+                       x-model="form.report_exam_date"/>
             </div>
             <div class="mt-3 sm:col-span-2 flex justify-end">
                 <button type="button" class="btn btn-primary" @click="saveSettings" :disabled="loading">

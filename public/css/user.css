@@ -1,6 +1,7 @@
 .report-preview tr {
     border: 0
 }
+
 .report-preview u > img {
     max-height: 50px;
 }
@@ -8,10 +9,18 @@
 .nice-select.w-100 {
     width: 100%;
 }
+
 select {
-    background-image: none!important;
+    background-image: none !important;
 }
 
 .ts-control {
     border-radius: .375rem;
+}
+
+.class-performance-summary table tbody tr td,
+table tfoot tr th,
+table thead tr th {
+    font-size: .6rem;
+    padding: .15rem .2rem;
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,4 +53,9 @@ Route::prefix('/results')->group(function() {
 Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function() {
     Route::get('/preview', [ReportController::class, 'preview']);
     Route::post('/', [ReportController::class, 'store']);
+});
+
+Route::prefix('/summaries/exams/{exam}')->group(function() {
+    Route::get('/preview', [SummaryController::class, 'preview']);
+    Route::post('/', [SummaryController::class, 'store']);
 });

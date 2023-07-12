@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -40,6 +41,11 @@ class CumulativeResult extends Model
     public function exam(): BelongsTo
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function cumulativeExamAverage(): HasOne
+    {
+        return $this->hasOne(CumulativeExamAverage::class, 'student_id', 'student_id')->latest('year');
     }
 
     /**

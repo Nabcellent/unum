@@ -46,7 +46,7 @@
                 </div>
                 <div class="flex justify-end items-center">
                     <button id="addonsRight" type="button" class="btn btn-primary w-full"
-                            :disabled="reports.length < 1 || loading||!studentSelectDisabled" @click="saveReports()">
+                            :disabled="reports.length < 1 || loading" @click="saveReports()">
                         <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
                         <i class="fa-solid fa-download ltr:mr-2 rtl:ml-2" x-show="!loading"></i>
                         Save All Reports
@@ -76,7 +76,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/js/nice-select2.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             // Reports

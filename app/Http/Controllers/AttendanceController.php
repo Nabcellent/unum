@@ -33,10 +33,12 @@ class AttendanceController extends Controller
      */
     public function createOrEdit(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        $exams = Exam::get();
+
         $data = [
             "grades"      => Grade::get(),
-            "exams"       => Exam::get(),
-            "currentExam" => $termSetting->current,
+            "exams"       => $exams,
+            "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];
 
         return view('pages.attendances.index', $data);

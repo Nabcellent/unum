@@ -185,7 +185,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/js/nice-select2.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             // Marks

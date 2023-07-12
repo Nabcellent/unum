@@ -6,6 +6,7 @@
 <script src="{{ asset('/js/custom.js') }}"></script>
 <script defer src="{{ asset('/js/apexcharts.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ asset('/js/nice-select2.js') }}"></script>
 
 <script>
     document.addEventListener('alpine:init', () => {

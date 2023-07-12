@@ -58,7 +58,7 @@ class Result extends Model
      */
     public static function updateRanking(string $grade = null, int $examId = null, int $subjectId = null): void
     {
-        DB::transaction(function() use ($examId, $subjectId, $grade) {
+        DB::transaction(function () use ($examId, $subjectId, $grade) {
             $qry = "
                 UPDATE results AS r
                     JOIN (
@@ -101,7 +101,7 @@ class Result extends Model
      */
     public static function updateQuarters(int $examId, int $subjectId): void
     {
-        DB::transaction(function() use ($examId, $subjectId) {
+        DB::transaction(function () use ($examId, $subjectId) {
             $qry = "
                 UPDATE results AS r
     JOIN (SELECT r.id,

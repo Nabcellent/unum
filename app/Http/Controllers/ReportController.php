@@ -159,7 +159,7 @@ class ReportController extends Controller
         $nextTermDate = app(TermSetting::class)->next_term_date;
 
         if (!$date) {
-            throw new Exception('Report exam dates has not been set.');
+            throw new Exception('Report exam date has not been set.');
         }
 
         $promotion = '&nbsp;';

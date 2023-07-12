@@ -32,8 +32,8 @@ return new class extends Migration
                 SET @average = total / count;
 
                 -- Insert or update the average in the averages table
-                INSERT INTO cumulative_results (student_id, exam_id, average)
-                VALUES (NEW.student_id, NEW.exam_id, @average)
+                INSERT INTO cumulative_results (student_id, exam_id, average, created_at)
+                VALUES (NEW.student_id, NEW.exam_id, @average, NOW())
                 ON DUPLICATE KEY UPDATE average = @average;
             END;
         ");
@@ -59,9 +59,9 @@ return new class extends Migration
                 SET @average = total / count;
 
                 -- Insert or update the average in the averages table
-                INSERT INTO cumulative_results (student_id, exam_id, average)
-                VALUES (NEW.student_id, NEW.exam_id, @average)
-                ON DUPLICATE KEY UPDATE average = @average;
+                INSERT INTO cumulative_results (student_id, exam_id, average, created_at)
+                VALUES (NEW.student_id, NEW.exam_id, @average, NOW())
+                ON DUPLICATE KEY UPDATE average = @average, updated_at = NOW();
             END;
         ");
     }

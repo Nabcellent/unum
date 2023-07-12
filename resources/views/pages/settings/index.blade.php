@@ -83,8 +83,8 @@
                 <li class="inline-block">
                     <a
                         href="javascript:;"
-                        class="flex gap-2 border-b border-transparent p-4 hover:border-primary hover:text-primary"
-                        :class="{'!border-primary text-primary' : tab == 'danger'}"
+                        class="flex gap-2 border-b border-transparent p-4 hover:border-red-500 hover:text-red-500"
+                        :class="{'!border-red-500 text-red-500' : tab == 'danger'}"
                         @click="tab='danger'"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"

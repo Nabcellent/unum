@@ -13,7 +13,7 @@
                     <select class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
                             <option
-                                value="{{ $exam->id }}" @selected($exam->name === $currentExam)>{{ $exam->name }}</option>
+                                value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>{{ $exam->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -83,12 +83,11 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/js/nice-select2.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('attendance', () => ({
                 loading: false,
-                exam_id: '<?= $currentExam ?>',
+                exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
                 term_days: null,
                 students: [],

@@ -193,7 +193,6 @@
 
                     this.fetchSubjects()
                 },
-
                 fetchSubjects() {
                     axios.get('/api/subjects').then(({data}) => {
                         if (data.status) this.subjects = data.subjects

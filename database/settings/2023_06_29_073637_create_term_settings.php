@@ -13,7 +13,7 @@ return new class extends SettingsMigration
             $blueprint->add('current', 2);
             $blueprint->add('current_exam', Exam::CAT_1);
 
-            $blueprint->add('report_exam_date');
+            $blueprint->add('report_exam_date', now());
             $blueprint->add('next_term_date');
         });
     }

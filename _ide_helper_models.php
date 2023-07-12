@@ -12,6 +12,18 @@
 
 namespace App\Models{
 /**
+ * App\Models\CumulativeExamAverage
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeExamAverage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeExamAverage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeExamAverage query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperCumulativeExamAverage {}
+}
+
+namespace App\Models{
+/**
  * App\Models\CumulativeResult
  *
  * @property int $id
@@ -27,6 +39,7 @@ namespace App\Models{
  * @property int|null $total_days
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\CumulativeExamAverage|null $cumulativeExamAverage
  * @property-read \App\Models\Exam $exam
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
  * @property-read int|null $results_count
@@ -50,6 +63,18 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class IdeHelperCumulativeResult {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\CumulativeSubjectAverage
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeSubjectAverage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeSubjectAverage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CumulativeSubjectAverage query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperCumulativeSubjectAverage {}
 }
 
 namespace App\Models{
@@ -255,7 +280,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property string $short_name
+ * @property string|null $short_name
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Grade> $grades
  * @property-read int|null $grades_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
