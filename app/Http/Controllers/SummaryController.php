@@ -294,9 +294,9 @@ class SummaryController extends Controller
             if ($subject['name'] === 'AVERAGE') {
                 $avg = round($students->avg('cumulative_result.average'), 2);
                 $html .= '<td style="font-weight: bold;"></td>';
-                $html .= '<td colspan="5" style="font-weight:normal;"> ' . $avg . '</td>';
+                $html .= '<td colspan="5" style="font-weight:bolder;"> ' . $avg . '</td>';
             } else {
-                $html .= '<td colspan="3" style="font-weight:normal;"> ' . $subjectAverages[$subject['id']] . '</td>';
+                $html .= '<td colspan="3" style="font-weight:bolder;"> ' . $subjectAverages[$subject['id']] . '</td>';
             }
         }
 
