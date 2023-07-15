@@ -41,7 +41,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     });
 
     Route::prefix('/summaries')->name('.summaries')->group(function () {
-        Route::get('/stream-performance', [SummaryController::class, 'streamPerformance'])->name('.stream-performance');
+        Route::get('/class-performance', [SummaryController::class, 'classPerformance'])->name('.class-performance');
     });
 
     Route::prefix('/students')->name('.students')->group(function () {

@@ -214,7 +214,7 @@
                             </button>
                             <ul x-cloak x-show="activeDropdown === 'summaries'" x-collapse class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('admin.summaries.stream-performance') }}">Stream Performance</a>
+                                    <a href="{{ route('admin.summaries.class-performance') }}">Class Performance</a>
                                 </li>
                             </ul>
                         </li>

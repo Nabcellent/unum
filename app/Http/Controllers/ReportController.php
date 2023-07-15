@@ -211,7 +211,7 @@ class ReportController extends Controller
                             <td  colspan="3" align="right" width="320px" style="font-family:times; font-size:13pt; font-weight: bold;">' . $term . '</td>
 
                          </tr>
-                        <tr >
+                        <tr>
                              <td  width="645px" colspan="6">' . $promotion . '</td>
                         </tr>
                     </table>

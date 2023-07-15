@@ -11,25 +11,33 @@
         </div>
 
         <div class="panel mb-3">
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:grid-cols-3">
                 <div class="mb-5">
                     <label for="class">Cat</label>
                     <select class="selectize" x-model="exam_id" @change="updatePreview">
                         @foreach($exams as $exam)
-                            <option
-                                value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>{{ $exam->name }}</option>
+                            <option value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>
+                                {{ $exam->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-5">
                     <label for="class">Class</label>
-                    <select id="grades" x-ref="tomSelectGradesEl" x-model="grades" aria-label multiple
-                            @change="updatePreview">
+                    <select id="grade" x-ref="tomSelectGradesEl" x-model="grade" aria-label @change="updatePreview">
                         <option value="" selected>Select Grades</option>
                         @foreach($grades as $grade)
-                            <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
+                            <option value="{{ $grade->name }}">{{ $grade->name }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="my-auto col-span-2 lg:col-span-1">
+                    <button id="addonsRight" type="button" class="btn btn-primary w-full"
+                            :disabled="summaries.length < 1 || loading" @click="saveSummaries()">
+                        <i class="fa-solid fa-spinner fa-spin-pulse ltr:mr-2 rtl:ml-2" x-show="loading"></i>
+                        <i class="fa-solid fa-download ltr:mr-2 rtl:ml-2" x-show="!loading"></i>
+                        Save All Summaries
+                    </button>
                 </div>
             </div>
         </div>
@@ -42,7 +50,7 @@
             <div class="class-performance-summary panel mb-3" x-show="!fetchingReport">
                 <button type="button" class="btn btn-sm btn-primary absolute top-0 right-0 m-1" x-tooltip="Save Summary"
                         :disabled="loading"
-                        @click="saveSummaries([summary.grade_id])">
+                        @click="saveSummaries(summary.grade_id)">
                     <i class="fa-solid fa-spinner fa-spin-pulse" x-show="loading"></i>
                     <i class="fa-solid fa-download" x-show="!loading"></i>
                 </button>
@@ -61,12 +69,12 @@
                 loading: false,
                 fetchingReport: false,
                 exam_id: '<?= $currentExam->id ?>',
-                grades: null,
+                grade: null,
                 summaries: [],
                 tomSelectGradesInstance: null,
 
                 init: () => {
-                    this.tomSelectGradesInstance = new TomSelect('#grades', {
+                    this.tomSelectGradesInstance = new TomSelect('#grade', {
                         plugins: {
                             remove_button: {title: 'Remove this item',}
                         },
@@ -80,11 +88,11 @@
                 },
 
                 updatePreview() {
-                    if (this.exam_id && this.grades) {
+                    if (this.exam_id && this.grade) {
                         this.fetchingReport = true
 
                         axios.get(`/api/summaries/exams/${this.exam_id}/preview`, {
-                            params: {grades: this.grades}
+                            params: {grade: this.grade}
                         }).then(({data}) => {
                             if (data.status === 'alert') {
                                 this.showMessage(data.msg, data.type)
@@ -102,30 +110,25 @@
                     }
                 },
 
-
-
-                saveSummaries(grades) {
+                saveSummaries(grade_id = null) {
                     this.loading = true
 
-                    if(grades.length <= 0) grades = this.grades
+                    axios.post(`/api/summaries/exams/${this.exam_id}`, {grade: this.grade, grade_id})
+                        .then(({data}) => {
+                            if (data.status === 'success') {
+                                this.showMessage(data.msg)
+                            } else if (data.status === 'error') {
+                                this.showMessage(data.msg, 'error')
 
-                    axios.post(`/api/summaries/exams/${ this.exam_id }`, {
-                        grades
-                    }).then(({ data }) => {
-                        if (data.status === 'success') {
-                            this.showMessage(data.msg)
-                        } else if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error')
+                                console.log(data)
+                            } else {
+                                this.showMessage('Something went wrong', 'error')
 
-                            console.log(data)
-                        } else {
-                            this.showMessage('Something went wrong', 'error')
+                                console.log(data)
+                            }
 
-                            console.log(data)
-                        }
-
-                        this.loading = false
-                    }).catch(err => {
+                            this.loading = false
+                        }).catch(err => {
                         this.loading = false
 
                         console.error(err)
