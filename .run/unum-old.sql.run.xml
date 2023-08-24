@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="unum-old.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+    <script-file value="$PROJECT_DIR$/database/unum-old.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="a579b118-a7ff-43d5-ac2b-3f9c1cc6570b" namespace="schema/&quot;unum_old&quot;" />
+    <method v="2" />
+  </configuration>
+</component>
