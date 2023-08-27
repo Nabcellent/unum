@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Subjects')
+@section('title', 'Learning Areas')
 @push('links')
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <link href="{{ asset('/vendors/tom-select/tom-select.css') }}" rel="stylesheet">
 @endpush
 @section('content')
 
-    <div x-data="subjects" class="xl:px-40 lg:px-32">
+    <div x-data="learningAreas" class="xl:px-40 lg:px-32">
         <div class="panel mb-3">
             <div class="flex justify-between items-start">
                 <h5 class="text-lg font-semibold dark:text-white-light mb-5">
-                    <span x-text="update ? 'Edit':'Create'"></span> Subject
+                    <span x-text="update ? 'Edit':'Create'"></span> Learning Area
                 </h5>
                 <span class="cursor-pointer" x-show="update" x-tooltip="Create" @click="onCreate">
                     <svg class="h-7 w-7" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -32,33 +32,37 @@
                     @endforeach
                 </select>
 
-                <input type="text" placeholder="Enter subject name" class="form-input" required aria-label
+                <input type="text" placeholder="Enter learning area name" class="form-input" required aria-label
                        x-model="form.name"/>
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary mt-6" @click="saveSubject"
+                <button type="submit" class="btn btn-primary mt-6" @click="saveLearningArea"
                         :disabled="!form.name || loading">Submit
                 </button>
             </div>
         </div>
 
         <div class="panel">
-            <h5 class="text-lg font-semibold dark:text-white-light">Subjects</h5>
+            <h5 class="text-lg font-semibold dark:text-white-light">Learning Areas</h5>
 
-            <div class="mb-5">
+            <div class="my-5">
                 <div class="table-responsive">
                     <table class="table-hover">
                         <thead>
                         <tr>
                             <th>Name</th>
+                            <th>No. of Strands</th>
                             <th class="!text-center">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <template x-for="s in subjects" :key="s.id">
-                            <tr class="cursor-pointer">
-                                <td x-text="s.name" class="whitespace-nowrap"></td>
+                        <template x-for="l in learningAreas" :key="l.id">
+                            <tr>
+                                <td x-text="l.name" class="whitespace-nowrap"></td>
+                                <td class="whitespace-nowrap">
+                                    <a :href="`/dashboard/strands?learning-area-id=${l.id}`" x-text="l.strands_count"></a>
+                                </td>
                                 <td class="flex items-center justify-between">
                                     <div x-data="{ dropdownOpen: false }" class="relative">
                                         <button @click="dropdownOpen=true"
@@ -93,7 +97,7 @@
                                                       d="M17.5138 3.23463C17.666 3.60218 17.666 4.06812 17.666 5L17.666 19C17.666 19.9319 17.666 20.3978 17.5138 20.7654C17.4802 20.8465 17.4415 20.9248 17.3981 21C17.1792 21.3792 16.8403 21.6784 16.4314 21.8478C16.0638 22 15.5979 22 14.666 22C13.7341 22 13.2682 22 12.9006 21.8478C12.4917 21.6784 12.1529 21.3792 11.934 21C11.8905 20.9248 11.8518 20.8465 11.8183 20.7654C11.666 20.3978 11.666 19.9319 11.666 19V5C11.666 4.06812 11.666 3.60218 11.8183 3.23463C11.8518 3.15353 11.8905 3.07519 11.934 3C12.1529 2.62082 12.4917 2.32164 12.9006 2.15224C13.2682 2 13.7341 2 14.666 2C15.5979 2 16.0638 2 16.4314 2.15224C16.8403 2.32164 17.1792 2.62082 17.3981 3C17.4415 3.07519 17.4802 3.15353 17.5138 3.23463ZM15.416 11C15.416 10.5858 15.0802 10.25 14.666 10.25C14.2518 10.25 13.916 10.5858 13.916 11L13.916 13C13.916 13.4142 14.2518 13.75 14.666 13.75C15.0802 13.75 15.416 13.4142 15.416 13L15.416 11Z"
                                                       fill="#1C274C"/>
                                             </svg>
-                                            <span x-text="`${s.grades.length} Classes`"></span>
+                                            <span x-text="`${l.grades.length} Classes`"></span>
                                             <svg class="absolute right-0 w-5 h-5 mr-3"
                                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                  stroke-width="1.5" stroke="currentColor">
@@ -110,7 +114,7 @@
                                              x-cloak>
                                             <div
                                                 class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
-                                                <template x-for="g in s.grades">
+                                                <template x-for="g in l.grades">
                                                     <div
                                                         class="relative flex cursor-default select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -128,7 +132,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" x-tooltip="Edit" @click="onEdit(s)">
+                                    <button type="button" x-tooltip="Edit" @click="onEdit(l)">
                                         <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">
                                             <path opacity="0.5"
@@ -139,7 +143,7 @@
                                                 fill="#1C274C"/>
                                         </svg>
                                     </button>
-                                    <button type="button" x-tooltip="Delete" @click="onDelete(s)">
+                                    <button type="button" x-tooltip="Delete" @click="onDelete(l)">
                                         <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">
                                             <path opacity="0.5"
@@ -163,14 +167,14 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="{{ asset('/vendors/tom-select/tom-select.complete.min.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data("subjects", () => ({
+            Alpine.data("learningAreas", () => ({
                 update: false,
                 loading: false,
-                subjects: [],
-                subject_id: null,
+                learningAreas: [],
+                learningAreaId: null,
                 form: {
                     classes: [],
                     name: ''
@@ -190,16 +194,17 @@
                         }
                     });
 
-                    this.fetchSubjects()
+                    this.fetchLearningAreas()
                 },
-                fetchSubjects() {
-                    axios.get('/api/subjects').then(({data}) => {
-                        if (data.status) this.subjects = data.subjects
+                fetchLearningAreas() {
+                    axios.get('/api/learning-areas').then(({data}) => {
+                        if (data.status) this.learningAreas = data.learningAreas
+                        console.log(data.learningAreas)
                     })
                 },
                 onCreate() {
                     this.update = false
-                    this.subject_id = null
+                    this.learningAreaId = null
                     this.form = {
                         classes: [],
                         name: ''
@@ -207,21 +212,21 @@
 
                     this.tomSelectGradesInstance.clear()
                 },
-                onEdit(subject) {
+                onEdit(learningArea) {
                     this.update = true
-                    this.subject_id = subject.id
+                    this.learningAreaId = learningArea.id
                     this.form = {
-                        classes: subject.grades.map(s => {
+                        classes: learningArea.grades.map(s => {
                             this.tomSelectGradesInstance.addItem(s.name, true)
 
                             return s.name
                         }),
-                        name: subject.name
+                        name: learningArea.name
                     }
 
                     window.scrollTo({top: 0});
                 },
-                onDelete(subject) {
+                onDelete(learningArea) {
                     window.Swal.fire({
                         title: 'Are you sure?',
                         text: `You won't be able to revert this!`,
@@ -229,26 +234,26 @@
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: `Yes, delete ${subject.name}!`,
-                    }).then(res => res.isConfirmed && axios.delete(`/api/subjects/${subject.id}`).then(({data}) => {
+                        confirmButtonText: `Yes, delete ${learningArea.name}!`,
+                    }).then(res => res.isConfirmed && axios.delete(`/api/learning-areas/${learningArea.id}`).then(({data}) => {
                         if (data.status) {
                             this.showMessage(data.msg)
 
-                            this.fetchSubjects()
+                            this.fetchLearningAreas()
                         } else {
                             this.showMessage(data.msg, 'error')
                         }
                     }));
                 },
-                saveSubject() {
+                saveLearningArea() {
                     this.loading = true
 
-                    axios[this.update ? 'put' : 'post'](`/api/subjects/${this.subject_id || ''}`, this.form)
+                    axios[this.update ? 'put' : 'post'](`/api/learning-areas/${this.learningAreaId || ''}`, this.form)
                         .then(({data}) => {
                             if (data.status) {
                                 this.showMessage(data.msg)
 
-                                this.fetchSubjects()
+                                this.fetchLearningAreas()
                             } else {
                                 this.showMessage(data.msg, 'error')
                             }

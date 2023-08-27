@@ -50,6 +50,14 @@ class Grade extends Model
         return $this->belongsToMany(Subject::class);
     }
 
+    /**
+     * The learning areas that belong to the grade.
+     */
+    public function learningAreas(): BelongsToMany
+    {
+        return $this->belongsToMany(LearningArea::class);
+    }
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);

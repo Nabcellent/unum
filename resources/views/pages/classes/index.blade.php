@@ -2,7 +2,7 @@
 @section('title', 'Classes')
 @section('content')
 
-    <div x-data="classes" class="xl:px-64 lg:px-40">
+    <div x-data="classes" class="xl:px-48 lg:px-40">
         <div class="panel mb-3">
             <div class="flex justify-between items-start">
                 <h5 class="text-lg font-semibold dark:text-white-light mb-5">
@@ -36,14 +36,16 @@
         <div class="panel">
             <h5 class="text-lg font-semibold dark:text-white-light">Classes</h5>
 
-            <div class="mb-5">
+            <div class="my-5">
                 <div class="table-responsive">
                     <table>
                         <thead>
                         <tr>
                             <th>Name</th>
                             <th>Stream</th>
-                            <th class="text-center">Action</th>
+                            <th>No. of Students</th>
+                            <th>No. of Subjects</th>
+                            <th class="!text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,6 +53,8 @@
                             <tr>
                                 <td x-text="g.name" class="whitespace-nowrap"></td>
                                 <td x-text="g.stream?.name ?? '-'" class="whitespace-nowrap"></td>
+                                <td x-text="g.students_count" class="whitespace-nowrap"></td>
+                                <td x-text="g.subjects_count" class="whitespace-nowrap"></td>
                                 <td class="flex items-center justify-evenly">
                                     <button type="button" x-tooltip="Edit" @click="onEdit(g)">
                                         <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"

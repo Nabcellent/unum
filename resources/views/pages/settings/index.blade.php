@@ -120,21 +120,6 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('settings', () => ({
                 tab: 'preferences',
-
-                showMessage(msg = '', type = 'success') {
-                    const toast = window.Swal.mixin({
-                        toast: true,
-                        position: 'top',
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-
-                    toast.fire({
-                        icon: type,
-                        title: msg,
-                        padding: '10px 20px',
-                    });
-                },
             }))
         })
     </script>

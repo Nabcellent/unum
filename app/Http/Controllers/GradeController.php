@@ -26,7 +26,7 @@ class GradeController extends Controller
 
     public function getGrades(): JsonResponse
     {
-        $grades = Grade::all();
+        $grades = Grade::withCount(['students', 'subjects'])->get();
 
         return response()->json(['status' => true, 'grades' => $grades]);
     }

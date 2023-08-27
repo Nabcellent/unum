@@ -3,11 +3,15 @@
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\IndicatorController;
+use App\Http\Controllers\LearningAreaController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StrandController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\SubStrandController;
 use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,29 +36,19 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
         Route::get('/subject', [ResultController::class, 'createOrEditSubject'])->name('.subject');
     });
 
-    Route::prefix('/attendances')->name('.attendances')->group(function () {
-        Route::get('/', [AttendanceController::class, 'createOrEdit']);
-    });
-
-    Route::prefix('/reports')->name('.reports')->group(function () {
-        Route::get('/', [ReportController::class, 'index']);
-    });
-
-    Route::prefix('/summaries')->name('.summaries')->group(function () {
-        Route::get('/class-performance', [SummaryController::class, 'classPerformance'])->name('.class-performance');
-    });
-
-    Route::prefix('/students')->name('.students')->group(function () {
-        Route::get('/', [StudentController::class, 'index']);
-    });
-
-    Route::prefix('/classes')->name('.classes')->group(function () {
-        Route::get('/', [GradeController::class, 'index']);
-    });
-
-    Route::prefix('/subjects')->name('.subjects')->group(function () {
-        Route::get('/', [SubjectController::class, 'index']);
-    });
+    Route::get('/attendances', [AttendanceController::class, 'createOrEdit'])->name('.attendances');
+    Route::get('/reports', [ReportController::class, 'index'])->name('.reports');
+    Route::get('/summaries/class-performance', [
+        SummaryController::class,
+        'classPerformance'
+    ])->name('.summaries.class-performance');
+    Route::get('/students', [StudentController::class, 'index'])->name('.students');
+    Route::get('/classes', [GradeController::class, 'index'])->name('.classes');
+    Route::get('/subjects', [SubjectController::class, 'index'])->name('.subjects');
+    Route::get('/learning-areas', [LearningAreaController::class, 'index'])->name('.learning-areas');
+    Route::get('/strands', [StrandController::class, 'index'])->name('.strands');
+    Route::get('/sub-strands', [SubStrandController::class, 'index'])->name('.sub-strands');
+    Route::get('/indicators', [IndicatorController::class, 'index'])->name('.indicators');
 
     Route::prefix('/settings')->name('.settings')->group(function () {
         Route::get('/', [SettingController::class, 'index']);

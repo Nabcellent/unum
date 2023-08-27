@@ -11,6 +11,24 @@
 <script>
     document.addEventListener('alpine:init', () => {
         // main section
+        Alpine.data('main', () => ({
+            showMessage(msg = '', type = 'success') {
+                const toast = window.Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+
+                toast.fire({
+                    icon: type,
+                    title: msg,
+                    padding: '10px 20px',
+                });
+            },
+        }))
+
+        // scroll section
         Alpine.data('scrollToTop', () => ({
             showTopButton: false,
             init() {

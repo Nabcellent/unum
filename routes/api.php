@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\LearningAreaController;
+use App\Http\Controllers\Api\StrandController;
+use App\Http\Controllers\Api\SubStrandController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ReportController;
@@ -20,10 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('/grades')->group(function() {
+Route::prefix('/grades')->group(function () {
     Route::get('/', [GradeController::class, 'getGrades']);
 
-    Route::prefix('/{grade}')->group(function() {
+    Route::prefix('/{grade}')->group(function () {
         Route::get('/subjects', [GradeController::class, 'subjects']);
         Route::get('/results', [GradeController::class, 'results']);
         Route::get('/students', [GradeController::class, 'results']);
@@ -33,29 +36,57 @@ Route::prefix('/grades')->group(function() {
     });
 });
 
-Route::prefix('/subjects')->group(function() {
+Route::prefix('/subjects')->group(function () {
     Route::get('/', [SubjectController::class, 'getSubjects']);
     Route::post('/', [SubjectController::class, 'store']);
     Route::put('/{subject}', [SubjectController::class, 'update']);
     Route::delete('/{subject}', [SubjectController::class, 'destroy']);
 });
 
-Route::prefix('/students')->group(function() {
+Route::prefix('/learning-areas')->group(function () {
+    Route::get('/', [LearningAreaController::class, 'getLearningAreas']);
+    Route::get('/{learningArea}/strands', [LearningAreaController::class, 'getStrands']);
+    Route::post('/', [LearningAreaController::class, 'store']);
+    Route::put('/{learningArea}', [LearningAreaController::class, 'update']);
+    Route::delete('/{learningArea}', [LearningAreaController::class, 'destroy']);
+});
+
+Route::prefix('/strands')->group(function () {
+    Route::get('/{strand}/sub-strands', [StrandController::class, 'getSubStrands']);
+    Route::post('/', [StrandController::class, 'store']);
+    Route::put('/{strand}', [StrandController::class, 'update']);
+    Route::delete('/{strand}', [StrandController::class, 'destroy']);
+});
+
+Route::prefix('/sub-strands')->group(function () {
+    Route::get('/{subStrand}/indicators', [SubStrandController::class, 'getIndicators']);
+    Route::post('/', [SubStrandController::class, 'store']);
+    Route::put('/{subStrand}', [SubStrandController::class, 'update']);
+    Route::delete('/{subStrand}', [SubStrandController::class, 'destroy']);
+});
+
+Route::prefix('/indicators')->group(function () {
+    Route::post('/', [SubStrandController::class, 'store']);
+    Route::put('/{subStrand}', [SubStrandController::class, 'update']);
+    Route::delete('/{subStrand}', [SubStrandController::class, 'destroy']);
+});
+
+Route::prefix('/students')->group(function () {
     Route::get('/{gradeId}', [StudentController::class, 'getByGradeId']);
     Route::get('/{student}/results', [StudentController::class, 'results']);
 });
 
-Route::prefix('/results')->group(function() {
+Route::prefix('/results')->group(function () {
     Route::post('/subject', [ResultController::class, 'storeSubject']);
     Route::post('/students/{student}', [ResultController::class, 'storeStudent']);
 });
 
-Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function() {
+Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function () {
     Route::get('/preview', [ReportController::class, 'preview']);
     Route::post('/', [ReportController::class, 'store']);
 });
 
-Route::prefix('/summaries/exams/{exam}')->group(function() {
+Route::prefix('/summaries/exams/{exam}')->group(function () {
     Route::get('/preview', [SummaryController::class, 'preview']);
     Route::post('/', [SummaryController::class, 'store']);
 });

@@ -51,7 +51,7 @@ return new class extends Migration
                 INTO total, count
                 FROM results
                 WHERE student_id = NEW.student_id
-                  AND exam_id = NEW.exam_id;
+                  AND exam_id = NEW.exam_id AND average IS NOT NULL;
 
                 -- Calculate the average mark
                 SET total = IFNULL(total, 0);

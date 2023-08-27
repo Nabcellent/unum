@@ -12,6 +12,50 @@
 
 namespace App\Models{
 /**
+ * App\Models\CbcConduct
+ *
+ * @property int $id
+ * @property int $student_id
+ * @property int $exam_id
+ * @property string $work
+ * @property string $self_respect
+ * @property string $courtesy
+ * @property string $participates
+ * @property string $cooperates
+ * @property string $enthusiastic
+ * @property string $sets_goals
+ * @property string $confidence
+ * @property string|null $conduct
+ * @property string|null $sports_grade
+ * @property int|null $attendance
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereAttendance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereConduct($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereConfidence($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereCooperates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereCourtesy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereEnthusiastic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereExamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereParticipates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereSelfRespect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereSetsGoals($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereSportsGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CbcConduct whereWork($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperCbcConduct {}
+}
+
+namespace App\Models{
+/**
  * App\Models\CumulativeExamAverage
  *
  * @method static \Illuminate\Database\Eloquent\Builder|CumulativeExamAverage newModelQuery()
@@ -132,6 +176,8 @@ namespace App\Models{
  * @property int $id
  * @property int|null $stream_id
  * @property string $name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LearningArea> $learningAreas
+ * @property-read int|null $learning_areas_count
  * @property-read \App\Models\Stream|null $stream
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Student> $students
  * @property-read int|null $students_count
@@ -170,6 +216,52 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Indicator
+ *
+ * @property int $id
+ * @property int $sub_strand_id
+ * @property string $name
+ * @property string $highly_competent
+ * @property string $competent
+ * @property string $approaching_competence
+ * @property string $needs_improvement
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereApproachingCompetence($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereCompetent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereHighlyCompetent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereNeedsImprovement($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Indicator whereSubStrandId($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperIndicator {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\LearningArea
+ *
+ * @property int $id
+ * @property string $name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Grade> $grades
+ * @property-read int|null $grades_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Strand> $strands
+ * @property-read int|null $strands_count
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningArea newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningArea newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningArea query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningArea whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningArea whereName($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperLearningArea {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Result
  *
  * @property int $id
@@ -204,6 +296,27 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class IdeHelperResult {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Strand
+ *
+ * @property int $id
+ * @property int $learning_area_id
+ * @property string $name
+ * @property-read \App\Models\LearningArea $learningArea
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SubStrand> $subStrands
+ * @property-read int|null $sub_strands_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand whereLearningAreaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Strand whereName($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperStrand {}
 }
 
 namespace App\Models{
@@ -272,6 +385,24 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class IdeHelperStudent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\SubStrand
+ *
+ * @property int $id
+ * @property int $strand_id
+ * @property string $name
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SubStrand whereStrandId($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperSubStrand {}
 }
 
 namespace App\Models{

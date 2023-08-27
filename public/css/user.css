@@ -21,6 +21,6 @@ select {
 .class-performance-summary table tbody tr td,
 table tfoot tr th,
 table thead tr th {
-    font-size: .6rem;
+    font-weight: bold;
     padding: .15rem .2rem;
 }
