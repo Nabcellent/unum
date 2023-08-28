@@ -15,7 +15,7 @@ class SubStrandController extends Controller
     {
         $indicators = Indicator::whereSubStrandId($subStrandId)->get();
 
-        return response()->json(['status' => true, 'indicators' => $indicators]);
+        return $this->successResponse($indicators);
     }
 
     /**
@@ -30,7 +30,7 @@ class SubStrandController extends Controller
 
         SubStrand::create($data);
 
-        return response()->json(['status' => true, 'msg' => 'Sub Strand Saved!']);
+        return $this->successResponse(msg: 'Sub Strand Saved!');
     }
 
     public function update(Request $request, SubStrand $subStrand): JsonResponse
@@ -42,7 +42,7 @@ class SubStrandController extends Controller
 
         $subStrand->update($data);
 
-        return response()->json(['status' => true, 'msg' => 'Sub Strand saved!']);
+        return $this->successResponse(msg: 'Sub Strand saved!');
     }
 
     /**
@@ -50,6 +50,8 @@ class SubStrandController extends Controller
      */
     public function destroy(SubStrand $subStrand): JsonResponse
     {
-        return response()->json(['status' => $subStrand->delete(), 'msg' => 'Sub Strand Deleted!']);
+        $subStrand->delete();
+
+        return $this->successResponse(msg: 'Sub Strand Deleted!');
     }
 }

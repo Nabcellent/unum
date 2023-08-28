@@ -174,16 +174,16 @@
                         axios.get(`/api/learning-areas/${this.learning_area_id}/strands`)
                             .then(({data: {data, status}}) => {
                                 if (status) {
-                                    this.strands = data.map(s => ({
-                                        ...s,
-                                        selected: s.id === Number(this.form.strand_id)
-                                    }))
-
                                     this.tomSelectStrand.clear()
                                     this.tomSelectStrand.clearOptions()
 
-                                    data.forEach(s => {
+                                    this.strands = data.map(s => {
                                         this.tomSelectStrand.addOption({value: s.id, text: s.name})
+
+                                        return {
+                                            ...s,
+                                            selected: s.id === Number(this.form.strand_id)
+                                        }
                                     })
 
                                     if (this.form.strand_id) {

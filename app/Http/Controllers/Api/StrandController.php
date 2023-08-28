@@ -15,7 +15,7 @@ class StrandController extends Controller
     {
         $subStrands = SubStrand::whereStrandId($strandId)->withCount(['indicators'])->get();
 
-        return response()->json(['status' => true, 'sub_strands' => $subStrands]);
+        return $this->successResponse($subStrands);
     }
 
     /**
@@ -24,25 +24,25 @@ class StrandController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name'      => 'required|string|unique:strands',
+            'name'             => 'required|string|unique:strands',
             'learning_area_id' => 'required|integer|exists:learning_areas,id'
         ]);
 
         Strand::create($data);
 
-        return response()->json(['status' => true, 'msg' => 'Learning area saved!']);
+        return $this->successResponse(msg: 'Learning area saved!');
     }
 
     public function update(Request $request, Strand $strand): JsonResponse
     {
         $data = $request->validate([
-            'name'      => ['string', Rule::unique('strands', 'name')->ignore($strand->id)],
+            'name'             => ['string', Rule::unique('strands', 'name')->ignore($strand->id)],
             'learning_area_id' => 'integer|exists:learning_areas,id'
         ]);
 
         $strand->update($data);
 
-        return response()->json(['status' => true, 'msg' => 'Strand saved!']);
+        return $this->successResponse(msg: 'Strand saved!');
     }
 
     /**
@@ -50,6 +50,8 @@ class StrandController extends Controller
      */
     public function destroy(Strand $strand): JsonResponse
     {
-        return response()->json(['status' => $strand->delete(), 'msg' => 'Strand Deleted!']);
+        $strand->delete();
+
+        return $this->successResponse(msg: 'Strand Deleted!');
     }
 }

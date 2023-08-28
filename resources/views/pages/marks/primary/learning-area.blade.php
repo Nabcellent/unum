@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('title', 'Marks')
 @section('content')
-    <div x-data="marks" class="2xl:px-48">
+    <div x-data="marks" class="2xl:px-20">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
             <h2 class="text-xl">Enter Marks Per Learning Area</h2>
         </div>
 
         <div class="panel">
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <div class="mb-5">
+            <div class="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                <div class="mb-3">
                     <label for="cat">Cat</label>
                     <select id="cat" class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
@@ -18,7 +18,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="mb-5">
+                <div class="mb-3">
                     <label for="grade">Grade</label>
                     <select id="grade" class="selectize" x-model="grade_id" @change="fetchLearningAreas">
                         @foreach($grades as $grade)
@@ -26,15 +26,16 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="mb-5">
+                <div class="mb-3">
                     <label for="learning-area">Learning Area</label>
-                    <select id="learning-area" x-ref="learningAreaNice" x-model="learning_area_id" @change="fetchStrands">
+                    <select id="learning-area" x-ref="learningAreaNice" x-model="learning_area_id"
+                            @change="fetchStrands">
                         <template x-for="l in learning_areas" :key="l.id">
                             <option :value="l.id" x-text="l.name" :selected="l.selected"></option>
                         </template>
                     </select>
                 </div>
-                <div class="mb-5">
+                <div class="mb-3">
                     <label for="strand">Strand</label>
                     <select id="strand" x-ref="tomStrandEl" x-model="strand_id" @change="fetchSubStrands">
                         <template x-for="s in strands" :key="s.id">
@@ -42,16 +43,16 @@
                         </template>
                     </select>
                 </div>
-                <div class="mb-5">
-                    <label for="sub-strand">Sub Strands</label>
+                <div class="mb-3">
+                    <label for="sub-strand">Sub Strand</label>
                     <select id="sub-strand" x-ref="tomSubStrandEl" x-model="sub_strand_id" @change="fetchIndicators">
                         <template x-for="i in indicators" :key="i.id">
                             <option :value="i.id" x-text="i.name" :selected="i.selected"></option>
                         </template>
                     </select>
                 </div>
-                <div class="mb-5">
-                    <label for="sub-strand">Sub Strands</label>
+                <div class="mb-3">
+                    <label for="sub-strand">Indicator</label>
                     <select id="sub-strand" x-ref="tomIndicatorEl" x-model="sub_strand_id" @change="fetchIndicators">
                         <template x-for="i in indicators" :key="i.id">
                             <option :value="i.id" x-text="i.name" :selected="i.selected"></option>
@@ -123,11 +124,13 @@
                             class="btn btn-warning ltr:rounded-l-full rtl:rounded-r-full ltr:rounded-r-none rtl:rounded-l-none">
                         <i class="fa-solid fa-angles-left"></i>
                     </button>
-                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Learning Area" @click="goToPreviousLearningArea"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Previous Learning Area"
+                            @click="goToPreviousLearningArea"
                             :disabled="!canPrevLearningArea">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Learning Area" @click="goToNextLearningArea"
+                    <button type="button" class="btn btn-warning rounded-none" x-tooltip="Next Learning Area"
+                            @click="goToNextLearningArea"
                             :disabled="!canNextLearningArea">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
@@ -176,10 +179,10 @@
                 canLastLearningArea: false,
                 canNextLearningArea: false,
                 canPrevLearningArea: false,
-                tom:{
-                    strand:null,
-                    subStrand:null,
-                    indicator:null,
+                tom: {
+                    strand: null,
+                    subStrand: null,
+                    indicator: null,
                 },
 
                 init() {
@@ -252,7 +255,10 @@
                     this.learningAreaUpdatedEvent()
                 },
                 goToLastLearningArea() {
-                    this.learning_areas = this.learning_areas.map((s, i) => ({...s, selected: i === this.learning_areas.length - 1}))
+                    this.learning_areas = this.learning_areas.map((s, i) => ({
+                        ...s,
+                        selected: i === this.learning_areas.length - 1
+                    }))
                     this.learning_area_id = this.learning_areas[this.learning_areas.length - 1].id
 
                     this.learningAreaUpdatedEvent()
@@ -276,7 +282,7 @@
                                 exam_id: this.exam_id,
                                 learning_area_id: this.learning_area_id,
                             }
-                        }).then(({data}) => {
+                        }).then(({data: {data}}) => {
                             this.students = data.map(s => {
                                 if (!s.result) {
                                     s.result = {
@@ -303,6 +309,8 @@
                                 this.learning_area_id = data.data[0]?.id
 
                                 this.learningAreaUpdatedEvent()
+
+                                if(!this.strand_id) this.fetchStrands()
                             }).catch(err => console.error(err))
                     }
                 },
@@ -310,10 +318,54 @@
                 fetchStrands() {
                     if (this.learning_area_id) {
                         axios.get(`/api/learning-areas/${this.learning_area_id}/strands`)
-                            .then(({data}) => {
-                                this.strands = data.map(d => ({...d, selected: d.id === data[0].id}))
-                                console.log(this.strands)
-                                this.strand_id = data[0]?.id
+                            .then(({data: {data}}) => {
+                                this.strands = data.map((s, i) => {
+                                    if(i === 0) this.strand_id = s.id
+
+                                    this.tom.strand.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === this.strand_id}
+                                })
+
+                                if(!this.sub_strand_id) this.fetchSubStrands()
+
+                                this.tom.strand.addItem(this.strand_id, true)
+                            }).catch(err => console.error(err))
+                    }
+                },
+
+                fetchSubStrands() {
+                    if (this.strand_id) {
+                        axios.get(`/api/strands/${this.strand_id}/sub-strands`)
+                            .then(({data: {data}}) => {
+                                this.sub_strands = data.map((s, i) => {
+                                    if(i === 0) this.sub_strand_id = s.id
+
+                                    this.tom.subStrand.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === this.sub_strand_id}
+                                })
+
+                                if(!this.indicator_id) this.fetchIndicators()
+
+                                this.tom.subStrand.addItem(this.sub_strand_id, true)
+                            }).catch(err => console.error(err))
+                    }
+                },
+
+                fetchIndicators() {
+                    if (this.sub_strand_id) {
+                        axios.get(`/api/sub-strands/${this.sub_strand_id}/indicators`)
+                            .then(({data: {data}}) => {
+                                this.indicators = data.map((s, i) => {
+                                    if(i === 0) this.indicator_id = s.id
+
+                                    this.tom.indicator.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === this.indicator_id}
+                                })
+
+                                this.tom.indicator.addItem(this.indicator_id, true)
                             }).catch(err => console.error(err))
                     }
                 },

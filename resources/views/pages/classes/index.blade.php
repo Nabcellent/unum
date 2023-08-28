@@ -9,9 +9,14 @@
                     <span x-text="update ? 'Edit':'Create'"></span> Class
                 </h5>
                 <span class="cursor-pointer" x-show="update" x-tooltip="Create" @click="onCreate">
-                    <svg class="h-7 w-7" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.5" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" fill="#1C274C"/>
-                        <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="#1C274C"/>
+                    <svg class="h-7 w-7" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.5"
+                              d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                              fill="#1C274C"/>
+                        <path
+                            d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z"
+                            fill="#1C274C"/>
                     </svg>
                 </span>
             </div>
@@ -43,6 +48,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Stream</th>
+                            <th>Level</th>
                             <th>No. of Students</th>
                             <th>No. of Subjects</th>
                             <th class="!text-center">Actions</th>
@@ -53,9 +59,22 @@
                             <tr>
                                 <td x-text="g.name" class="whitespace-nowrap"></td>
                                 <td x-text="g.stream?.name ?? '-'" class="whitespace-nowrap"></td>
+                                <td x-text="g.level ?? '-'" class="whitespace-nowrap"></td>
                                 <td x-text="g.students_count" class="whitespace-nowrap"></td>
                                 <td x-text="g.subjects_count" class="whitespace-nowrap"></td>
                                 <td class="flex items-center justify-evenly">
+                                    <button type="button" x-tooltip="`Assign Subjects/Learning Areas`"
+                                            @click="onAssignSubjects(g)">
+                                        <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path opacity="0.5"
+                                                  d="M20.8487 8.71306C22.3844 7.17735 22.3844 4.68748 20.8487 3.15178C19.313 1.61607 16.8231 1.61607 15.2874 3.15178L14.4004 4.03882C14.4125 4.0755 14.4251 4.11268 14.4382 4.15035C14.7633 5.0875 15.3768 6.31601 16.5308 7.47002C17.6848 8.62403 18.9133 9.23749 19.8505 9.56262C19.888 9.57563 19.925 9.58817 19.9615 9.60026L20.8487 8.71306Z"
+                                                  fill="#1C274C"/>
+                                            <path
+                                                d="M14.4386 4L14.4004 4.03819C14.4125 4.07487 14.4251 4.11206 14.4382 4.14973C14.7633 5.08687 15.3768 6.31538 16.5308 7.4694C17.6848 8.62341 18.9133 9.23686 19.8505 9.56199C19.8876 9.57489 19.9243 9.58733 19.9606 9.59933L11.4001 18.1598C10.823 18.7369 10.5343 19.0255 10.2162 19.2737C9.84082 19.5665 9.43469 19.8175 9.00498 20.0223C8.6407 20.1959 8.25351 20.3249 7.47918 20.583L3.39584 21.9442C3.01478 22.0712 2.59466 21.972 2.31063 21.688C2.0266 21.4039 1.92743 20.9838 2.05445 20.6028L3.41556 16.5194C3.67368 15.7451 3.80273 15.3579 3.97634 14.9936C4.18114 14.5639 4.43213 14.1578 4.7249 13.7824C4.97307 13.4643 5.26165 13.1757 5.83874 12.5986L14.4386 4Z"
+                                                fill="#1C274C"/>
+                                        </svg>
+                                    </button>
                                     <button type="button" x-tooltip="Edit" @click="onEdit(g)">
                                         <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +113,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data("classes", () => ({
-                update:false,
+                update: false,
                 form: {
                     stream_id: null,
                     name: ''
@@ -102,9 +121,13 @@
                 grades: [],
 
                 init() {
-                    axios.get('/api/grades').then(({data}) => {
-                        if (data.status) this.grades = data.grades
+                    axios.get('/api/grades').then(({data: {data, status}}) => {
+                        if (status) this.grades = data
                     })
+                },
+
+                onAssignSubjects(g) {
+
                 },
 
                 onEdit(grade) {

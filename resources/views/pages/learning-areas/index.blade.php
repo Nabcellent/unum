@@ -58,7 +58,8 @@
                             <tr>
                                 <td x-text="l.name" class="whitespace-nowrap"></td>
                                 <td class="whitespace-nowrap">
-                                    <a :href="`/dashboard/strands?learning-area-id=${l.id}`" x-text="l.strands_count"></a>
+                                    <a :href="`/dashboard/strands?learning-area-id=${l.id}`"
+                                       x-text="l.strands_count"></a>
                                 </td>
                                 <td class="flex items-center justify-between">
                                     <div x-data="{ dropdownOpen: false }" class="relative">
@@ -193,9 +194,8 @@
                     this.fetchLearningAreas()
                 },
                 fetchLearningAreas() {
-                    axios.get('/api/learning-areas').then(({data}) => {
-                        if (data.status) this.learningAreas = data.learningAreas
-                        console.log(data.learningAreas)
+                    axios.get('/api/learning-areas').then(({data: {data, status}}) => {
+                        if (status) this.learningAreas = data
                     })
                 },
                 onCreate() {

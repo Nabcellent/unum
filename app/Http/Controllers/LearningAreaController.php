@@ -18,7 +18,7 @@ class LearningAreaController extends Controller
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
-            "grades" => Grade::select('name')->distinct()->get()
+            "grades" => Grade::select('name')->distinct()->primary()->get()
         ];
 
         return view('pages.learning-areas.index', $data);
