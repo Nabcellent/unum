@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
 use App\Http\Controllers\Api\StrandController;
 use App\Http\Controllers\Api\SubStrandController;
@@ -66,9 +67,9 @@ Route::prefix('/sub-strands')->group(function () {
 });
 
 Route::prefix('/indicators')->group(function () {
-    Route::post('/', [SubStrandController::class, 'store']);
-    Route::put('/{subStrand}', [SubStrandController::class, 'update']);
-    Route::delete('/{subStrand}', [SubStrandController::class, 'destroy']);
+    Route::post('/', [IndicatorController::class, 'store']);
+    Route::put('/{subStrand}', [IndicatorController::class, 'update']);
+    Route::delete('/{subStrand}', [IndicatorController::class, 'destroy']);
 });
 
 Route::prefix('/students')->group(function () {

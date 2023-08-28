@@ -11,7 +11,7 @@ class StoreIndicatorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class StoreIndicatorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'                   => 'required|string|unique:indicators',
+            'sub_strand_id'          => 'required|integer|exists:sub_strands,id',
+            'highly_competent'       => 'required|string',
+            'competent'              => 'required|string',
+            'approaching_competence' => 'required|string',
+            'needs_improvement'      => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            "sub_strand_id.required" => "The sub strand field is required."
         ];
     }
 }

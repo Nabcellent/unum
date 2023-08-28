@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateIndicatorRequest extends FormRequest
 {
@@ -21,8 +22,21 @@ class UpdateIndicatorRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this->get('indicator'));
         return [
-            //
+            'name'                   => ['string', Rule::unique('indicators', 'name')->ignore($indicator->id)],
+            'sub_strand_id'          => 'integer|exists:sub_strands,id',
+            'highly_competent'       => 'required|string',
+            'competent'              => 'required|string',
+            'approaching_competence' => 'required|string',
+            'needs_improvement'      => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            "sub_strand_id.required" => "The sub strand field is required."
         ];
     }
 }
