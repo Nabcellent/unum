@@ -64,19 +64,82 @@
                 </li>
 
                 <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
-                    <svg
-                        class="hidden h-5 w-4 flex-none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>Assessment</span>
+                    <span>Primary Section</span>
                 </h2>
+
+                <li class="menu nav-item">
+                    <button
+                        type="button"
+                        class="nav-link group"
+                        :class="{'active' : activeDropdown === 'learning_areas'}"
+                        @click="activeDropdown === 'learning_areas' ? activeDropdown = null : activeDropdown = 'learning_areas'"
+                    >
+                        <div class="flex items-center">
+                            <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M14.2502 4.47954L14.2502 7.5372C14.25 7.64842 14.2498 7.80699 14.271 7.9431C14.297 8.10951 14.3826 8.43079 14.7153 8.62611C15.0357 8.81422 15.349 8.74436 15.498 8.69806C15.6278 8.6577 15.7702 8.58988 15.8764 8.5393L17.0002 8.00545L18.124 8.5393C18.2302 8.58987 18.3725 8.6577 18.5024 8.69806C18.6513 8.74436 18.9647 8.81422 19.2851 8.62611C19.6177 8.43079 19.7033 8.10952 19.7293 7.9431C19.7506 7.807 19.7504 7.64845 19.7502 7.53723L19.7502 3.0313C19.863 3.026 19.9737 3.02152 20.082 3.01775C21.1538 2.98041 22 3.86075 22 4.93319V16.1436C22 17.2546 21.094 18.1535 19.9851 18.2228C19.0157 18.2835 17.8767 18.402 17 18.6334C15.9185 18.9187 14.6271 19.5365 13.6276 20.0692C13.3485 20.218 13.0531 20.3257 12.7502 20.3925V5.17387C13.0709 5.0953 13.3824 4.97142 13.6738 4.80275C13.8581 4.6961 14.0514 4.58732 14.2502 4.47954ZM19.7278 12.8181C19.8282 13.2199 19.5839 13.6271 19.1821 13.7276L15.1821 14.7276C14.7802 14.8281 14.373 14.5837 14.2726 14.1819C14.1721 13.7801 14.4164 13.3729 14.8183 13.2724L18.8183 12.2724C19.2201 12.1719 19.6273 12.4163 19.7278 12.8181Z"
+                                      fill="#1C274D"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M11.2502 5.21397C10.9159 5.15048 10.5894 5.03785 10.2823 4.87546C9.29611 4.35401 8.04921 3.76431 7 3.48744C6.11349 3.25351 4.95877 3.1349 3.9824 3.07489C2.8863 3.00752 2 3.89963 2 4.9978V16.1436C2 17.2546 2.90605 18.1535 4.01486 18.2228C4.98428 18.2835 6.12329 18.402 7 18.6334C8.08145 18.9187 9.37293 19.5365 10.3724 20.0692C10.6516 20.218 10.9472 20.3258 11.2502 20.3926V5.21397ZM4.27257 8.8181C4.37303 8.41625 4.78023 8.17193 5.18208 8.27239L9.18208 9.27239C9.58393 9.37285 9.82825 9.78006 9.72778 10.1819C9.62732 10.5837 9.22012 10.8281 8.81828 10.7276L4.81828 9.72761C4.41643 9.62715 4.17211 9.21994 4.27257 8.8181ZM5.18208 12.2724C4.78023 12.1719 4.37303 12.4163 4.27257 12.8181C4.17211 13.2199 4.41643 13.6271 4.81828 13.7276L8.81828 14.7276C9.22012 14.8281 9.62732 14.5837 9.72778 14.1819C9.82825 13.7801 9.58393 13.3729 9.18208 13.2724L5.18208 12.2724Z"
+                                      fill="#1C274D"/>
+                                <path
+                                    d="M18.2502 3.15101C17.6301 3.22431 17.0206 3.33159 16.5 3.48744C16.2585 3.55975 16.0064 3.65141 15.7502 3.7564V3.95002V6.93859L16.4995 6.58266L16.5083 6.57822C16.5573 6.55316 16.7638 6.44757 17.0002 6.44757C17.0477 6.44757 17.094 6.45184 17.1381 6.45887C17.3132 6.48679 17.4529 6.5582 17.4921 6.57822L17.5009 6.58265L18.2502 6.93859V3.64665V3.15101Z"
+                                    fill="#1C274D"/>
+                            </svg>
+
+                            <span
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Learning Areas</span>
+                        </div>
+                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'learning_areas'}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </button>
+                    <ul x-cloak x-show="activeDropdown === 'learning_areas'" x-collapse class="sub-menu text-gray-500">
+                        <li>
+                            <a href="{{ route('admin.learning-areas') }}">Learning Areas</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.strands') }}">Strands</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.sub-strands') }}">Sub Strands</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.indicators') }}">Indicators</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                    <span>Secondary Section</span>
+                </h2>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.subjects') }}" class="group">
+                        <div class="flex items-center">
+                            <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M14.2502 4.47954L14.2502 7.5372C14.25 7.64842 14.2498 7.80699 14.271 7.9431C14.297 8.10951 14.3826 8.43079 14.7153 8.62611C15.0357 8.81422 15.349 8.74436 15.498 8.69806C15.6278 8.6577 15.7702 8.58988 15.8764 8.5393L17.0002 8.00545L18.124 8.5393C18.2302 8.58987 18.3725 8.6577 18.5024 8.69806C18.6513 8.74436 18.9647 8.81422 19.2851 8.62611C19.6177 8.43079 19.7033 8.10952 19.7293 7.9431C19.7506 7.807 19.7504 7.64845 19.7502 7.53723L19.7502 3.0313C19.863 3.026 19.9737 3.02152 20.082 3.01775C21.1538 2.98041 22 3.86075 22 4.93319V16.1436C22 17.2546 21.094 18.1535 19.9851 18.2228C19.0157 18.2835 17.8767 18.402 17 18.6334C15.9185 18.9187 14.6271 19.5365 13.6276 20.0692C13.3485 20.218 13.0531 20.3257 12.7502 20.3925V5.17387C13.0709 5.0953 13.3824 4.97142 13.6738 4.80275C13.8581 4.6961 14.0514 4.58732 14.2502 4.47954ZM19.7278 12.8181C19.8282 13.2199 19.5839 13.6271 19.1821 13.7276L15.1821 14.7276C14.7802 14.8281 14.373 14.5837 14.2726 14.1819C14.1721 13.7801 14.4164 13.3729 14.8183 13.2724L18.8183 12.2724C19.2201 12.1719 19.6273 12.4163 19.7278 12.8181Z"
+                                      fill="#1C274D"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M11.2502 5.21397C10.9159 5.15048 10.5894 5.03785 10.2823 4.87546C9.29611 4.35401 8.04921 3.76431 7 3.48744C6.11349 3.25351 4.95877 3.1349 3.9824 3.07489C2.8863 3.00752 2 3.89963 2 4.9978V16.1436C2 17.2546 2.90605 18.1535 4.01486 18.2228C4.98428 18.2835 6.12329 18.402 7 18.6334C8.08145 18.9187 9.37293 19.5365 10.3724 20.0692C10.6516 20.218 10.9472 20.3258 11.2502 20.3926V5.21397ZM4.27257 8.8181C4.37303 8.41625 4.78023 8.17193 5.18208 8.27239L9.18208 9.27239C9.58393 9.37285 9.82825 9.78006 9.72778 10.1819C9.62732 10.5837 9.22012 10.8281 8.81828 10.7276L4.81828 9.72761C4.41643 9.62715 4.17211 9.21994 4.27257 8.8181ZM5.18208 12.2724C4.78023 12.1719 4.37303 12.4163 4.27257 12.8181C4.17211 13.2199 4.41643 13.6271 4.81828 13.7276L8.81828 14.7276C9.22012 14.8281 9.62732 14.5837 9.72778 14.1819C9.82825 13.7801 9.58393 13.3729 9.18208 13.2724L5.18208 12.2724Z"
+                                      fill="#1C274D"/>
+                                <path
+                                    d="M18.2502 3.15101C17.6301 3.22431 17.0206 3.33159 16.5 3.48744C16.2585 3.55975 16.0064 3.65141 15.7502 3.7564V3.95002V6.93859L16.4995 6.58266L16.5083 6.57822C16.5573 6.55316 16.7638 6.44757 17.0002 6.44757C17.0477 6.44757 17.094 6.45184 17.1381 6.45887C17.3132 6.48679 17.4529 6.5582 17.4921 6.57822L17.5009 6.58265L18.2502 6.93859V3.64665V3.15101Z"
+                                    fill="#1C274D"/>
+                            </svg>
+
+                            <span
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Subjects</span>
+                        </div>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <ul>
@@ -269,122 +332,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu nav-item">
-                    <button
-                        type="button"
-                        class="nav-link group"
-                        :class="{'active' : activeDropdown === 'primary'}"
-                        @click="activeDropdown === 'primary' ? activeDropdown = null : activeDropdown = 'primary'"
-                    >
-                        <div class="flex items-center">
-                            <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M15.5 7.5C15.5 9.433 13.933 11 12 11C10.067 11 8.5 9.433 8.5 7.5C8.5 5.567 10.067 4 12 4C13.933 4 15.5 5.567 15.5 7.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M18 16.5C18 18.433 15.3137 20 12 20C8.68629 20 6 18.433 6 16.5C6 14.567 8.68629 13 12 13C15.3137 13 18 14.567 18 16.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M7.12205 5C7.29951 5 7.47276 5.01741 7.64005 5.05056C7.23249 5.77446 7 6.61008 7 7.5C7 8.36825 7.22131 9.18482 7.61059 9.89636C7.45245 9.92583 7.28912 9.94126 7.12205 9.94126C5.70763 9.94126 4.56102 8.83512 4.56102 7.47063C4.56102 6.10614 5.70763 5 7.12205 5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M5.44734 18.986C4.87942 18.3071 4.5 17.474 4.5 16.5C4.5 15.5558 4.85657 14.744 5.39578 14.0767C3.4911 14.2245 2 15.2662 2 16.5294C2 17.8044 3.5173 18.8538 5.44734 18.986Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M16.9999 7.5C16.9999 8.36825 16.7786 9.18482 16.3893 9.89636C16.5475 9.92583 16.7108 9.94126 16.8779 9.94126C18.2923 9.94126 19.4389 8.83512 19.4389 7.47063C19.4389 6.10614 18.2923 5 16.8779 5C16.7004 5 16.5272 5.01741 16.3599 5.05056C16.7674 5.77446 16.9999 6.61008 16.9999 7.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M18.5526 18.986C20.4826 18.8538 21.9999 17.8044 21.9999 16.5294C21.9999 15.2662 20.5088 14.2245 18.6041 14.0767C19.1433 14.744 19.4999 15.5558 19.4999 16.5C19.4999 17.474 19.1205 18.3071 18.5526 18.986Z"
-                                    fill="#1C274C"/>
-                            </svg>
 
-                            <span
-                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Primary Section</span>
-                        </div>
-                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'primary'}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                      stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </button>
-                    <ul x-cloak x-show="activeDropdown === 'primary'" x-collapse class="sub-menu text-gray-500">
-                        <li x-data="{subActive:null}">
-                            <button type="button" class="before:h-[5px] before:w-[5px] before:rounded before:bg-gray-300 hover:bg-gray-100 ltr:before:mr-2 rtl:before:ml-2 dark:text-[#888ea8] dark:hover:bg-gray-900" @click="subActive === 'learning_areas' ? subActive = null : subActive = 'learning_areas'">
-                                Learning Areas
-                                <div class="ltr:ml-auto rtl:mr-auto rtl:rotate-180" :class="{'!rotate-90' : subActive === 'learning_areas'}">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.5" d="M6.25 19C6.25 19.3139 6.44543 19.5946 6.73979 19.7035C7.03415 19.8123 7.36519 19.7264 7.56944 19.4881L13.5694 12.4881C13.8102 12.2073 13.8102 11.7928 13.5694 11.5119L7.56944 4.51194C7.36519 4.27364 7.03415 4.18773 6.73979 4.29662C6.44543 4.40551 6.25 4.68618 6.25 5.00004L6.25 19Z" fill="currentColor"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5119 19.5695C10.1974 19.2999 10.161 18.8264 10.4306 18.5119L16.0122 12L10.4306 5.48811C10.161 5.17361 10.1974 4.70014 10.5119 4.43057C10.8264 4.161 11.2999 4.19743 11.5695 4.51192L17.5695 11.5119C17.8102 11.7928 17.8102 12.2072 17.5695 12.4881L11.5695 19.4881C11.2999 19.8026 10.8264 19.839 10.5119 19.5695Z" fill="currentColor"></path>
-                                    </svg>
-                                </div>
-                            </button>
-                            <ul class="sub-menu text-gray-500 ltr:ml-2 rtl:mr-2" x-show="subActive === 'learning_areas'" x-collapse="" style="height: 0px; overflow: hidden; display: none;" hidden="">
-                                <li>
-                                    <a href="{{ route('admin.learning-areas') }}">Learning Areas</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.strands') }}">Strands</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.sub-strands') }}">Sub Strands</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.indicators') }}">Indicators</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu nav-item">
-                    <button
-                        type="button"
-                        class="nav-link group"
-                        :class="{'active' : activeDropdown === 'secondary'}"
-                        @click="activeDropdown === 'secondary' ? activeDropdown = null : activeDropdown = 'secondary'"
-                    >
-                        <div class="flex items-center">
-                            <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M15.5 7.5C15.5 9.433 13.933 11 12 11C10.067 11 8.5 9.433 8.5 7.5C8.5 5.567 10.067 4 12 4C13.933 4 15.5 5.567 15.5 7.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M18 16.5C18 18.433 15.3137 20 12 20C8.68629 20 6 18.433 6 16.5C6 14.567 8.68629 13 12 13C15.3137 13 18 14.567 18 16.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M7.12205 5C7.29951 5 7.47276 5.01741 7.64005 5.05056C7.23249 5.77446 7 6.61008 7 7.5C7 8.36825 7.22131 9.18482 7.61059 9.89636C7.45245 9.92583 7.28912 9.94126 7.12205 9.94126C5.70763 9.94126 4.56102 8.83512 4.56102 7.47063C4.56102 6.10614 5.70763 5 7.12205 5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M5.44734 18.986C4.87942 18.3071 4.5 17.474 4.5 16.5C4.5 15.5558 4.85657 14.744 5.39578 14.0767C3.4911 14.2245 2 15.2662 2 16.5294C2 17.8044 3.5173 18.8538 5.44734 18.986Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M16.9999 7.5C16.9999 8.36825 16.7786 9.18482 16.3893 9.89636C16.5475 9.92583 16.7108 9.94126 16.8779 9.94126C18.2923 9.94126 19.4389 8.83512 19.4389 7.47063C19.4389 6.10614 18.2923 5 16.8779 5C16.7004 5 16.5272 5.01741 16.3599 5.05056C16.7674 5.77446 16.9999 6.61008 16.9999 7.5Z"
-                                    fill="#1C274C"/>
-                                <path
-                                    d="M18.5526 18.986C20.4826 18.8538 21.9999 17.8044 21.9999 16.5294C21.9999 15.2662 20.5088 14.2245 18.6041 14.0767C19.1433 14.744 19.4999 15.5558 19.4999 16.5C19.4999 17.474 19.1205 18.3071 18.5526 18.986Z"
-                                    fill="#1C274C"/>
-                            </svg>
-
-                            <span
-                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Secondary Section</span>
-                        </div>
-                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'secondary'}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                      stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </button>
-                    <ul x-cloak x-show="activeDropdown === 'secondary'" x-collapse class="sub-menu text-gray-500">
-                        <li>
-                            <a href="{{ route('admin.subjects') }}">Subjects</a>
-                        </li>
-                    </ul>
-                </li>
                 <li class="menu nav-item">
                     <button
                         type="button"
