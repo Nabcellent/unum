@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\LearningAreaController;
+use App\Http\Controllers\PriResultController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SettingController;
@@ -30,6 +31,10 @@ Route::get('/', fn() => view('welcome'));
 
 Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('.dashboard');
+
+    Route::prefix('/primary')->name('.pri')->group(function() {
+        Route::get('/marks/{view}', [PriResultController::class, 'getView'])->name('.marks');
+    });
 
     Route::prefix('/marks')->name('.assessment')->group(function () {
         Route::get('/student', [ResultController::class, 'createOrEditStudent'])->name('.student');

@@ -28,20 +28,20 @@ class ResultController extends Controller
             "termDays"    => $termSettings->days
         ];
 
-        return view('pages.marks.student', $data);
+        return view('pages.marks.secondary.student', $data);
     }
 
     public function createOrEditSubject(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $exams = Exam::get();
-        
+
         $data = [
             "grades"      => Grade::get(),
             "exams"       => $exams,
             "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
         ];
 
-        return view('pages.marks.subject', $data);
+        return view('pages.marks.secondary.subject', $data);
     }
 
     /**

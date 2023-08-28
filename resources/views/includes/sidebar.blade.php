@@ -8,7 +8,7 @@
                 <a href="/" class="main-logo flex shrink-0 items-center">
                     <img class="ml-[5px] w-8 flex-none" src="{{ asset('/images/logo.jpg') }}" alt="image"/>
                     <span
-                        class="align-middle text-xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">STRATHMORE</span>
+                        class="align-middle text-xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">UNUM</span>
                 </a>
                 <a
                     href="javascript:;"
@@ -67,66 +67,14 @@
                     <span>Primary Section</span>
                 </h2>
 
-                <li class="menu nav-item">
-                    <button
-                        type="button"
-                        class="nav-link group"
-                        :class="{'active' : activeDropdown === 'learning_areas'}"
-                        @click="activeDropdown === 'learning_areas' ? activeDropdown = null : activeDropdown = 'learning_areas'"
-                    >
-                        <div class="flex items-center">
-                            <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M14.2502 4.47954L14.2502 7.5372C14.25 7.64842 14.2498 7.80699 14.271 7.9431C14.297 8.10951 14.3826 8.43079 14.7153 8.62611C15.0357 8.81422 15.349 8.74436 15.498 8.69806C15.6278 8.6577 15.7702 8.58988 15.8764 8.5393L17.0002 8.00545L18.124 8.5393C18.2302 8.58987 18.3725 8.6577 18.5024 8.69806C18.6513 8.74436 18.9647 8.81422 19.2851 8.62611C19.6177 8.43079 19.7033 8.10952 19.7293 7.9431C19.7506 7.807 19.7504 7.64845 19.7502 7.53723L19.7502 3.0313C19.863 3.026 19.9737 3.02152 20.082 3.01775C21.1538 2.98041 22 3.86075 22 4.93319V16.1436C22 17.2546 21.094 18.1535 19.9851 18.2228C19.0157 18.2835 17.8767 18.402 17 18.6334C15.9185 18.9187 14.6271 19.5365 13.6276 20.0692C13.3485 20.218 13.0531 20.3257 12.7502 20.3925V5.17387C13.0709 5.0953 13.3824 4.97142 13.6738 4.80275C13.8581 4.6961 14.0514 4.58732 14.2502 4.47954ZM19.7278 12.8181C19.8282 13.2199 19.5839 13.6271 19.1821 13.7276L15.1821 14.7276C14.7802 14.8281 14.373 14.5837 14.2726 14.1819C14.1721 13.7801 14.4164 13.3729 14.8183 13.2724L18.8183 12.2724C19.2201 12.1719 19.6273 12.4163 19.7278 12.8181Z"
-                                      fill="#1C274D"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M11.2502 5.21397C10.9159 5.15048 10.5894 5.03785 10.2823 4.87546C9.29611 4.35401 8.04921 3.76431 7 3.48744C6.11349 3.25351 4.95877 3.1349 3.9824 3.07489C2.8863 3.00752 2 3.89963 2 4.9978V16.1436C2 17.2546 2.90605 18.1535 4.01486 18.2228C4.98428 18.2835 6.12329 18.402 7 18.6334C8.08145 18.9187 9.37293 19.5365 10.3724 20.0692C10.6516 20.218 10.9472 20.3258 11.2502 20.3926V5.21397ZM4.27257 8.8181C4.37303 8.41625 4.78023 8.17193 5.18208 8.27239L9.18208 9.27239C9.58393 9.37285 9.82825 9.78006 9.72778 10.1819C9.62732 10.5837 9.22012 10.8281 8.81828 10.7276L4.81828 9.72761C4.41643 9.62715 4.17211 9.21994 4.27257 8.8181ZM5.18208 12.2724C4.78023 12.1719 4.37303 12.4163 4.27257 12.8181C4.17211 13.2199 4.41643 13.6271 4.81828 13.7276L8.81828 14.7276C9.22012 14.8281 9.62732 14.5837 9.72778 14.1819C9.82825 13.7801 9.58393 13.3729 9.18208 13.2724L5.18208 12.2724Z"
-                                      fill="#1C274D"/>
-                                <path
-                                    d="M18.2502 3.15101C17.6301 3.22431 17.0206 3.33159 16.5 3.48744C16.2585 3.55975 16.0064 3.65141 15.7502 3.7564V3.95002V6.93859L16.4995 6.58266L16.5083 6.57822C16.5573 6.55316 16.7638 6.44757 17.0002 6.44757C17.0477 6.44757 17.094 6.45184 17.1381 6.45887C17.3132 6.48679 17.4529 6.5582 17.4921 6.57822L17.5009 6.58265L18.2502 6.93859V3.64665V3.15101Z"
-                                    fill="#1C274D"/>
-                            </svg>
-
-                            <span
-                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Learning Areas</span>
-                        </div>
-                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'learning_areas'}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                      stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </button>
-                    <ul x-cloak x-show="activeDropdown === 'learning_areas'" x-collapse class="sub-menu text-gray-500">
-                        <li>
-                            <a href="{{ route('admin.learning-areas') }}">Learning Areas</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.strands') }}">Strands</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.sub-strands') }}">Sub Strands</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.indicators') }}">Indicators</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
-                    <span>Secondary Section</span>
-                </h2>
-
                 <li class="nav-item">
                     <ul>
                         <li class="menu nav-item">
                             <button
                                 type="button"
                                 class="nav-link group"
-                                :class="{'active' : activeDropdown === 'marks'}"
-                                @click="activeDropdown === 'marks' ? activeDropdown = null : activeDropdown = 'marks'"
+                                :class="{'active' : activeDropdown === 'pri_marks'}"
+                                @click="activeDropdown === 'pri_marks' ? activeDropdown = null : activeDropdown = 'pri_marks'"
                             >
                                 <div class="flex items-center">
                                     <svg width="24" class="group-hover:!text-primary" height="24" viewBox="0 0 24 24"
@@ -149,9 +97,9 @@
                                     </svg>
 
                                     <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Mark Entry</span>
+                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Marks</span>
                                 </div>
-                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'marks'}">
+                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'pri_marks'}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
@@ -159,7 +107,110 @@
                                     </svg>
                                 </div>
                             </button>
-                            <ul x-cloak x-show="activeDropdown === 'marks'" x-collapse class="sub-menu text-gray-500">
+                            <ul x-cloak x-show="activeDropdown === 'pri_marks'" x-collapse class="sub-menu text-gray-500">
+                                <li>
+                                    <a href="{{ route('admin.pri.marks', 'learning-area') }}">Per Learning Area</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.pri.marks', 'student') }}">Per Student</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu nav-item">
+                            <button
+                                type="button"
+                                class="nav-link group"
+                                :class="{'active' : activeDropdown === 'learning_areas'}"
+                                @click="activeDropdown === 'learning_areas' ? activeDropdown = null : activeDropdown = 'learning_areas'"
+                            >
+                                <div class="flex items-center">
+                                    <svg class="group-hover:!text-primary" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                              d="M14.2502 4.47954L14.2502 7.5372C14.25 7.64842 14.2498 7.80699 14.271 7.9431C14.297 8.10951 14.3826 8.43079 14.7153 8.62611C15.0357 8.81422 15.349 8.74436 15.498 8.69806C15.6278 8.6577 15.7702 8.58988 15.8764 8.5393L17.0002 8.00545L18.124 8.5393C18.2302 8.58987 18.3725 8.6577 18.5024 8.69806C18.6513 8.74436 18.9647 8.81422 19.2851 8.62611C19.6177 8.43079 19.7033 8.10952 19.7293 7.9431C19.7506 7.807 19.7504 7.64845 19.7502 7.53723L19.7502 3.0313C19.863 3.026 19.9737 3.02152 20.082 3.01775C21.1538 2.98041 22 3.86075 22 4.93319V16.1436C22 17.2546 21.094 18.1535 19.9851 18.2228C19.0157 18.2835 17.8767 18.402 17 18.6334C15.9185 18.9187 14.6271 19.5365 13.6276 20.0692C13.3485 20.218 13.0531 20.3257 12.7502 20.3925V5.17387C13.0709 5.0953 13.3824 4.97142 13.6738 4.80275C13.8581 4.6961 14.0514 4.58732 14.2502 4.47954ZM19.7278 12.8181C19.8282 13.2199 19.5839 13.6271 19.1821 13.7276L15.1821 14.7276C14.7802 14.8281 14.373 14.5837 14.2726 14.1819C14.1721 13.7801 14.4164 13.3729 14.8183 13.2724L18.8183 12.2724C19.2201 12.1719 19.6273 12.4163 19.7278 12.8181Z"
+                                              fill="#1C274D"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                              d="M11.2502 5.21397C10.9159 5.15048 10.5894 5.03785 10.2823 4.87546C9.29611 4.35401 8.04921 3.76431 7 3.48744C6.11349 3.25351 4.95877 3.1349 3.9824 3.07489C2.8863 3.00752 2 3.89963 2 4.9978V16.1436C2 17.2546 2.90605 18.1535 4.01486 18.2228C4.98428 18.2835 6.12329 18.402 7 18.6334C8.08145 18.9187 9.37293 19.5365 10.3724 20.0692C10.6516 20.218 10.9472 20.3258 11.2502 20.3926V5.21397ZM4.27257 8.8181C4.37303 8.41625 4.78023 8.17193 5.18208 8.27239L9.18208 9.27239C9.58393 9.37285 9.82825 9.78006 9.72778 10.1819C9.62732 10.5837 9.22012 10.8281 8.81828 10.7276L4.81828 9.72761C4.41643 9.62715 4.17211 9.21994 4.27257 8.8181ZM5.18208 12.2724C4.78023 12.1719 4.37303 12.4163 4.27257 12.8181C4.17211 13.2199 4.41643 13.6271 4.81828 13.7276L8.81828 14.7276C9.22012 14.8281 9.62732 14.5837 9.72778 14.1819C9.82825 13.7801 9.58393 13.3729 9.18208 13.2724L5.18208 12.2724Z"
+                                              fill="#1C274D"/>
+                                        <path
+                                            d="M18.2502 3.15101C17.6301 3.22431 17.0206 3.33159 16.5 3.48744C16.2585 3.55975 16.0064 3.65141 15.7502 3.7564V3.95002V6.93859L16.4995 6.58266L16.5083 6.57822C16.5573 6.55316 16.7638 6.44757 17.0002 6.44757C17.0477 6.44757 17.094 6.45184 17.1381 6.45887C17.3132 6.48679 17.4529 6.5582 17.4921 6.57822L17.5009 6.58265L18.2502 6.93859V3.64665V3.15101Z"
+                                            fill="#1C274D"/>
+                                    </svg>
+
+                                    <span
+                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Learning Areas</span>
+                                </div>
+                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'learning_areas'}">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </button>
+                            <ul x-cloak x-show="activeDropdown === 'learning_areas'" x-collapse class="sub-menu text-gray-500">
+                                <li>
+                                    <a href="{{ route('admin.learning-areas') }}">Learning Areas</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.strands') }}">Strands</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.sub-strands') }}">Sub Strands</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.indicators') }}">Indicators</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                    <span>Secondary Section</span>
+                </h2>
+
+                <li class="nav-item">
+                    <ul>
+                        <li class="menu nav-item">
+                            <button
+                                type="button"
+                                class="nav-link group"
+                                :class="{'active' : activeDropdown === 'sec_marks'}"
+                                @click="activeDropdown === 'sec_marks' ? activeDropdown = null : activeDropdown = 'sec_marks'"
+                            >
+                                <div class="flex items-center">
+                                    <svg width="24" class="group-hover:!text-primary" height="24" viewBox="0 0 24 24"
+                                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.5"
+                                              d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                                              fill="#1C274C"/>
+                                        <path
+                                            d="M10.5431 7.51724C10.8288 7.2173 10.8172 6.74256 10.5172 6.4569C10.2173 6.17123 9.74256 6.18281 9.4569 6.48276L7.14286 8.9125L6.5431 8.28276C6.25744 7.98281 5.78271 7.97123 5.48276 8.2569C5.18281 8.54256 5.17123 9.01729 5.4569 9.31724L6.59976 10.5172C6.74131 10.6659 6.9376 10.75 7.14286 10.75C7.34812 10.75 7.5444 10.6659 7.68596 10.5172L10.5431 7.51724Z"
+                                            fill="#1C274C"/>
+                                        <path
+                                            d="M13 8.25C12.5858 8.25 12.25 8.58579 12.25 9C12.25 9.41422 12.5858 9.75 13 9.75H18C18.4142 9.75 18.75 9.41422 18.75 9C18.75 8.58579 18.4142 8.25 18 8.25H13Z"
+                                            fill="#1C274C"/>
+                                        <path
+                                            d="M10.5431 14.5172C10.8288 14.2173 10.8172 13.7426 10.5172 13.4569C10.2173 13.1712 9.74256 13.1828 9.4569 13.4828L7.14286 15.9125L6.5431 15.2828C6.25744 14.9828 5.78271 14.9712 5.48276 15.2569C5.18281 15.5426 5.17123 16.0173 5.4569 16.3172L6.59976 17.5172C6.74131 17.6659 6.9376 17.75 7.14286 17.75C7.34812 17.75 7.5444 17.6659 7.68596 17.5172L10.5431 14.5172Z"
+                                            fill="#1C274C"/>
+                                        <path
+                                            d="M13 15.25C12.5858 15.25 12.25 15.5858 12.25 16C12.25 16.4142 12.5858 16.75 13 16.75H18C18.4142 16.75 18.75 16.4142 18.75 16C18.75 15.5858 18.4142 15.25 18 15.25H13Z"
+                                            fill="#1C274C"/>
+                                    </svg>
+
+                                    <span
+                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Marks</span>
+                                </div>
+                                <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'sec_marks'}">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </button>
+                            <ul x-cloak x-show="activeDropdown === 'sec_marks'" x-collapse class="sub-menu text-gray-500">
                                 <li>
                                     <a href="{{ route('admin.assessment.subject') }}">Per Subject</a>
                                 </li>
