@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Indicators')
 @push('links')
-    <link href="{{ asset('/vendors/tom-select/tom-select.css') }}" rel="stylesheet">
     <link
         href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/b-2.4.1/cr-1.7.0/r-2.5.0/sc-2.2.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css"
         rel="stylesheet">
@@ -181,7 +180,6 @@
 @push('scripts')
     <script
         src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/b-2.4.1/cr-1.7.0/r-2.5.0/sc-2.2.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.js"></script>
-    <script src="{{ asset('/vendors/tom-select/tom-select.complete.min.js') }}"></script>
 
     <script>
         document.addEventListener('alpine:init', () => {

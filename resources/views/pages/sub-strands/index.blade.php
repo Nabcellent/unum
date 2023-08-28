@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Sub Strands')
-@push('links')
-    <link href="{{ asset('/vendors/tom-select/tom-select.css') }}" rel="stylesheet">
-@endpush
 @section('content')
 
     <div x-data="subStrands" class="xl:px-32 lg:px-20">
@@ -139,7 +136,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/vendors/tom-select/tom-select.complete.min.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data("subStrands", () => ({
@@ -175,25 +171,26 @@
                 },
                 fetchStrands() {
                     if (this.learning_area_id) {
-                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data}) => {
-                            if (data.status) {
-                                this.strands = data.strands.map(s => ({
-                                    ...s,
-                                    selected: s.id === Number(this.form.strand_id)
-                                }))
+                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`)
+                            .then(({data: {data, status}}) => {
+                                if (status) {
+                                    this.strands = data.map(s => ({
+                                        ...s,
+                                        selected: s.id === Number(this.form.strand_id)
+                                    }))
 
-                                this.tomSelectStrand.clear()
-                                this.tomSelectStrand.clearOptions()
+                                    this.tomSelectStrand.clear()
+                                    this.tomSelectStrand.clearOptions()
 
-                                data.strands.forEach(s => {
-                                    this.tomSelectStrand.addOption({value: s.id, text: s.name})
-                                })
+                                    data.forEach(s => {
+                                        this.tomSelectStrand.addOption({value: s.id, text: s.name})
+                                    })
 
-                                if (this.form.strand_id) {
-                                    this.tomSelectStrand.addItem(this.form.strand_id, true)
+                                    if (this.form.strand_id) {
+                                        this.tomSelectStrand.addItem(this.form.strand_id, true)
+                                    }
                                 }
-                            }
-                        })
+                            })
                     }
                 },
                 fetchSubStrands() {

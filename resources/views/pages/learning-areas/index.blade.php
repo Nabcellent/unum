@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Learning Areas')
-@push('links')
-    <link href="{{ asset('/vendors/tom-select/tom-select.css') }}" rel="stylesheet">
-@endpush
 @section('content')
 
     <div x-data="learningAreas" class="xl:px-40 lg:px-32">
@@ -167,7 +164,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('/vendors/tom-select/tom-select.complete.min.js') }}"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data("learningAreas", () => ({

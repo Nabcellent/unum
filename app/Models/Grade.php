@@ -63,48 +63,19 @@ class Grade extends Model
         return $this->hasMany(Student::class);
     }
 
-    public static function classAverage($subject, $table, $darasa)
+    /**
+     * Scope a query to only include secondary grades.
+     */
+    public function scopePrimary(Builder $query): void
     {
-        $catz = exam();
-        $conn = connect_to_db();
-        $students_table = students_table();
-        if ($subject == 'average') $subj = $subject;
-        else $subj = $subject."_mean";
-        $daro = "Grade 7A";
-        $stream = substr($daro, 0, -1);
-        $current_year_accumulated_results_table = current_year_accumulated_results_table();
+        $query->where('level', 'primary');
+    }
 
-        if ($table == $current_year_accumulated_results_table)
-            $query = "SELECT avg(`$subj`) as ave  FROM `$table` JOIN `$students_table` USING (`student_id`) WHERE `class` like '".$stream."%'and char_length(`$subj`)>0";
-        else
-            $query = "SELECT avg(`$subj`) as ave  FROM `$table` JOIN `$students_table` USING (`student_id`) WHERE `class` like '".$stream."%'and char_length(`$subj`)>0 and `exam` = '$catz'";
-
-        $resultz = $conn->query($query);
-
-        if ($resultz->num_rows > 0) {
-            $rowz = $resultz->fetch_assoc();
-
-            $cow = $rowz['ave'];
-        } else {
-            $cow = null;
-        }
-
-        if ($table == $current_year_accumulated_results_table)
-            $queryz = "SELECT avg(`$subj`) as ave  FROM `$table` JOIN `$students_table` USING (`student_id`) WHERE `class` like '".$daro."'and char_length(`$subj`)>0";
-        else
-            $queryz = "SELECT avg(`$subj`) as ave  FROM `$table` JOIN `$students_table` USING (`student_id`) WHERE `class` like '".$daro."'and char_length(`$subj`)>0 and `exam` like '$catz'";
-
-        $resultzi = $conn->query($queryz);
-
-        if ($resultzi->num_rows > 0) {
-            $rowzi = $resultzi->fetch_assoc();
-            $exo = $rowzi['ave'];
-        } else
-            $exo = null;
-
-        if ($darasa == 'all') $accum = $cow;
-        else $accum = $exo;
-
-        return ($accum);
+    /**
+     * Scope a query to only include primary grades.
+     */
+    public function scopeSecondary(Builder $query): void
+    {
+        $query->where('level', 'secondary');
     }
 }

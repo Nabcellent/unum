@@ -16,17 +16,17 @@ class GradeSeeder extends Seeder
 
         $grades = [];
         for ($i = 1; $i <= 6; $i++) {
-            $grades[] = ["stream_id" => null, "name" => "Grade $i"];
+            $grades[] = ["stream_id" => null, "name" => "Grade $i", "level" => "primary"];
         }
 
-        $grades[] = ["stream_id" => 1, "name" => "Grade 7"];
-        $grades[] = ["stream_id" => 2, "name" => "Grade 7"];
+        $grades[] = ["stream_id" => 1, "name" => "Grade 7", "level" => "secondary"];
+        $grades[] = ["stream_id" => 2, "name" => "Grade 7", "level" => "secondary"];
 
-        $grades[] = ["stream_id" => null, "name" => "STD 8"];
+        $grades[] = ["stream_id" => null, "name" => "STD 8", "level" => "secondary"];
 
         for ($i = 1; $i <= 4; $i++) {
-            $grades[] = ["stream_id" => 1, "name" => "Form $i"];
-            $grades[] = ["stream_id" => 2, "name" => "Form $i"];
+            $grades[] = ["stream_id" => 1, "name" => "Form $i", "level" => "secondary"];
+            $grades[] = ["stream_id" => 2, "name" => "Form $i", "level" => "secondary"];
         }
 
         $grades[] = ["stream_id" => null, "name" => "Alumni"];

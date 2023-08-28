@@ -16,14 +16,14 @@ class LearningAreaController extends Controller
     {
         $learningAreas = LearningArea::with('grades')->withCount(['strands'])->get();
 
-        return response()->json(['status' => true, 'learningAreas' => $learningAreas]);
+        return $this->successResponse($learningAreas);
     }
 
     public function getStrands(int $learningAreaId): JsonResponse
     {
         $strands = Strand::whereLearningAreaId($learningAreaId)->with('learningArea')->withCount(['subStrands'])->get();
 
-        return response()->json(['status' => true, 'strands' => $strands]);
+        return $this->successResponse($strands);
     }
 
     /**

@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/index.css') }}"/>
 <link defer rel="stylesheet" type="text/css" media="screen" href="{{ asset('/css/animate.css') }}"/>
 <link rel="stylesheet" type="text/css" href="{{ asset('/css/nice-select2.css') }}"/>
+<link href="{{ asset('/vendors/tom-select/tom-select.css') }}" rel="stylesheet">
 
 @stack('links')
 

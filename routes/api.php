@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
 use App\Http\Controllers\Api\StrandController;
 use App\Http\Controllers\Api\SubStrandController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\StudentController;
@@ -28,9 +28,10 @@ Route::prefix('/grades')->group(function () {
     Route::get('/', [GradeController::class, 'getGrades']);
 
     Route::prefix('/{grade}')->group(function () {
-        Route::get('/subjects', [GradeController::class, 'subjects']);
-        Route::get('/results', [GradeController::class, 'results']);
-        Route::get('/students', [GradeController::class, 'results']);
+        Route::get('/subjects', [GradeController::class, 'getSubjects']);
+        Route::get('/learning-areas', [GradeController::class, 'getLearningAreas']);
+        Route::get('/results', [GradeController::class, 'getResults']);
+        Route::get('/students', [GradeController::class, 'getStudents']);
 
         Route::get('/attendances', [AttendanceController::class, 'index']);
         Route::put('/attendances', [AttendanceController::class, 'upsert']);

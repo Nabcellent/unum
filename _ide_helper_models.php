@@ -176,6 +176,7 @@ namespace App\Models{
  * @property int $id
  * @property int|null $stream_id
  * @property string $name
+ * @property string|null $level
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LearningArea> $learningAreas
  * @property-read int|null $learning_areas_count
  * @property-read \App\Models\Stream|null $stream
@@ -185,8 +186,11 @@ namespace App\Models{
  * @property-read int|null $subjects_count
  * @method static \Illuminate\Database\Eloquent\Builder|Grade newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Grade newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Grade primary()
  * @method static \Illuminate\Database\Eloquent\Builder|Grade query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Grade secondary()
  * @method static \Illuminate\Database\Eloquent\Builder|Grade whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Grade whereLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Grade whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Grade whereStreamId($value)
  * @mixin \Eloquent
@@ -225,6 +229,7 @@ namespace App\Models{
  * @property string $competent
  * @property string $approaching_competence
  * @property string $needs_improvement
+ * @property-read \App\Models\SubStrand $subStrand
  * @method static \Illuminate\Database\Eloquent\Builder|Indicator newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Indicator newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Indicator query()
@@ -258,6 +263,18 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class IdeHelperLearningArea {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PriResult
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperPriResult {}
 }
 
 namespace App\Models{
@@ -394,6 +411,9 @@ namespace App\Models{
  * @property int $id
  * @property int $strand_id
  * @property string $name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Indicator> $indicators
+ * @property-read int|null $indicators_count
+ * @property-read \App\Models\Strand $strand
  * @method static \Illuminate\Database\Eloquent\Builder|SubStrand newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubStrand newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubStrand query()

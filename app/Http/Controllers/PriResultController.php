@@ -16,7 +16,7 @@ class PriResultController extends Controller
         $exams = Exam::get();
 
         $data = [
-            "grades"      => Grade::get(),
+            "grades"      => Grade::primary()->get(),
             "exams"       => $exams,
             "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];

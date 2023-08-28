@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Stream::class)->nullable()->constrained()->nullOnDelete()->cascadeOnUpdate();
             $table->string("name", 10);
+            $table->string("level", 20)->nullable();
 
             $table->unique(['stream_id', 'name']);
         });
