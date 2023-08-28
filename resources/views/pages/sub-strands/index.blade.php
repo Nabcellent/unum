@@ -100,7 +100,7 @@
                             <tr>
                                 <td x-text="s.name" class="whitespace-nowrap"></td>
                                 <td class="whitespace-nowrap">
-                                    <a :href="`/dashboard/sub-strands?strand-id=${s.id}`"
+                                    <a :href="`/dashboard/indicators?sub-strand-id=${s.id}`"
                                        x-text="s.indicators_count"></a>
                                 </td>
                                 <td class="flex items-center justify-between">
