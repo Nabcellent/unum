@@ -12,7 +12,7 @@ class UpdateIndicatorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,9 +22,12 @@ class UpdateIndicatorRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this->get('indicator'));
         return [
-            'name'                   => ['string', Rule::unique('indicators', 'name')->ignore($indicator->id)],
+            'name'                   => [
+                'string',
+                Rule::unique('indicators', 'name')
+                    ->where('sub_strand_id', $this->input('sub_strand_id'))->ignore($this->route('indicator'))
+            ],
             'sub_strand_id'          => 'integer|exists:sub_strands,id',
             'highly_competent'       => 'required|string',
             'competent'              => 'required|string',

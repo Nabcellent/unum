@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreIndicatorRequest extends FormRequest
 {
@@ -22,7 +23,11 @@ class StoreIndicatorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                   => 'required|string|unique:indicators',
+            'name'                   => [
+                'required',
+                'string',
+                Rule::unique('indicators', 'name')->where('sub_strand_id', $this->input('sub_strand_id')),
+            ],
             'sub_strand_id'          => 'required|integer|exists:sub_strands,id',
             'highly_competent'       => 'required|string',
             'competent'              => 'required|string',

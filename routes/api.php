@@ -68,8 +68,8 @@ Route::prefix('/sub-strands')->group(function () {
 
 Route::prefix('/indicators')->group(function () {
     Route::post('/', [IndicatorController::class, 'store']);
-    Route::put('/{subStrand}', [IndicatorController::class, 'update']);
-    Route::delete('/{subStrand}', [IndicatorController::class, 'destroy']);
+    Route::put('/{indicator}', [IndicatorController::class, 'update']);
+    Route::delete('/{indicator}', [IndicatorController::class, 'destroy']);
 });
 
 Route::prefix('/students')->group(function () {
