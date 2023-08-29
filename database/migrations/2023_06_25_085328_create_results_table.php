@@ -31,16 +31,6 @@ return new class extends Migration {
 
             $table->unique(['student_id', 'exam_id', 'subject_id']);
         });
-
-        //  Store student averages per exam.
-        /*DB::statement("
-            CREATE VIEW cumulative_results_view AS
-            SELECT r.student_id,
-                   r.exam_id,
-                   AVG(r.average) AS average_subject
-            FROM results r
-            GROUP BY r.student_id, r.exam_id;
-        ");*/
     }
 
     /**
@@ -48,8 +38,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-//        DB::statement("DROP VIEW IF EXISTS cumulative_results_view;");
-
         Schema::dropIfExists('results');
     }
 };

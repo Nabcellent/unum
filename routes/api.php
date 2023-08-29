@@ -3,11 +3,12 @@
 use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
+use App\Http\Controllers\Api\PriResultController;
 use App\Http\Controllers\Api\StrandController;
 use App\Http\Controllers\Api\SubStrandController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SecResultController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SummaryController;
@@ -32,7 +33,6 @@ Route::prefix('/grades')->group(function () {
         Route::put('/subjects', [GradeController::class, 'syncSubjects']);
         Route::get('/learning-areas', [GradeController::class, 'getLearningAreas']);
         Route::put('/learning-areas', [GradeController::class, 'syncLearningAreas']);
-
 
         Route::get('/results', [GradeController::class, 'getResults']);
         Route::get('/students', [GradeController::class, 'getStudents']);
@@ -82,9 +82,13 @@ Route::prefix('/students')->group(function () {
     Route::get('/{student}/results', [StudentController::class, 'results']);
 });
 
+Route::prefix('/primary')->group(function() {
+    Route::put('/results', [PriResultController::class, 'upsert']);
+});
+
 Route::prefix('/results')->group(function () {
-    Route::post('/subject', [ResultController::class, 'storeSubject']);
-    Route::post('/students/{student}', [ResultController::class, 'storeStudent']);
+    Route::post('/subject', [SecResultController::class, 'storeSubject']);
+    Route::post('/students/{student}', [SecResultController::class, 'storeStudent']);
 });
 
 Route::prefix('/reports/exams/{exam}/grades/{grade}')->group(function () {

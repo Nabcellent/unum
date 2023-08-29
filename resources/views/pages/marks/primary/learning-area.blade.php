@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Marks')
+@section('title', 'Primary Marks')
 @section('content')
     <div x-data="marks" class="2xl:px-20">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
@@ -28,34 +28,9 @@
                 </div>
                 <div class="mb-3">
                     <label for="learning-area">Learning Area</label>
-                    <select id="learning-area" x-ref="learningAreaNice" x-model="learning_area_id"
-                            @change="fetchStrands">
+                    <select id="learning-area" x-ref="tomLearningAreaEl" x-model="learning_area_id" @change="updateTable">
                         <template x-for="l in learning_areas" :key="l.id">
                             <option :value="l.id" x-text="l.name" :selected="l.selected"></option>
-                        </template>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="strand">Strand</label>
-                    <select id="strand" x-ref="tomStrandEl" x-model="strand_id" @change="fetchSubStrands">
-                        <template x-for="s in strands" :key="s.id">
-                            <option :value="s.id" x-text="s.name" :selected="s.selected"></option>
-                        </template>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="sub-strand">Sub Strand</label>
-                    <select id="sub-strand" x-ref="tomSubStrandEl" x-model="sub_strand_id" @change="fetchIndicators">
-                        <template x-for="i in indicators" :key="i.id">
-                            <option :value="i.id" x-text="i.name" :selected="i.selected"></option>
-                        </template>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="sub-strand">Indicator</label>
-                    <select id="sub-strand" x-ref="tomIndicatorEl" x-model="sub_strand_id" @change="fetchIndicators">
-                        <template x-for="i in indicators" :key="i.id">
-                            <option :value="i.id" x-text="i.name" :selected="i.selected"></option>
                         </template>
                     </select>
                 </div>
@@ -68,9 +43,7 @@
                     <thead>
                     <tr>
                         <th colspan="2" style="width: 206px">Name</th>
-                        <th>Course Work</th>
                         <th>Exam</th>
-                        <th>Ave</th>
                         <th>Quarter</th>
                         <th>Rank</th>
                     </tr>
@@ -79,38 +52,23 @@
                     <template x-for="(student, i) in students" :key="student.id">
                         <tr>
                             <td class="py-1 w-3" x-text="student.class_no"></td>
-                            <td class="py-1 w-1/4" x-text="student.name"></td>
-                            <td class="py-1 w-32">
-                                <input
-                                    :id="`cw-${i}`"
-                                    @input="onMarkChange(i, 'cw', $event.target)"
-                                    aria-label
-                                    type="number"
-                                    max="99"
-                                    min="0"
-                                    step="1"
-                                    placeholder="%"
-                                    class="form-input w-16 px-2 py-1"
-                                    x-model="student.result.course_work_mark"
-                                />
-                            </td>
+                            <td class="py-1 w-1/3" x-text="student.name"></td>
                             <td class="py-1">
                                 <input
                                     :id="`exam-${i}`"
-                                    @input="onMarkChange(i, 'exam', $event.target)"
+                                    @input="onMarkChange(i, $event.target)"
                                     aria-label
                                     type="number"
                                     max="99"
                                     min="0"
                                     step="1"
                                     placeholder="%"
-                                    class="form-input w-16 px-2 py-1"
-                                    x-model="student.result.exam_mark"
+                                    class="form-input w-14 px-2 py-1"
+                                    x-model="student.primary_result.mark"
                                 />
                             </td>
-                            <td class="py-1" x-text="student.result?.average"></td>
-                            <td class="py-1" x-text="student.result?.quarter"></td>
-                            <td class="py-1" x-text="student.result?.rank"></td>
+                            <td class="py-1" x-text="student.primary_result?.quarter"></td>
+                            <td class="py-1" x-text="student.primary_result?.rank"></td>
                         </tr>
                     </template>
                     </tbody>
@@ -162,49 +120,26 @@
             // Marks
             Alpine.data('marks', () => ({
                 loading: false,
-                updateMarksModal: false,
                 exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
                 learning_area_id: null,
                 learning_areas: [],
-                strand_id: null,
-                strands: [],
-                sub_strands: [],
-                sub_strand_id: null,
-                indicators: [],
-                indicator_id: null,
                 students: [],
-                learningAreaNice: null,
+                tomLearningArea: null,
                 canFirstLearningArea: false,
                 canLastLearningArea: false,
                 canNextLearningArea: false,
                 canPrevLearningArea: false,
-                tom: {
-                    strand: null,
-                    subStrand: null,
-                    indicator: null,
-                },
 
                 init() {
-                    const tomSelectOpts = {
-                        sortField: {
-                            field: "text",
-                            direction: "asc"
-                        }
-                    }
-                    this.tom.strand = new TomSelect(this.$refs.tomStrandEl, tomSelectOpts);
-                    this.tom.subStrand = new TomSelect(this.$refs.tomSubStrandEl, tomSelectOpts);
-                    this.tom.indicator = new TomSelect(this.$refs.tomIndicatorEl, tomSelectOpts);
-
-                    this.learningAreaNice = NiceSelect.bind(this.$refs.learningAreaNice, {searchable: true,})
+                    this.tomLearningArea = new TomSelect(this.$refs.tomLearningAreaEl);
                 },
 
-                onMarkChange(i, markName, el) {
+                onMarkChange(i, el) {
                     const nextInput = () => {
-                        if (markName === 'exam') i++
+                        i++
 
-                        const nextInputIdentifier = markName === 'cw' ? 'exam' : 'cw';
-                        const nextInputElement = document.getElementById(`${nextInputIdentifier}-${i}`);
+                        const nextInputElement = document.getElementById(`exam-${i}`);
 
                         if (nextInputElement) {
                             nextInputElement.focus();
@@ -222,19 +157,13 @@
                     if (el.value.length === 2) nextInput()
                 },
 
-                learningAreaUpdatedEvent() {
-                    setTimeout(() => {
-                        this.learningAreaNice.update()
-
-                        this.updateTable()
-                    }, 50)
-                },
-
                 goToFirstLearningArea() {
                     this.learning_areas[0].selected = true
                     this.learning_area_id = this.learning_areas[0].id
 
-                    this.learningAreaUpdatedEvent()
+                    this.tomLearningArea.addItem(this.learning_area_id, true)
+
+                    this.updateTable()
                 },
                 goToPreviousLearningArea() {
                     const currentIndex = this.learning_areas.findIndex(s => s.id === this.learning_area_id)
@@ -243,7 +172,9 @@
                     this.learning_areas = this.learning_areas.map((s, i) => ({...s, selected: i === prevIndex}))
                     this.learning_area_id = this.learning_areas[prevIndex].id
 
-                    this.learningAreaUpdatedEvent()
+                    this.tomLearningArea.addItem(this.learning_area_id, true)
+
+                    this.updateTable()
                 },
                 goToNextLearningArea() {
                     const currentIndex = this.learning_areas.findIndex(s => s.id === this.learning_area_id)
@@ -252,7 +183,9 @@
                     this.learning_areas = this.learning_areas.map((s, i) => ({...s, selected: i === nextIndex}))
                     this.learning_area_id = this.learning_areas[nextIndex].id
 
-                    this.learningAreaUpdatedEvent()
+                    this.tomLearningArea.addItem(this.learning_area_id, true)
+
+                    this.updateTable()
                 },
                 goToLastLearningArea() {
                     this.learning_areas = this.learning_areas.map((s, i) => ({
@@ -261,7 +194,9 @@
                     }))
                     this.learning_area_id = this.learning_areas[this.learning_areas.length - 1].id
 
-                    this.learningAreaUpdatedEvent()
+                    this.tomLearningArea.addItem(this.learning_area_id, true)
+
+                    this.updateTable()
                 },
 
                 updatePagination() {
@@ -284,11 +219,8 @@
                             }
                         }).then(({data: {data}}) => {
                             this.students = data.map(s => {
-                                if (!s.result) {
-                                    s.result = {
-                                        course_work_mark: null,
-                                        exam_mark: null,
-                                    }
+                                if (!s.primary_result) {
+                                    s.primary_result = {mark: null}
                                 }
 
                                 return s
@@ -304,75 +236,28 @@
 
                     if (this.grade_id) {
                         axios.get(`/api/grades/${this.grade_id}/learning-areas`)
-                            .then(({data}) => {
-                                this.learning_areas = data.data.map(d => ({...d, selected: d.id === data.data[0].id}))
-                                this.learning_area_id = data.data[0]?.id
-
-                                this.learningAreaUpdatedEvent()
-
-                                if(!this.strand_id) this.fetchStrands()
-                            }).catch(err => console.error(err))
-                    }
-                },
-
-                fetchStrands() {
-                    if (this.learning_area_id) {
-                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`)
                             .then(({data: {data}}) => {
-                                this.strands = data.map((s, i) => {
-                                    if(i === 0) this.strand_id = s.id
+                                this.tomLearningArea.clear()
+                                this.tomLearningArea.clearOptions()
 
-                                    this.tom.strand.addOption({value: s.id, text: s.name})
+                                data.sort((a, b) => a.name.localeCompare(b.name))
 
-                                    return {...s, selected: s.id === this.strand_id}
+                                this.learning_areas = data.map(d => {
+                                    this.tomLearningArea.addOption({value: d.id, text: d.name})
+
+                                    return {...d, selected: d.id === data[0].id}
                                 })
+                                this.learning_area_id = data[0]?.id
+                                this.tomLearningArea.addItem(this.learning_area_id, true)
 
-                                if(!this.sub_strand_id) this.fetchSubStrands()
-
-                                this.tom.strand.addItem(this.strand_id, true)
-                            }).catch(err => console.error(err))
-                    }
-                },
-
-                fetchSubStrands() {
-                    if (this.strand_id) {
-                        axios.get(`/api/strands/${this.strand_id}/sub-strands`)
-                            .then(({data: {data}}) => {
-                                this.sub_strands = data.map((s, i) => {
-                                    if(i === 0) this.sub_strand_id = s.id
-
-                                    this.tom.subStrand.addOption({value: s.id, text: s.name})
-
-                                    return {...s, selected: s.id === this.sub_strand_id}
-                                })
-
-                                if(!this.indicator_id) this.fetchIndicators()
-
-                                this.tom.subStrand.addItem(this.sub_strand_id, true)
-                            }).catch(err => console.error(err))
-                    }
-                },
-
-                fetchIndicators() {
-                    if (this.sub_strand_id) {
-                        axios.get(`/api/sub-strands/${this.sub_strand_id}/indicators`)
-                            .then(({data: {data}}) => {
-                                this.indicators = data.map((s, i) => {
-                                    if(i === 0) this.indicator_id = s.id
-
-                                    this.tom.indicator.addOption({value: s.id, text: s.name})
-
-                                    return {...s, selected: s.id === this.indicator_id}
-                                })
-
-                                this.tom.indicator.addItem(this.indicator_id, true)
+                                this.updateTable()
                             }).catch(err => console.error(err))
                     }
                 },
 
                 saveMarks() {
                     for (const s of this.students) {
-                        if (!s.result.exam_mark) {
+                        if (!s.primary_result.mark) {
                             this.showMessage(`Please key in EXAM marks for ${s.class_no}. ${s.name}.`, 'error');
                             return true;
                         }
@@ -380,21 +265,16 @@
 
                     this.loading = true
 
-                    axios.post(`/api/results/learning-area`, {
-                        marks: this.students.map(s => s.result),
+                    axios.put(`/api/primary/results`, {
+                        marks: this.students.map(s => ({...s.primary_result, student_id: s.id})),
                         learning_area_id: this.learning_area_id,
                         exam_id: this.exam_id,
                         grade_id: this.grade_id
-                    }, {
-                        header: {'Content-Type': 'application/json'}
-                    }).then(({data}) => {
-                        console.log(data)
-                        if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error');
-
-                            console.log(data.error)
+                    }).then(({data: {status, msg}}) => {
+                        if (!status) {
+                            this.showMessage(msg, 'error');
                         } else {
-                            this.showMessage(data.msg)
+                            this.showMessage(msg)
 
                             this.updateTable()
                             window.scrollTo({top: 0});
@@ -404,8 +284,12 @@
                     }).catch(err => {
                         this.loading = false
 
-                        console.error(err)
-                        this.showMessage(err.message, 'error')
+                        if (err.response.status === 422) {
+                            console.log(err.response.data.message)
+                            this.showMessage(err.response.data.message, 'error')
+                        } else {
+                            this.showMessage(err.message, 'error')
+                        }
                     })
                 }
             }));

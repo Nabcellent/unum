@@ -135,7 +135,6 @@
             // Marks
             Alpine.data('marks', () => ({
                 loading: false,
-                updateMarksModal: false,
                 exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
                 subject_id: null,
@@ -234,7 +233,7 @@
                                 exam_id: this.exam_id,
                                 subject_id: this.subject_id,
                             }
-                        }).then(({data}) => {
+                        }).then(({data:{data}}) => {
                             this.students = data.map(s => {
                                 if (!s.result) {
                                     s.result = {
@@ -256,7 +255,7 @@
 
                     if (this.grade_id) {
                         axios.get(`/api/grades/${this.grade_id}/subjects`)
-                            .then(({data}) => {
+                            .then(({data:{data}}) => {
                                 this.subjects = data.map(d => ({...d, selected: d.id === data[0].id}))
                                 this.subject_id = data[0]?.id
 
@@ -280,9 +279,7 @@
                         subject_id: this.subject_id,
                         exam_id: this.exam_id,
                         grade_id: this.grade_id
-                    }, {
-                        header: {'Content-Type': 'application/json'}
-                    }).then(({data}) => {
+                    }).then(({data:{data}}) => {
                         console.log(data)
                         if (data.status === 'error') {
                             this.showMessage(data.msg, 'error');

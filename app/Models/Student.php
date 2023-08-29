@@ -54,6 +54,16 @@ class Student extends Model
         return $this->belongsTo(Grade::class);
     }
 
+    public function primaryResults(): HasMany
+    {
+        return $this->hasMany(PriResult::class);
+    }
+
+    public function primaryResult(): HasOne
+    {
+        return $this->hasOne(PriResult::class);
+    }
+
     public function results(): HasMany
     {
         return $this->hasMany(Result::class);

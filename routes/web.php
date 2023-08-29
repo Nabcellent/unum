@@ -7,7 +7,7 @@ use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\LearningAreaController;
 use App\Http\Controllers\PriResultController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SecResultController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StrandController;
 use App\Http\Controllers\StudentController;
@@ -35,10 +35,8 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     Route::prefix('/primary')->name('.pri')->group(function() {
         Route::get('/marks/{view}', [PriResultController::class, 'getView'])->name('.marks');
     });
-
-    Route::prefix('/marks')->name('.assessment')->group(function () {
-        Route::get('/student', [ResultController::class, 'createOrEditStudent'])->name('.student');
-        Route::get('/subject', [ResultController::class, 'createOrEditSubject'])->name('.subject');
+    Route::prefix('/secondary')->name('.sec')->group(function() {
+        Route::get('/marks/{view}', [SecResultController::class, 'getView'])->name('.marks');
     });
 
     Route::get('/attendances', [AttendanceController::class, 'createOrEdit'])->name('.attendances');

@@ -212,10 +212,10 @@
                             </button>
                             <ul x-cloak x-show="activeDropdown === 'sec_marks'" x-collapse class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('admin.assessment.subject') }}">Per Subject</a>
+                                    <a href="{{ route('admin.sec.marks', 'subject') }}">Per Subject</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.assessment.student') }}">Per Student</a>
+                                    <a href="{{ route('admin.sec.marks', 'student') }}">Per Student</a>
                                 </li>
                             </ul>
                         </li>

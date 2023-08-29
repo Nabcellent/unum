@@ -15,33 +15,23 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Throwable;
 
-class ResultController extends Controller
+class SecResultController extends Controller
 {
-    public function createOrEditStudent(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
+    public function getView(string $view, TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $exams = Exam::get();
 
         $data = [
-            "grades"      => Grade::get(),
+            "grades"      => Grade::secondary()->get(),
             "exams"       => $exams,
-            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
-            "termDays"    => $termSettings->days
+            "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];
 
-        return view('pages.marks.secondary.student', $data);
-    }
+        if ($view === 'student') {
+            $data['termDays'] = $termSetting->days;
+        }
 
-    public function createOrEditSubject(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
-    {
-        $exams = Exam::get();
-
-        $data = [
-            "grades"      => Grade::get(),
-            "exams"       => $exams,
-            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
-        ];
-
-        return view('pages.marks.secondary.subject', $data);
+        return view("pages.marks.secondary.$view", $data);
     }
 
     /**

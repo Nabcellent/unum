@@ -201,7 +201,7 @@
                         responsive: true,
                         ajax: {
                             url: `/api/sub-strands/${this.form.sub_strand_id || 0}/indicators`,
-                            dataSrc: 'indicators'
+                            dataSrc: 'data'
                         },
                         columns: [
                             {title: 'Name', data: 'name'},
@@ -247,12 +247,12 @@
 
                 fetchStrands() {
                     if (this.learning_area_id) {
-                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data}) => {
-                            if (data.status) {
+                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data:{data, status}}) => {
+                            if (status) {
                                 this.tomStrand.clear()
                                 this.tomStrand.clearOptions()
 
-                                this.strands = data.strands.map(s => {
+                                this.strands = data.map(s => {
                                     this.tomStrand.addOption({value: s.id, text: s.name})
 
                                     return {
@@ -269,12 +269,12 @@
 
                 fetchSubStrands() {
                     if (this.learning_area_id && this.strand_id) {
-                        axios.get(`/api/strands/${this.strand_id}/sub-strands`).then(({data}) => {
-                            if (data.status) {
+                        axios.get(`/api/strands/${this.strand_id}/sub-strands`).then(({data:{data, status}}) => {
+                            if (status) {
                                 this.tomSubStrand.clear()
                                 this.tomSubStrand.clearOptions()
 
-                                this.sub_strands = data.sub_strands.map(s => {
+                                this.sub_strands = data.map(s => {
                                     this.tomSubStrand.addOption({value: s.id, text: s.name})
 
                                     return {
@@ -293,13 +293,13 @@
                     this.loading = true
 
                     axios[this.update ? 'put' : 'post'](`/api/indicators/${this.indicator_id || ''}`, this.form)
-                        .then(({data}) => {
-                            if (data.status) {
-                                this.showMessage(data.msg)
+                        .then(({data:{msg, status}}) => {
+                            if (status) {
+                                this.showMessage(msg)
 
                                 this.datatable.ajax.reload()
                             } else {
-                                this.showMessage(data.msg, 'error')
+                                this.showMessage(msg, 'error')
                             }
 
                             this.loading = false
