@@ -10,9 +10,9 @@
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div class="mb-5">
                     <label for="class">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updateForm">
+                    <select class="selectize" x-model="exam_id" @change="updateForm" aria-label>
                         @foreach($exams as $exam)
-                            <option value="{{ $exam->id }}" @selected($exam->name === $currentExam)>
+                            <option value="{{ $exam->id }}" @selected($exam->id === $currentExam->id)>
                                 {{ $exam->name }}
                             </option>
                         @endforeach
@@ -20,7 +20,7 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Class</label>
-                    <select class="selectize" x-model="grade_id" @change="updateClass">
+                    <select class="selectize" x-model="grade_id" @change="updateClass" aria-label>
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
@@ -42,10 +42,8 @@
                 <table class="table-striped table-hover">
                     <thead>
                     <tr>
-                        <th class="font-bold">Subject</th>
-                        <th class="font-bold">Course Work</th>
+                        <th class="font-bold">Learning Area</th>
                         <th class="font-bold">Exam</th>
-                        <th class="font-bold">Ave</th>
                         <th class="font-bold">Quarter</th>
                         <th class="font-bold">Rank</th>
                     </tr>
@@ -53,22 +51,7 @@
                     <tbody>
                     <template x-for="(r, i) in results" :key="i">
                         <tr>
-                            <td class="py-1" x-text="r.subject.name"></td>
-                            <td class="py-1 w-32">
-                                <input
-                                    :id="`cw-${i}`"
-                                    type="number"
-                                    max="99"
-                                    min="0"
-                                    step="1"
-                                    placeholder="%"
-                                    class="form-input w-16 px-2 py-1"
-                                    x-model="r.course_work_mark"
-                                    maxlength="2"
-                                    aria-label
-                                    @input="onMarkChange(i, 'cw', $event.target, r)"
-                                />
-                            </td>
+                            <td class="py-1" x-text="r.learning_area.name"></td>
                             <td class="py-1">
                                 <input
                                     :id="`exam-${i}`"
@@ -78,13 +61,12 @@
                                     step="1"
                                     placeholder="%"
                                     class="form-input w-16 px-2 py-1"
-                                    x-model="r.exam_mark"
+                                    x-model="r.mark"
                                     maxlength="2"
                                     aria-label
-                                    @input="onMarkChange(i, 'exam', $event.target, r)"
+                                    @input="onMarkChange(i, $event.target, r)"
                                 />
                             </td>
-                            <td class="py-1" x-text="`${r.average ?? ''}%`"></td>
                             <td class="py-1" x-text="r.quarter"></td>
                             <td class="py-1" x-text="r.rank"></td>
                         </tr>
@@ -189,7 +171,7 @@
         document.addEventListener('alpine:init', () => {
             // Marks
             Alpine.data('marks', () => ({
-                exam_id: '{{ $currentExam }}',
+                exam_id: '{{ $currentExam->id }}',
                 grade_id: null,
                 term_days: {{ $termDays }},
                 results: [],
@@ -215,12 +197,11 @@
                     this.conductGradeSelectInstance = NiceSelect.bind(this.$refs.conductSelect);
                 },
 
-                onMarkChange(i, markName, el, result) {
+                onMarkChange(i, el, result) {
                     const nextInput = () => {
-                        if (markName === 'exam') i++
+                        i++
 
-                        const nextInputIdentifier = markName === 'cw' ? 'exam' : 'cw';
-                        const nextInputElement = document.getElementById(`${nextInputIdentifier}-${i}`);
+                        const nextInputElement = document.getElementById(`exam-${i}`);
 
                         if (nextInputElement) {
                             nextInputElement.focus();
@@ -236,10 +217,6 @@
                     }
 
                     if (el.value.length === 2) nextInput()
-
-                    result.average = result.course_work_mark && result.exam_mark
-                        ? Math.round(result.course_work_mark * .3 + result.exam_mark * .7)
-                        : result.exam_mark
                 },
 
                 onAttendanceChange(e) {
@@ -270,7 +247,6 @@
 
                     this.studentUpdatedEvent()
                 },
-
                 goToPreviousStudent() {
                     const currentIndex = this.students.findIndex(s => s.id === this.student_id)
                     const prevIndex = (currentIndex - 1) % this.students.length
@@ -280,7 +256,6 @@
 
                     this.studentUpdatedEvent()
                 },
-
                 goToNextStudent() {
                     const currentIndex = this.students.findIndex(s => s.id === this.student_id)
                     const nextIndex = (currentIndex + 1) % this.students.length
@@ -290,7 +265,6 @@
 
                     this.studentUpdatedEvent()
                 },
-
                 goToLastStudent() {
                     this.students = this.students.map((s, i) => ({...s, selected: i === this.students.length - 1}))
                     this.student_id = this.students[this.students.length - 1].id
@@ -310,9 +284,9 @@
                 },
 
                 updateForm() {
-                    if (this.exam_id && this.grade_id && this.student_id) {
-                        axios.get(`/api/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
-                            .then(({data}) => {
+                    if (this.exam_id && this.student_id) {
+                        axios.get(`/api/primary/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
+                            .then(({data: {data}}) => {
                                 this.results = data.results
                                 this.cumulative_result = data.cumulative_result
 
@@ -336,7 +310,7 @@
                     this.results = []
 
                     axios.get(`/api/grades/${this.grade_id}/students`)
-                        .then(({data}) => {
+                        .then(({data: {data}}) => {
                             this.students = data
 
                             if (data[0]) this.student_id = data[0].id
@@ -346,21 +320,13 @@
                 },
 
                 saveMarks() {
-                    for (const r of this.results) {
-                        if ([1, 2, 3].includes(r.subject_id) && (!r.course_work_mark || !r.exam_mark)) {
-                            this.showMessage(`${r.subject.name} mark is required.`, 'error');
-                            return true;
-                        }
-                    }
-
                     this.loading = true
 
                     const data = {
                         exam_id: this.exam_id,
                         results: this.results.map(r => ({
-                            subject_id: r.subject_id,
-                            course_work_mark: r.course_work_mark,
-                            exam_mark: r.exam_mark
+                            learning_area_id: r.learning_area_id,
+                            mark: r.mark,
                         })),
                         cumulative_result: {
                             conduct: this.cumulative_result.conduct,
@@ -371,13 +337,13 @@
                         attendance: this.attendance
                     }
 
-                    axios.post(`/api/results/students/${this.student_id}`, data).then(({data}) => {
-                        if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error');
+                    axios.put(`/api/primary/students/${this.student_id}/results`, data).then(({data: {msg, status}}) => {
+                        if (status === 'error') {
+                            this.showMessage(msg, 'error');
 
                             console.error(data)
                         } else {
-                            this.showMessage(data.msg)
+                            this.showMessage(msg)
 
                             this.updateForm()
                         }

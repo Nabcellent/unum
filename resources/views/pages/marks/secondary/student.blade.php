@@ -10,9 +10,9 @@
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div class="mb-5">
                     <label for="class">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updateForm">
+                    <select class="selectize" x-model="exam_id" @change="updateForm" aria-label>
                         @foreach($exams as $exam)
-                            <option value="{{ $exam->id }}" @selected($exam->name === $currentExam)>
+                            <option value="{{ $exam->id }}" @selected($exam->id === $currentExam->id)>
                                 {{ $exam->name }}
                             </option>
                         @endforeach
@@ -20,7 +20,7 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Class</label>
-                    <select class="selectize" x-model="grade_id" @change="updateClass">
+                    <select class="selectize" x-model="grade_id" @change="updateClass" aria-label>
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
@@ -28,7 +28,7 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Student</label>
-                    <select x-ref="studentSelect" id="student-select" x-model="student_id" @change="updateForm">
+                    <select x-ref="studentSelect" id="student-select" x-model="student_id" @change="updateForm" aria-label>
                         <template x-for="student in students" :key="student.id">
                             <option :value="student.id" x-text="student.name" :selected="student.selected"></option>
                         </template>
@@ -189,7 +189,7 @@
         document.addEventListener('alpine:init', () => {
             // Marks
             Alpine.data('marks', () => ({
-                exam_id: '{{ $currentExam }}',
+                exam_id: '{{ $currentExam->id }}',
                 grade_id: null,
                 term_days: {{ $termDays }},
                 results: [],
@@ -311,7 +311,7 @@
 
                 updateForm() {
                     if (this.exam_id && this.grade_id && this.student_id) {
-                        axios.get(`/api/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
+                        axios.get(`/api/secondary/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
                             .then(({data}) => {
                                 this.results = data.results
                                 this.cumulative_result = data.cumulative_result

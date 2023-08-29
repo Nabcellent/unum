@@ -11,6 +11,14 @@ class PriCumulativeResult extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        "conduct",
+        "sports_grade",
+        "days_attended",
+        "total_days",
+        "passes"
+    ];
+
     /**
      * @throws Throwable
      */
@@ -25,7 +33,7 @@ class PriCumulativeResult extends Model
      */
     public static function updateRankingAndQuarters(int $examId): void
     {
-        DB::transaction(function() use ($examId) {
+        DB::transaction(function () use ($examId) {
             DB::statement("
                 UPDATE pri_cumulative_results AS ar
                     JOIN (SELECT id,
@@ -50,7 +58,7 @@ class PriCumulativeResult extends Model
      */
     public static function updatePasses(): void
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
             DB::statement("
                 UPDATE pri_cumulative_results ar
                 SET passes = (

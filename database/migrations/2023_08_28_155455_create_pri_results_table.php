@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(LearningArea::class)->constrained()->cascadeOnUpdate();
-            $table->tinyInteger('mark')->nullable();    //  TODO: Find out if this can be null.
+            $table->tinyInteger('mark')->nullable();
             $table->tinyInteger('quarter')->nullable();
             $table->tinyInteger('rank')->nullable();
             $table->timestamps();

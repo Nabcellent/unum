@@ -5,11 +5,11 @@ use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
 use App\Http\Controllers\Api\PriResultController;
 use App\Http\Controllers\Api\StrandController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\SubStrandController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SecResultController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
@@ -79,11 +79,23 @@ Route::prefix('/indicators')->group(function () {
 
 Route::prefix('/students')->group(function () {
     Route::get('/{gradeId}', [StudentController::class, 'getByGradeId']);
-    Route::get('/{student}/results', [StudentController::class, 'results']);
 });
 
-Route::prefix('/primary')->group(function() {
-    Route::put('/results', [PriResultController::class, 'upsert']);
+Route::prefix('/primary')->group(function () {
+    Route::prefix('/students')->group(function () {
+        Route::get('/{gradeId}', [StudentController::class, 'getByGradeId']);
+        Route::get('/{student}/results', [StudentController::class, 'getPrimaryResults']);
+        Route::put('/{student}/results', [PriResultController::class, 'upsertPerStudent']);
+    });
+
+    Route::put('/results', [PriResultController::class, 'upsertPerLearningArea']);
+});
+
+Route::prefix('/secondary')->group(function () {
+    Route::prefix('/students')->group(function () {
+        Route::get('/{gradeId}', [StudentController::class, 'getByGradeId']);
+        Route::get('/{student}/results', [StudentController::class, 'getResults']);
+    });
 });
 
 Route::prefix('/results')->group(function () {

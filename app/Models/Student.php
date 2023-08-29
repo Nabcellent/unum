@@ -64,6 +64,16 @@ class Student extends Model
         return $this->hasOne(PriResult::class);
     }
 
+    public function primaryCumulativeResults(): HasMany
+    {
+        return $this->hasMany(PriCumulativeResult::class);
+    }
+
+    public function primaryCumulativeResult(): HasOne
+    {
+        return $this->hasOne(PriCumulativeResult::class);
+    }
+
     public function results(): HasMany
     {
         return $this->hasMany(Result::class);

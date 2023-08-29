@@ -120,7 +120,7 @@
             // Marks
             Alpine.data('marks', () => ({
                 loading: false,
-                exam_id: '<?= $currentExam->id ?>',
+                exam_id: '{{ $currentExam->id }}',
                 grade_id: null,
                 learning_area_id: null,
                 learning_areas: [],

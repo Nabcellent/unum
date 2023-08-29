@@ -20,21 +20,31 @@ class PriResult extends Model
         return $this->belongsTo(Student::class);
     }
 
-    /**
-     * @throws Throwable
-     */
-    public static function updateRankingAndQuarters(int $examId, int $subjectId, string $grade = null): void
+    public function exam(): BelongsTo
     {
-        self::updateRanking($grade, $examId, $subjectId);
-        self::updateQuarters($examId, $subjectId);
+        return $this->belongsTo(Exam::class);
+    }
+
+    public function learningArea(): BelongsTo
+    {
+        return $this->belongsTo(LearningArea::class);
     }
 
     /**
      * @throws Throwable
      */
-    public static function updateRanking(string $grade = null, int $examId = null, int $subjectId = null): void
+    public static function updateRankingAndQuarters(int $examId, int $learningAreaId, string $grade = null): void
     {
-        DB::transaction(function () use ($examId, $subjectId, $grade) {
+        self::updateRanking($grade, $examId, $learningAreaId);
+        self::updateQuarters($examId, $learningAreaId);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public static function updateRanking(string $grade = null, int $examId = null, int $learningAreaId = null): void
+    {
+        DB::transaction(function () use ($examId, $learningAreaId, $grade) {
             $qry = "
                 UPDATE pri_results AS r
                     JOIN (
@@ -60,7 +70,7 @@ class PriResult extends Model
             ";
 
             if ($grade) $qry .= "AND g.name = '$grade' ";
-            if ($subjectId) $qry .= "AND r.learning_area_id = $subjectId ";
+            if ($learningAreaId) $qry .= "AND r.learning_area_id = $learningAreaId ";
             if ($examId) $qry .= "AND r.exam_id = $examId ";
 
             $qry .= "ORDER BY g.name, r.learning_area_id, r.exam_id, r.mark DESC) AS subquery
@@ -75,9 +85,9 @@ class PriResult extends Model
     /**
      * @throws Throwable
      */
-    public static function updateQuarters(int $examId, int $subjectId): void
+    public static function updateQuarters(int $examId, int $learningAreaId): void
     {
-        DB::transaction(function () use ($examId, $subjectId) {
+        DB::transaction(function () use ($examId, $learningAreaId) {
             $qry = "
                 UPDATE pri_results AS r
     JOIN (SELECT r.id,
@@ -95,11 +105,11 @@ class PriResult extends Model
                                   JOIN students s ON r.student_id = s.id
                                   JOIN grades g2 ON s.grade_id = g2.id
                          WHERE r.exam_id = $examId
-                           AND r.learning_area_id = $subjectId
+                           AND r.learning_area_id = $learningAreaId
                            AND r.mark IS NOT NULL
                          GROUP BY grade_id, name) g ON s.grade_id = g.grade_id
           WHERE exam_id = $examId
-            AND learning_area_id = $subjectId
+            AND learning_area_id = $learningAreaId
             AND mark IS NOT NULL) AS quarters ON r.id = quarters.id
 SET r.quarter = quarters.`quarter`;
             ";
