@@ -257,7 +257,7 @@
 
                 saveMarks() {
                     for (const s of this.students) {
-                        if (!s.primary_result.mark) {
+                        if (s.primary_result.mark === null) {
                             this.showMessage(`Please key in EXAM marks for ${s.class_no}. ${s.name}.`, 'error');
                             return true;
                         }
