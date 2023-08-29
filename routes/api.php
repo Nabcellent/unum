@@ -29,7 +29,11 @@ Route::prefix('/grades')->group(function () {
 
     Route::prefix('/{grade}')->group(function () {
         Route::get('/subjects', [GradeController::class, 'getSubjects']);
+        Route::put('/subjects', [GradeController::class, 'syncSubjects']);
         Route::get('/learning-areas', [GradeController::class, 'getLearningAreas']);
+        Route::put('/learning-areas', [GradeController::class, 'syncLearningAreas']);
+
+
         Route::get('/results', [GradeController::class, 'getResults']);
         Route::get('/students', [GradeController::class, 'getStudents']);
 

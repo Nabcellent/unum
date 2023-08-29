@@ -29,7 +29,7 @@ class SubjectController extends Controller
     {
         $subjects = Subject::with('grades')->get();
 
-        return response()->json(['status' => true, 'subjects' => $subjects]);
+        return $this->successResponse($subjects);
     }
 
     /**
@@ -44,13 +44,13 @@ class SubjectController extends Controller
 
         $subject = Subject::create($data);
 
-        if(isset($data['classes'])) {
+        if (isset($data['classes'])) {
             $gradeIds = Grade::whereIn('name', $data['classes'])->pluck('id');
 
             $subject->grades()->attach($gradeIds);
         }
 
-        return response()->json(['status' => true, 'msg' => 'Subject saved!']);
+        return $this->successResponse(msg: 'Subject saved!');
     }
 
     /**
@@ -66,13 +66,13 @@ class SubjectController extends Controller
         $subject->update($data);
 
         $gradeIds = [];
-        if(isset($data['classes'])) {
+        if (isset($data['classes'])) {
             $gradeIds = Grade::whereIn('name', $data['classes'])->pluck('id');
         }
 
         $subject->grades()->sync($gradeIds);
 
-        return response()->json(['status' => true, 'msg' => 'Subject saved!']);
+        return $this->successResponse(msg: 'Subject saved!');
     }
 
     /**
@@ -80,6 +80,8 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject): JsonResponse
     {
-        return response()->json(['status' => $subject->delete(), 'msg' => 'Subject Deleted!']);
+        $subject->delete();
+
+        return $this->successResponse(msg: 'Subject Deleted!');
     }
 }

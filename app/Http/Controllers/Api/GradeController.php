@@ -12,7 +12,7 @@ class GradeController extends Controller
 
     public function getGrades(): JsonResponse
     {
-        $grades = Grade::withCount(['students', 'subjects'])->get();
+        $grades = Grade::withCount(['students', 'subjects', 'learningAreas'])->get();
 
         return $this->successResponse($grades);
     }
@@ -20,6 +20,28 @@ class GradeController extends Controller
     public function getSubjects(Grade $grade): JsonResponse
     {
         return $this->successResponse($grade->subjects);
+    }
+
+    public function syncSubjects(Request $request, Grade $grade): JsonResponse
+    {
+        $ids = $request->validate([
+            'subjects.*' => 'required|integer|distinct|exists:subjects,id'
+        ]);
+
+        $grade->subjects()->sync($ids['subjects']);
+
+        return $this->successResponse(msg:'Subjects Assigned Successfully');
+    }
+
+    public function syncLearningAreas(Request $request, Grade $grade): JsonResponse
+    {
+        $ids = $request->validate([
+            'learning_areas.*' => 'required|integer|distinct|exists:learning_areas,id'
+        ]);
+
+        $grade->learningAreas()->sync($ids['learning_areas']);
+
+        return $this->successResponse(msg:'Subjects Assigned Successfully');
     }
 
     public function getLearningAreas(Grade $grade): JsonResponse
