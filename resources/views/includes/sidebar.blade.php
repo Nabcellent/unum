@@ -109,10 +109,10 @@
                             </button>
                             <ul x-cloak x-show="activeDropdown === 'pri_marks'" x-collapse class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('admin.pri.marks', 'learning-area') }}">Per Learning Area</a>
+                                    <a href="{{ route('admin.pri.marks', 'per-sub-strand') }}">Per Sub Strand</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.pri.marks', 'student') }}">Per Student</a>
+                                    <a href="{{ route('admin.pri.marks', 'per-student') }}">Per Student</a>
                                 </li>
                             </ul>
                         </li>
@@ -157,9 +157,6 @@
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.sub-strands') }}">Sub Strands</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.indicators') }}">Indicators</a>
                                 </li>
                             </ul>
                         </li>

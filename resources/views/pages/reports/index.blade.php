@@ -1,17 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Reports')
+@section('title', 'Secondary Reports')
 @section('content')
 
     <div x-data="reports" class="2xl:px-48">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <h2 class="text-xl">Reports</h2>
+            <h2 class="text-xl">Secondary Reports</h2>
         </div>
 
         <div class="panel mb-3">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div>
                     <label for="class" class="mb-0">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updatePreview">
+                    <select class="selectize" x-model="exam_id" @change="updatePreview" aria-label>
                         @foreach($exams as $exam)
                             <option value="{{ $exam->id }}" @selected($exam->id === $currentExam->id)>
                                 {{ $exam->name }}
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <label for="class" class="mb-0">Class</label>
-                    <select class="selectize" x-model="grade_id" @change="updateClass">
+                    <select class="selectize" x-model="grade_id" @change="updateClass" aria-label>
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
@@ -31,7 +31,7 @@
                     <label for="class" class="mb-0">Student</label>
                     <div class="flex">
                         <select x-ref="studentSelect" class="ltr:rounded-r-none rtl:rounded-l-none w-100"
-                                id="student-select" x-model="student_id" @change="updatePreview">
+                                id="student-select" x-model="student_id" @change="updatePreview" aria-label>
                             <template x-for="student in students" :key="student.id">
                                 <option :value="student.id" x-text="student.name"></option>
                             </template>
@@ -94,7 +94,7 @@
                 init() {
                     //  Nice select
                     document.querySelectorAll('.selectize').forEach(select => NiceSelect.bind(select));
-                    this.studentSelectInstance = NiceSelect.bind(this.$refs.studentSelect, { searchable: true, })
+                    this.studentSelectInstance = NiceSelect.bind(this.$refs.studentSelect, {searchable: true,})
                 },
 
                 updatePreview() {
@@ -105,13 +105,12 @@
 
                         if (this.student_id && !this.studentSelectDisabled) params.student_id = this.student_id
 
-                        axios.get(`/api/reports/exams/${ this.exam_id }/grades/${ this.grade_id }/preview`, { params: params })
-                            .then(({ data }) => {
-                                if (data.status === 'alert') {
-                                    this.showMessage(data.msg, data.type)
-                                }
-                                if (data.status === 'success') {
-                                    this.reports = data.reports
+                        axios.get(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}/preview`, {params: params})
+                            .then(({data: {data, status}}) => {
+                                if (status) {
+                                    this.reports = data
+                                } else {
+                                    this.showMessage(data.msg, 'error')
                                 }
 
                                 this.fetchingReport = false
@@ -128,8 +127,8 @@
                     if (this.student_id) this.student_id = null
                     this.studentSelectDisabled = false
 
-                    axios.get(`/api/grades/${ this.grade_id }/students`)
-                        .then(({ data }) => {
+                    axios.get(`/api/grades/${this.grade_id}/students`)
+                        .then(({data: {data}}) => {
                             this.students = data
 
                             setTimeout(() => {
@@ -151,30 +150,23 @@
                 saveReports(student_id) {
                     this.loading = true
 
-                    axios.post(`/api/reports/exams/${ this.exam_id }/grades/${ this.grade_id }`, {
-                        student_id
-                    }).then(({ data }) => {
-                        if (data.status === 'success') {
-                            this.showMessage(data.msg)
-                        } else if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error')
+                    axios.post(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}`, {student_id})
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
+                            } else {
+                                this.showMessage(msg ?? 'Something went wrong', 'error')
+                            }
 
-                            console.log(data)
-                        } else {
-                            this.showMessage('Something went wrong', 'error')
-
-                            console.log(data)
-                        }
-
-                        this.loading = false
-                    }).catch(err => {
+                            this.loading = false
+                        }).catch(err => {
                         this.loading = false
 
                         console.error(err)
 
                         this.showMessage('Something went wrong', 'error')
                     })
-                }
+                },
 
                 headline: str => {
                     if (!str) return "";

@@ -29,7 +29,7 @@ class GradeSeeder extends Seeder
             $grades[] = ["stream_id" => 2, "name" => "Form $i", "level" => "secondary"];
         }
 
-        $grades[] = ["stream_id" => null, "name" => "Alumni"];
+        $grades[] = ["stream_id" => null, "name" => "Alumni", "level" => "alumni"];
 
         Grade::insert($grades);
     }

@@ -18,7 +18,12 @@ class SubStrand extends Model
 
     protected $fillable = [
         'strand_id',
-        'name'
+        'name',
+        "indicator",
+        "highly_competent",
+        "competent",
+        "approaching_competence",
+        "needs_improvement",
     ];
 
     public function indicators(): HasMany

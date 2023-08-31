@@ -3,7 +3,7 @@
 @section('content')
     <div x-data="marks" class="2xl:px-20">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <h2 class="text-xl">Enter Marks Per Learning Area</h2>
+            <h2 class="text-xl">Enter Marks Per Indicator</h2>
         </div>
 
         <div class="panel">

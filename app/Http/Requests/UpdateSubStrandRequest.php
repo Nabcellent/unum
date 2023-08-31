@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSubStrandRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateSubStrandRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,24 @@ class UpdateSubStrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'strand_id'              => 'integer|exists:strands,id',
+            'name'                   => [
+                'string',
+                Rule::unique('sub_strands', 'name')
+                    ->where('strand_id', $this->input('strand_id'))->ignore($this->route('strand'))
+            ],
+            'indicator'              => 'required|string',
+            'highly_competent'       => 'required|string',
+            'competent'              => 'required|string',
+            'approaching_competence' => 'required|string',
+            'needs_improvement'      => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            "strand_id.required" => "The sub strand field is required."
         ];
     }
 }

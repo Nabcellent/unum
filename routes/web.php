@@ -51,7 +51,6 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     Route::get('/learning-areas', [LearningAreaController::class, 'index'])->name('.learning-areas');
     Route::get('/strands', [StrandController::class, 'index'])->name('.strands');
     Route::get('/sub-strands', [SubStrandController::class, 'index'])->name('.sub-strands');
-    Route::get('/indicators', [IndicatorController::class, 'index'])->name('.indicators');
 
     Route::prefix('/settings')->name('.settings')->group(function () {
         Route::get('/', [SettingController::class, 'index']);
