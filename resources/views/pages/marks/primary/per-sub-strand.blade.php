@@ -28,9 +28,27 @@
                 </div>
                 <div class="mb-3">
                     <label for="learning-area">Learning Area</label>
-                    <select id="learning-area" x-ref="tomLearningAreaEl" x-model="learning_area_id" @change="updateTable">
+                    <select id="learning-area" x-ref="tomLearningAreaEl" x-model="learning_area_id" @change="fetchStrands">
                         <template x-for="l in learning_areas" :key="l.id">
-                            <option :value="l.id" x-text="l.name" :selected="l.selected"></option>
+                            <option :value="l.id" x-text="l.name"></option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div class="mb-3">
+                    <label for="strand">Strand</label>
+                    <select id="strand" x-ref="tomStrandEl" x-model="strand_id" @change="fetchSubStrands">
+                        <template x-for="s in strands" :key="s.id">
+                            <option :value="s.id" x-text="s.name"></option>
+                        </template>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="sub-strand">Sub Strand</label>
+                    <select id="sub-strand" x-ref="tomSubStrandEl" x-model="sub_strand_id" @change="updateTable">
+                        <template x-for="l in sub_strands" :key="l.id">
+                            <option :value="l.id" x-text="l.name"></option>
                         </template>
                     </select>
                 </div>
@@ -124,8 +142,14 @@
                 grade_id: null,
                 learning_area_id: null,
                 learning_areas: [],
+                strand_id: null,
+                strands: [],
+                sub_strand_id: null,
+                sub_strands: [],
                 students: [],
                 tomLearningArea: null,
+                tomStrand: null,
+                tomSubStrand: null,
                 canFirstLearningArea: false,
                 canLastLearningArea: false,
                 canNextLearningArea: false,
@@ -133,6 +157,8 @@
 
                 init() {
                     this.tomLearningArea = new TomSelect(this.$refs.tomLearningAreaEl);
+                    this.tomStrand = new TomSelect(this.$refs.tomStrandEl);
+                    this.tomSubStrand = new TomSelect(this.$refs.tomSubStrandEl);
                 },
 
                 onMarkChange(i, el) {
@@ -157,65 +183,65 @@
                     if (el.value.length === 2) nextInput()
                 },
 
-                goToFirstLearningArea() {
-                    this.learning_areas[0].selected = true
-                    this.learning_area_id = this.learning_areas[0].id
+                goToFirstSubStrand() {
+                    this.sub_strands[0].selected = true
+                    this.sub_strand_id = this.sub_strands[0].id
 
-                    this.tomLearningArea.addItem(this.learning_area_id, true)
-
-                    this.updateTable()
-                },
-                goToPreviousLearningArea() {
-                    const currentIndex = this.learning_areas.findIndex(s => s.id === this.learning_area_id)
-                    const prevIndex = (currentIndex - 1) % this.learning_areas.length
-
-                    this.learning_areas = this.learning_areas.map((s, i) => ({...s, selected: i === prevIndex}))
-                    this.learning_area_id = this.learning_areas[prevIndex].id
-
-                    this.tomLearningArea.addItem(this.learning_area_id, true)
+                    this.tomSubStrand.addItem(this.sub_strand_id, true)
 
                     this.updateTable()
                 },
-                goToNextLearningArea() {
-                    const currentIndex = this.learning_areas.findIndex(s => s.id === this.learning_area_id)
-                    const nextIndex = (currentIndex + 1) % this.learning_areas.length
+                goToPreviousSubStrand() {
+                    const currentIndex = this.sub_strands.findIndex(s => s.id === this.sub_strand_id)
+                    const prevIndex = (currentIndex - 1) % this.sub_strands.length
 
-                    this.learning_areas = this.learning_areas.map((s, i) => ({...s, selected: i === nextIndex}))
-                    this.learning_area_id = this.learning_areas[nextIndex].id
+                    this.sub_strands = this.sub_strands.map((s, i) => ({...s, selected: i === prevIndex}))
+                    this.sub_strand_id = this.sub_strands[prevIndex].id
 
-                    this.tomLearningArea.addItem(this.learning_area_id, true)
+                    this.tomSubStrand.addItem(this.sub_strand_id, true)
 
                     this.updateTable()
                 },
-                goToLastLearningArea() {
-                    this.learning_areas = this.learning_areas.map((s, i) => ({
+                goToNextSubStrand() {
+                    const currentIndex = this.sub_strands.findIndex(s => s.id === this.sub_strand_id)
+                    const nextIndex = (currentIndex + 1) % this.sub_strands.length
+
+                    this.sub_strands = this.sub_strands.map((s, i) => ({...s, selected: i === nextIndex}))
+                    this.sub_strand_id = this.sub_strands[nextIndex].id
+
+                    this.tomSubStrand.addItem(this.sub_strand_id, true)
+
+                    this.updateTable()
+                },
+                goToLastSubStrand() {
+                    this.sub_strands = this.sub_strands.map((s, i) => ({
                         ...s,
-                        selected: i === this.learning_areas.length - 1
+                        selected: i === this.sub_strands.length - 1
                     }))
-                    this.learning_area_id = this.learning_areas[this.learning_areas.length - 1].id
+                    this.sub_strand_id = this.sub_strands[this.sub_strands.length - 1].id
 
-                    this.tomLearningArea.addItem(this.learning_area_id, true)
+                    this.tomSubStrand.addItem(this.sub_strand_id, true)
 
                     this.updateTable()
                 },
 
                 updatePagination() {
-                    const learningAreasExist = this.students.length > 0 && !this.loading
-                    const isLastLearningArea = this.learning_area_id === this.learning_areas[this.learning_areas.length - 1].id
-                    const isFirstLearningArea = this.learning_area_id === this.learning_areas[0].id
+                    const subStrandsExist = this.sub_strands.length > 0 && !this.loading
+                    const isLastSubStrand = this.sub_strand_id === this.sub_strands[this.sub_strands.length - 1].id
+                    const isFirstSubStrand = this.sub_strand_id === this.sub_strands[0].id
 
-                    this.canFirstLearningArea = learningAreasExist && !isFirstLearningArea
-                    this.canLastLearningArea = learningAreasExist && !isLastLearningArea
-                    this.canPrevLearningArea = learningAreasExist && !isFirstLearningArea
-                    this.canNextLearningArea = learningAreasExist && !isLastLearningArea
+                    this.canFirstSubStrand = subStrandsExist && !isFirstSubStrand
+                    this.canLastSubStrand = subStrandsExist && !isLastSubStrand
+                    this.canPrevSubStrand = subStrandsExist && !isFirstSubStrand
+                    this.canNextSubStrand = subStrandsExist && !isLastSubStrand
                 },
 
                 updateTable() {
-                    if (this.exam_id && this.grade_id && this.learning_area_id) {
+                    if (this.exam_id && this.grade_id && this.sub_strand_id) {
                         axios.get(`/api/grades/${this.grade_id}/results`, {
                             params: {
                                 exam_id: this.exam_id,
-                                learning_area_id: this.learning_area_id,
+                                sub_strand_id: this.sub_strand_id,
                             }
                         }).then(({data: {data}}) => {
                             this.students = data.map(s => {
@@ -250,8 +276,54 @@
                                 this.learning_area_id = data[0]?.id
                                 this.tomLearningArea.addItem(this.learning_area_id, true)
 
-                                this.updateTable()
+                                this.fetchStrands()
                             }).catch(err => console.error(err))
+                    }
+                },
+
+                fetchStrands() {
+                    if (this.learning_area_id) {
+                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data:{data, status}}) => {
+                            if (status) {
+                                this.tomStrand.clear()
+                                this.tomStrand.clearOptions()
+
+                                this.strand_id = data[0].id
+
+                                this.strands = data.map(s => {
+                                    this.tomStrand.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === Number(this.strand_id)}
+                                })
+
+                                this.tomStrand.addItem(this.strand_id, true)
+
+                                this.fetchSubStrands()
+                            }
+                        })
+                    }
+                },
+
+                fetchSubStrands() {
+                    if (this.strand_id) {
+                        axios.get(`/api/strands/${this.strand_id}/sub-strands`).then(({data:{data, status}}) => {
+                            if (status) {
+                                this.tomSubStrand.clear()
+                                this.tomSubStrand.clearOptions()
+
+                                this.sub_strand_id = data[0].id
+
+                                this.sub_strands = data.map(s => {
+                                    this.tomSubStrand.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === Number(this.sub_strand_id)}
+                                })
+
+                                this.tomSubStrand.addItem(this.sub_strand_id, true)
+
+                                this.updateTable()
+                            }
+                        })
                     }
                 },
 
@@ -267,7 +339,7 @@
 
                     axios.put(`/api/primary/results`, {
                         marks: this.students.map(s => ({...s.primary_result, student_id: s.id})),
-                        learning_area_id: this.learning_area_id,
+                        sub_strand_id: this.sub_strand_id,
                         exam_id: this.exam_id,
                         grade_id: this.grade_id
                     }).then(({data: {status, msg}}) => {

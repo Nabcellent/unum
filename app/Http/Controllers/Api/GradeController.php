@@ -65,7 +65,7 @@ class GradeController extends Controller
                 $qry->with('primaryResult', function ($qry) use ($request) {
                     $qry->select(['id', 'student_id', 'mark', 'quarter', 'rank'])
                         ->whereExamId($request->integer('exam_id'))
-                        ->whereLearningAreaId($request->integer('learning_area_id'));
+                        ->whereSubStrandId($request->integer('sub_strand_id'));
                 });
             })->get(['id', 'grade_id', 'user_id', 'class_no']);
 

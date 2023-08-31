@@ -25,43 +25,43 @@ class PriResult extends Model
         return $this->belongsTo(Exam::class);
     }
 
-    public function learningArea(): BelongsTo
+    public function subStrand(): BelongsTo
     {
-        return $this->belongsTo(LearningArea::class);
+        return $this->belongsTo(SubStrand::class);
     }
 
     /**
      * @throws Throwable
      */
-    public static function updateRankingAndQuarters(int $examId, int $learningAreaId, string $grade = null): void
+    public static function updateRankingAndQuarters(int $examId, int $subStrandId, string $grade = null): void
     {
-        self::updateRanking($grade, $examId, $learningAreaId);
-        self::updateQuarters($examId, $learningAreaId);
+        self::updateRanking($grade, $examId, $subStrandId);
+        self::updateQuarters($examId, $subStrandId);
     }
 
     /**
      * @throws Throwable
      */
-    public static function updateRanking(string $grade = null, int $examId = null, int $learningAreaId = null): void
+    public static function updateRanking(string $grade = null, int $examId = null, int $subStrandId = null): void
     {
-        DB::transaction(function () use ($examId, $learningAreaId, $grade) {
+        DB::transaction(function () use ($examId, $subStrandId, $grade) {
             $qry = "
                 UPDATE pri_results AS r
                     JOIN (
                         SELECT id,
                                grade,
                                student_id,
-                               learning_area_id,
+                               sub_strand_id,
                                exam_id,
                                mark,
-                               @rank := IF(@prev_grade = grade AND @prev_subject = learning_area_id AND @prev_exam = exam_id, @rank + 1, 1) AS `rank`,
+                               @rank := IF(@prev_grade = grade AND @prev_subject = sub_strand_id AND @prev_exam = exam_id, @rank + 1, 1) AS `rank`,
                                @prev_grade := grade,
-                               @prev_subject := learning_area_id,
+                               @prev_subject := sub_strand_id,
                                @prev_exam := exam_id
                         FROM (SELECT r.id,
                                      g.name AS grade,
                                      s.id   AS student_id,
-                                     r.learning_area_id,
+                                     r.sub_strand_id,
                                      r.exam_id,
                                      r.mark
                               FROM grades g
@@ -70,10 +70,10 @@ class PriResult extends Model
             ";
 
             if ($grade) $qry .= "AND g.name = '$grade' ";
-            if ($learningAreaId) $qry .= "AND r.learning_area_id = $learningAreaId ";
+            if ($subStrandId) $qry .= "AND r.sub_strand_id = $subStrandId ";
             if ($examId) $qry .= "AND r.exam_id = $examId ";
 
-            $qry .= "ORDER BY g.name, r.learning_area_id, r.exam_id, r.mark DESC) AS subquery
+            $qry .= "ORDER BY g.name, r.sub_strand_id, r.exam_id, r.mark DESC) AS subquery
                                  CROSS JOIN (SELECT @rank := 0, @prev_grade := NULL, @prev_subject := NULL, @prev_exam := NULL) AS vars
                     ) AS ranked_results ON r.id = ranked_results.id
                 SET r.rank = ranked_results.`rank`;";
@@ -85,18 +85,18 @@ class PriResult extends Model
     /**
      * @throws Throwable
      */
-    public static function updateQuarters(int $examId, int $learningAreaId): void
+    public static function updateQuarters(int $examId, int $subStrandId): void
     {
-        DB::transaction(function () use ($examId, $learningAreaId) {
+        DB::transaction(function () use ($examId, $subStrandId) {
             $qry = "
                 UPDATE pri_results AS r
     JOIN (SELECT r.id,
                  r.student_id,
                  s.grade_id,
-                 r.learning_area_id,
+                 r.sub_strand_id,
                  r.exam_id,
                  mark,
-                 FLOOR((ROW_NUMBER() OVER (PARTITION BY s.grade_id, r.learning_area_id, r.exam_id ORDER BY r.`rank`) - 1) /
+                 FLOOR((ROW_NUMBER() OVER (PARTITION BY s.grade_id, r.sub_strand_id, r.exam_id ORDER BY r.`rank`) - 1) /
                        (g.grade_count / 4)) + 1 AS quarter
           FROM pri_results r
                    JOIN students s ON r.student_id = s.id
@@ -105,11 +105,11 @@ class PriResult extends Model
                                   JOIN students s ON r.student_id = s.id
                                   JOIN grades g2 ON s.grade_id = g2.id
                          WHERE r.exam_id = $examId
-                           AND r.learning_area_id = $learningAreaId
+                           AND r.sub_strand_id = $subStrandId
                            AND r.mark IS NOT NULL
                          GROUP BY grade_id, name) g ON s.grade_id = g.grade_id
           WHERE exam_id = $examId
-            AND learning_area_id = $learningAreaId
+            AND sub_strand_id = $subStrandId
             AND mark IS NOT NULL) AS quarters ON r.id = quarters.id
 SET r.quarter = quarters.`quarter`;
             ";

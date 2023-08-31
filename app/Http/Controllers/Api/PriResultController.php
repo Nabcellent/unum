@@ -17,21 +17,21 @@ class PriResultController extends Controller
     /**
      * @throws Throwable
      */
-    public function upsertPerLearningArea(UpsertPriResultRequest $request): JsonResponse
+    public function upsertPerSubStrand(UpsertPriResultRequest $request): JsonResponse
     {
         $data = $request->validated();
 
         $data['marks'] = array_map(fn($mark) => [
             ...$mark,
             "exam_id"          => $data['exam_id'],
-            "learning_area_id" => $data['learning_area_id'],
+            "sub_strand_id" => $data['sub_strand_id'],
         ], $data['marks']);
 
         PriResult::upsert($data['marks'], [], ['mark']);
 
         $grade = Grade::find($data['grade_id']);
 
-        PriResult::updateRankingAndQuarters($data['exam_id'], $data['learning_area_id'], $grade->name);
+        PriResult::updateRankingAndQuarters($data['exam_id'], $data['sub_strand_id'], $grade->name);
         PriCumulativeResult::updatePassesRankingAndQuarters($data['exam_id']);
 
         return $this->successResponse(msg: 'Results saved successfully!');
@@ -44,7 +44,7 @@ class PriResultController extends Controller
     {
         $data = $request->validate([
             "results.*.mark"                  => "nullable|integer|max:99",
-            "results.*.learning_area_id"      => "required|exists:learning_areas,id",
+            "results.*.sub_strand_id"      => "required|exists:sub_strands,id",
             "exam_id"                         => "required|exists:exams,id",
             "cumulative_result.conduct"       => "nullable|in:A,B,C,D,E",
             "cumulative_result.sports_grade"  => "nullable|in:A,B,C,D,E",

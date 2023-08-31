@@ -80,7 +80,7 @@ Route::prefix('/primary')->group(function () {
         Route::put('/{student}/results', [PriResultController::class, 'upsertPerStudent']);
     });
 
-    Route::put('/results', [PriResultController::class, 'upsertPerLearningArea']);
+    Route::put('/results', [PriResultController::class, 'upsertPerSubStrand']);
 });
 
 Route::prefix('/secondary')->group(function () {

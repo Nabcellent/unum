@@ -26,7 +26,7 @@ class UpsertPriResultRequest extends FormRequest
             "marks.*.mark"       => "required|integer|max:99",
             "marks.*.student_id" => "required|exists:students,id",
             "exam_id"            => "required|exists:exams,id",
-            "learning_area_id"   => "required|exists:subjects,id",
+            "sub_strand_id"      => "required|exists:sub_strands,id",
             "grade_id"           => "required|exists:grades,id",
         ];
     }
