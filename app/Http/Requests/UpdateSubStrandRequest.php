@@ -28,12 +28,7 @@ class UpdateSubStrandRequest extends FormRequest
                 'string',
                 Rule::unique('sub_strands', 'name')
                     ->where('strand_id', $this->input('strand_id'))->ignore($this->route('strand'))
-            ],
-            'indicator'              => 'required|string',
-            'highly_competent'       => 'required|string',
-            'competent'              => 'required|string',
-            'approaching_competence' => 'required|string',
-            'needs_improvement'      => 'required|string',
+            ]
         ];
     }
 

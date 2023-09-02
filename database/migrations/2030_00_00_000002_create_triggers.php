@@ -3,15 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         DB::statement("
-            CREATE TRIGGER after_insert_calculate_average_sec
+            CREATE TRIGGER IF NOT EXISTS after_insert_calculate_average_sec
                 AFTER INSERT
                 ON results
                 FOR EACH ROW
@@ -38,7 +37,7 @@ return new class extends Migration
             END;
         ");
         DB::statement("
-            CREATE TRIGGER after_update_calculate_average_sec
+            CREATE TRIGGER IF NOT EXISTS after_update_calculate_average_sec
                 AFTER UPDATE
                 ON results
                 FOR EACH ROW
@@ -65,8 +64,8 @@ return new class extends Migration
             END;
         ");
 
-        DB::statement("
-            CREATE TRIGGER after_insert_calculate_average_pri
+        /*DB::statement("
+            CREATE TRIGGER IF NOT EXISTS after_insert_calculate_average_pri
                 AFTER INSERT
                 ON pri_results
                 FOR EACH ROW
@@ -93,7 +92,7 @@ return new class extends Migration
             END;
         ");
         DB::statement("
-            CREATE TRIGGER after_update_calculate_average_pri
+            CREATE TRIGGER IF NOT EXISTS after_update_calculate_average_pri
                 AFTER UPDATE
                 ON pri_results
                 FOR EACH ROW
@@ -118,7 +117,7 @@ return new class extends Migration
                 VALUES (NEW.student_id, NEW.exam_id, total, @average, NOW())
                 ON DUPLICATE KEY UPDATE average = @average, total = total, updated_at = NOW();
             END;
-        ");
+        ");*/
     }
 
     /**

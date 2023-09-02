@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpsertPriResultRequest;
-use App\Models\Grade;
 use App\Models\PriCumulativeResult;
 use App\Models\PriResult;
 use App\Models\Student;
@@ -17,22 +16,22 @@ class PriResultController extends Controller
     /**
      * @throws Throwable
      */
-    public function upsertPerSubStrand(UpsertPriResultRequest $request): JsonResponse
+    public function upsertPerIndicator(UpsertPriResultRequest $request): JsonResponse
     {
         $data = $request->validated();
 
         $data['marks'] = array_map(fn($mark) => [
             ...$mark,
             "exam_id"          => $data['exam_id'],
-            "sub_strand_id" => $data['sub_strand_id'],
+            "indicator_id" => $data['indicator_id'],
         ], $data['marks']);
 
         PriResult::upsert($data['marks'], [], ['mark']);
 
-        $grade = Grade::find($data['grade_id']);
+//        $grade = Grade::find($data['grade_id']);
 
-        PriResult::updateRankingAndQuarters($data['exam_id'], $data['sub_strand_id'], $grade->name);
-        PriCumulativeResult::updatePassesRankingAndQuarters($data['exam_id']);
+//        PriResult::updateRankingAndQuarters($data['exam_id'], $data['indicator_id'], $grade->name);
+//        PriCumulativeResult::updatePassesRankingAndQuarters($data['exam_id']);
 
         return $this->successResponse(msg: 'Results saved successfully!');
     }

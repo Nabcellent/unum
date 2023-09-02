@@ -1,14 +1,13 @@
 <?php
 
 use App\Models\Exam;
+use App\Models\Indicator;
 use App\Models\Student;
-use App\Models\SubStrand;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,13 +17,13 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnUpdate();
-            $table->foreignIdFor(SubStrand::class)->constrained()->cascadeOnUpdate();
+            $table->foreignIdFor(Indicator::class)->constrained()->cascadeOnUpdate();
             $table->tinyInteger('mark')->nullable();
             $table->tinyInteger('quarter')->nullable();
             $table->tinyInteger('rank')->nullable();
             $table->timestamps();
 
-            $table->unique(['student_id', 'exam_id', 'sub_strand_id']);
+            $table->unique(['student_id', 'exam_id', 'indicator_id']);
         });
     }
 

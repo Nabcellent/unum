@@ -12,6 +12,8 @@ class ExamSeeder extends Seeder
      */
     public function run(): void
     {
+        Exam::truncate();
+
         $exams = [];
         foreach (\App\Enums\Exam::cases() as $exam) {
             $exams[] = ["name" => $exam->value];

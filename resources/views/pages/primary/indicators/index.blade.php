@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Sub Strands')
+@section('title', 'Indicators')
 @push('links')
     <link
         href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/b-2.4.1/cr-1.7.0/r-2.5.0/sc-2.2.0/sb-1.5.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css"
@@ -7,14 +7,11 @@
 @endpush
 @section('content')
 
-    <div x-data="subStrands">
-        <div class="flex justify-between items-center">
-            <h5 class="my-3 text-lg font-semibold dark:text-white-light">Sub Strands</h5>
-            <button type="button" class="btn btn-warning mb-3 text-end ml-auto" @click="onCreate">
-                Create Sub Strand
-            </button>
-        </div>
-
+    <div x-data="indicators">
+        <!-- button -->
+        <button type="button" class="btn btn-warning mb-3 text-end ml-auto" @click="onCreate">
+            Create Indicator
+        </button>
         <!-- modal -->
         <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="openModal && '!block'">
             <div class="flex items-start justify-center min-h-screen px-4" @click.self="openModal = false">
@@ -22,7 +19,7 @@
                      class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
                     <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
                         <h5 class="font-bold text-lg">
-                            <span x-text="update ? 'Edit':'Create'"></span> Sub Strand
+                            <span x-text="update ? 'Edit':'Create'"></span> Indicator
                         </h5>
                         <button type="button" class="text-white-dark hover:text-dark" @click="toggleModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
@@ -50,8 +47,8 @@
                                 </div>
                                 <div>
                                     <label class="mb-0 text-gray-400">Strand</label>
-                                    <select x-ref="tomStrandEl" x-model="form.strand_id" aria-label
-                                            @change="refreshTable">
+                                    <select x-ref="tomStrandEl" x-model="strand_id" aria-label
+                                            @change="fetchSubStrands">
                                         <option value="" selected>Select Strand</option>
                                         <template x-for="strand in strands" :key="strand.id">
                                             <option :value="strand.id" x-text="strand.name"
@@ -60,16 +57,21 @@
                                     </select>
                                 </div>
 
-                                <div>
+                                <div class="col-span-2">
                                     <label class="mb-0 text-gray-400">Sub Strand</label>
-                                    <input type="text" placeholder="Enter sub-strand name" class="form-input" required
-                                           aria-label x-model="form.name"/>
+                                    <select x-ref="tomSubStrandEl" x-model="form.sub_strand_id" aria-label>
+                                        <option value="" selected>Select Sub Strand</option>
+                                        <template x-for="s in sub_strands" :key="s.id">
+                                            <option :value="s.id" x-text="s.name" :selected="s.selected"></option>
+                                        </template>
+                                    </select>
                                 </div>
 
-                                <div>
+                                <div class="col-span-2">
                                     <label class="mb-0 text-gray-400">Indicator</label>
                                     <input type="text" placeholder="Enter indicator name" class="form-input" required
-                                           aria-label x-model="form.indicator"/>
+                                           aria-label
+                                           x-model="form.name"/>
                                 </div>
 
                                 <div>
@@ -101,7 +103,7 @@
                         <div class="flex justify-end items-center mt-8">
                             <button type="button" class="btn btn-outline-danger" @click="toggleModal">Discard</button>
                             <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4"
-                                    :disabled="!form.name || loading" @click="saveSubStrand">
+                                    :disabled="!form.name || loading" @click="saveIndicator">
                                 Save
                             </button>
                         </div>
@@ -118,7 +120,7 @@
                             x-model="learning_area_id" @change="fetchStrands" aria-label>
                         <option value="" selected hidden>Select</option>
                         @foreach($learningAreas as $lA)
-                            <option value="{{ $lA->id }}" @selected($lA->id === $strand?->learning_area_id)>
+                            <option value="{{ $lA->id }}" @selected($lA->id === $subStrand?->strand?->learning_area_id)>
                                 {{ $lA->name }}
                             </option>
                         @endforeach
@@ -127,13 +129,26 @@
                 <div class="w-full">
                     <label class="mb-0 text-gray-400">Strand</label>
                     <select class="form-select me-2 pe-3 z-[2] border-0 border-b-2 rounded-none"
-                            x-model="form.strand_id" @change="refreshTable" aria-label>
+                            x-model="strand_id" @change="fetchSubStrands" aria-label>
                         <option value="" selected hidden>Select</option>
                         <template x-for="s in strands" :key="s.id">
                             <option :value="s.id" x-text="s.name" :selected="s.selected"></option>
                         </template>
                     </select>
                 </div>
+                <div class="w-full">
+                    <label class="mb-0 text-gray-400">Sub Strand</label>
+                    <select class="form-select me-2 pe-3 z-[2] border-0 border-b-2 rounded-none"
+                            x-model="form.sub_strand_id" @change="refreshTable" aria-label>
+                        <option value="" selected hidden>Select</option>
+                        <template x-for="s in sub_strands" :key="s.id">
+                            <option :value="s.id" x-text="s.name" :selected="s.selected"></option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <h5 class="my-3 text-lg font-semibold dark:text-white-light">Indicators</h5>
             </div>
 
             <table x-ref="table" class="!w-full"></table>
@@ -148,20 +163,20 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('subStrands', (initialOpenState = false) => ({
+            Alpine.data('indicators', (initialOpenState = false) => ({
                 update: false,
                 loading: false,
                 errors: {},
                 openModal: initialOpenState,
-                learning_area_id: `{{ $strand?->learning_area_id }}`,
-                sub_strand_id: null,
+                learning_area_id: `{{ $subStrand?->strand->learning_area_id }}`,
+                strand_id: `{{ $subStrand?->strand_id }}`,
+                indicator_id: null,
                 datatable: null,
                 strands: [],
                 sub_strands: [],
                 form: {
-                    strand_id: `{{ $strand?->id }}`,
+                    sub_strand_id: `{{ $subStrand?->id }}`,
                     name: '',
-                    indicator: '',
                     highly_competent: '',
                     competent: '',
                     approaching_competence: '',
@@ -169,6 +184,7 @@
                 },
                 tomLearningArea: null,
                 tomStrand: null,
+                tomSubStrand: null,
 
                 init() {
                     const tomOpts = {
@@ -179,16 +195,15 @@
                     }
                     this.tomLearningArea = new TomSelect(this.$refs.tomLearningAreaEl, tomOpts);
                     this.tomStrand = new TomSelect(this.$refs.tomStrandEl, tomOpts);
-
+                    this.tomSubStrand = new TomSelect(this.$refs.tomSubStrandEl, tomOpts);
                     this.datatable = new DataTable(this.$refs.table, {
                         responsive: true,
                         ajax: {
-                            url: `/api/strands/${this.form.strand_id || 0}/sub-strands`,
+                            url: `/api/sub-strands/${this.form.sub_strand_id || 0}/indicators`,
                             dataSrc: 'data'
                         },
                         columns: [
                             {title: 'Name', data: 'name'},
-                            {title: 'Indicator', data: 'indicator'},
                             {title: 'Highly Competent', data: 'highly_competent'},
                             {title: 'Competent', data: 'competent'},
                             {title: 'Approaching Competence', data: 'approaching_competence'},
@@ -218,16 +233,15 @@
                             lengthMenu: 'Show _MENU_ indicators'
                         }
                     });
-
                     this.fetchStrands()
+                    this.fetchSubStrands()
                 },
 
                 refreshTable() {
-                    if (this.form.strand_id) {
-                        this.datatable.ajax.url(`/api/strands/${this.form.strand_id}/sub-strands`).load()
+                    if (this.form.sub_strand_id) {
+                        this.datatable.ajax.url(`/api/sub-strands/${this.form.sub_strand_id}/indicators`).load()
                     }
                 },
-
                 fetchStrands() {
                     if (this.learning_area_id) {
                         axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data:{data, status}}) => {
@@ -235,76 +249,89 @@
                                 this.tomStrand.clear()
                                 this.tomStrand.clearOptions()
 
-                                this.form.strand_id = data[0].id
+                                this.strand_id = data[0].id
 
                                 this.strands = data.map(s => {
                                     this.tomStrand.addOption({value: s.id, text: s.name})
 
-                                    return {...s, selected: s.id === Number(this.form.strand_id)}
+                                    return {...s, selected: s.id === this.strand_id}
                                 })
 
-                                this.tomStrand.addItem(this.form.strand_id, true)
+                                this.tomStrand.addItem(this.strand_id, true)
+
+                                this.fetchSubStrands()
+                            }
+                        })
+                    }
+                },
+                fetchSubStrands() {
+                    if (this.learning_area_id && this.strand_id) {
+                        axios.get(`/api/strands/${this.strand_id}/sub-strands`).then(({data:{data, status}}) => {
+                            if (status) {
+                                this.tomSubStrand.clear()
+                                this.tomSubStrand.clearOptions()
+
+                                this.form.sub_strand_id = data[0].id
+
+                                this.sub_strands = data.map(s => {
+                                    this.tomSubStrand.addOption({value: s.id, text: s.name})
+
+                                    return {...s, selected: s.id === this.form.sub_strand_id}
+                                })
+
+                                this.tomSubStrand.addItem(this.form.sub_strand_id, true)
 
                                 this.refreshTable()
                             }
                         })
                     }
                 },
-
-                saveSubStrand() {
+                saveIndicator() {
                     this.loading = true
-
-                    axios[this.update ? 'put' : 'post'](`/api/sub-strands/${this.sub_strand_id || ''}`, this.form)
+                    axios[this.update ? 'put' : 'post'](`/api/indicators/${this.indicator_id || ''}`, this.form)
                         .then(({data:{msg, status}}) => {
                             if (status) {
                                 this.showMessage(msg)
-
                                 this.datatable.ajax.reload()
                             } else {
                                 this.showMessage(msg, 'error')
                             }
-
                             this.loading = false
                             this.openModal = false
                         }).catch(err => {
                         console.error(err)
-
                         if (err?.response?.data?.errors) this.errors = err.response.data.errors
-
                         this.loading = false
                         this.showMessage(err.message, 'error')
                     })
                 },
-
                 onCreate() {
                     this.update = false
                     this.openModal = true
-                    this.sub_strand_id = null
+                    this.indicator_id = null
                     this.form = {}
-
+                    this.tomSubStrand.clear()
                     this.tomStrand.clear()
                     this.tomLearningArea.clear()
                 },
-
-                onEdit(subStrand) {
+                onEdit(indicator) {
                     this.update = true
                     this.openModal = true
-                    this.sub_strand_id = subStrand.id
+                    this.indicator_id = indicator.id
                     this.form = {
-                        strand_id: subStrand.strand_id,
-                        name: subStrand.name,
-                        indicator: subStrand.indicator,
-                        highly_competent: subStrand.highly_competent,
-                        competent: subStrand.competent,
-                        approaching_competence: subStrand.approaching_competence,
-                        needs_improvement: subStrand.needs_improvement,
+                        sub_strand_id: indicator.sub_strand_id,
+                        name: indicator.name,
+                        highly_competent: indicator.highly_competent,
+                        competent: indicator.competent,
+                        approaching_competence: indicator.approaching_competence,
+                        needs_improvement: indicator.needs_improvement,
                     }
 
-                    this.tomStrand.addItem(this.form.strand_id, true)
+                    this.tomSubStrand.addItem(indicator.sub_strand_id, true)
+                    this.tomStrand.addItem(this.strand_id, true)
                     this.tomLearningArea.addItem(this.learning_area_id, true)
                 },
-
-                onDelete(id) {
+                onDelete(indicatorId) {
                     window.Swal.fire({
                         title: 'Are you sure?',
                         text: `You won't be able to revert this!`,
@@ -313,17 +340,15 @@
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: `Yes, delete!`,
-                    }).then(res => res.isConfirmed && axios.delete(`/api/sub-strands/${id}`).then(({data}) => {
+                    }).then(res => res.isConfirmed && axios.delete(`/api/indicators/${indicatorId}`).then(({data}) => {
                         if (data.status) {
                             this.showMessage(data.msg)
-
                             this.refreshTable()
                         } else {
                             this.showMessage(data.msg, 'error')
                         }
                     }));
                 },
-
                 toggleModal() {
                     this.openModal = !this.openModal;
                 },

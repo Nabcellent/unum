@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreSubStrandRequest extends FormRequest
+class UpdateIndicatorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,16 @@ class StoreSubStrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'strand_id'              => 'required|integer|exists:strands,id',
             'name'                   => [
-                'required',
                 'string',
-                Rule::unique('sub_strands', 'name')->where('strand_id', $this->input('strand_id')),
-            ]
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            "strand_id.required" => "The strand field is required."
+                Rule::unique('indicators', 'name')
+                    ->where('sub_strand_id', $this->input('sub_strand_id'))->ignore($this->route('indicator'))
+            ],
+            'sub_strand_id'          => 'integer|exists:sub_strands,id',
+            'highly_competent'       => 'required|string',
+            'competent'              => 'required|string',
+            'approaching_competence' => 'required|string',
+            'needs_improvement'      => 'required|string',
         ];
     }
 }

@@ -13,13 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /*User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);*/
-
         Schema::disableForeignKeyConstraints();
 
         $this->call([
@@ -29,7 +22,6 @@ class DatabaseSeeder extends Seeder
             GradeSeeder::class,
             SubjectSeeder::class,
             ExamSeeder::class,
-//            ResultSeeder::class
         ]);
 
         Schema::enableForeignKeyConstraints();

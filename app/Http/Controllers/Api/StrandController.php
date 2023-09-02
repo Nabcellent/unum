@@ -13,7 +13,7 @@ class StrandController extends Controller
 {
     public function getSubStrands(int $strandId): JsonResponse
     {
-        $subStrands = SubStrand::whereStrandId($strandId)->get();
+        $subStrands = SubStrand::whereStrandId($strandId)->withCount(['indicators'])->get();
 
         return $this->successResponse($subStrands);
     }

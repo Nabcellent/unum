@@ -34,13 +34,14 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
 
     Route::prefix('/primary')->name('.pri')->group(function() {
         Route::get('/marks/{view}', [PriResultController::class, 'getView'])->name('.marks');
+        Route::get('/reports', [ReportController::class, 'indexPri'])->name('.reports');
     });
     Route::prefix('/secondary')->name('.sec')->group(function() {
         Route::get('/marks/{view}', [SecResultController::class, 'getView'])->name('.marks');
+        Route::get('/reports', [ReportController::class, 'indexSec'])->name('.reports');
     });
 
     Route::get('/attendances', [AttendanceController::class, 'createOrEdit'])->name('.attendances');
-    Route::get('/reports', [ReportController::class, 'index'])->name('.reports');
     Route::get('/summaries/class-performance', [
         SummaryController::class,
         'classPerformance'
@@ -51,6 +52,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     Route::get('/learning-areas', [LearningAreaController::class, 'index'])->name('.learning-areas');
     Route::get('/strands', [StrandController::class, 'index'])->name('.strands');
     Route::get('/sub-strands', [SubStrandController::class, 'index'])->name('.sub-strands');
+    Route::get('/indicators', [IndicatorController::class, 'index'])->name('.indicators');
 
     Route::prefix('/settings')->name('.settings')->group(function () {
         Route::get('/', [SettingController::class, 'index']);

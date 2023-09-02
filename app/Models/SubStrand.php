@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @mixin IdeHelperSubStrand
@@ -17,16 +18,16 @@ class SubStrand extends Model
 
     protected $fillable = [
         'strand_id',
-        'name',
-        "indicator",
-        "highly_competent",
-        "competent",
-        "approaching_competence",
-        "needs_improvement",
+        'name'
     ];
 
     public function strand(): BelongsTo
     {
         return $this->belongsTo(Strand::class);
+    }
+
+    public function indicators(): HasMany
+    {
+        return $this->hasMany(Indicator::class);
     }
 }

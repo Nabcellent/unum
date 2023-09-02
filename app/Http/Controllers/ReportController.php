@@ -11,7 +11,20 @@ use Illuminate\Contracts\View\View;
 
 class ReportController extends Controller
 {
-    public function index(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
+    public function indexPri(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        $exams = Exam::get();
+
+        $data = [
+            "grades"      => Grade::primary()->get(),
+            "exams"       => $exams,
+            "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
+        ];
+
+        return view('pages.primary.reports.index', $data);
+    }
+
+    public function indexSec(TermSetting $termSettings): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $exams = Exam::get();
 
@@ -21,6 +34,6 @@ class ReportController extends Controller
             "currentExam" => $exams->firstWhere('name', $termSettings->current_exam),
         ];
 
-        return view('pages.reports.index', $data);
+        return view('pages.secondary.reports.index', $data);
     }
 }

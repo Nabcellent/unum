@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\GradeController;
+use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
 use App\Http\Controllers\Api\PriResultController;
 use App\Http\Controllers\Api\ReportController;
@@ -64,9 +65,16 @@ Route::prefix('/strands')->group(function () {
 });
 
 Route::prefix('/sub-strands')->group(function () {
+    Route::get('/{subStrand}/indicators', [SubStrandController::class, 'getIndicators']);
     Route::post('/', [SubStrandController::class, 'store']);
     Route::put('/{subStrand}', [SubStrandController::class, 'update']);
     Route::delete('/{subStrand}', [SubStrandController::class, 'destroy']);
+});
+
+Route::prefix('/indicators')->group(function () {
+    Route::post('/', [IndicatorController::class, 'store']);
+    Route::put('/{indicator}', [IndicatorController::class, 'update']);
+    Route::delete('/{indicator}', [IndicatorController::class, 'destroy']);
 });
 
 Route::prefix('/students')->group(function () {
@@ -80,7 +88,7 @@ Route::prefix('/primary')->group(function () {
         Route::put('/{student}/results', [PriResultController::class, 'upsertPerStudent']);
     });
 
-    Route::put('/results', [PriResultController::class, 'upsertPerSubStrand']);
+    Route::put('/results', [PriResultController::class, 'upsertPerIndicator']);
 });
 
 Route::prefix('/secondary')->group(function () {

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('strands', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(LearningArea::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('name');
+            $table->string('name')->unique();
         });
     }
 

@@ -33,10 +33,10 @@ class StudentController extends Controller
         $data = [
             'results'           => $student->primaryResults()
                 ->whereExamId($request->integer('exam_id'))
-                ->with('subStrand')
+                ->with('indicator')
                 ->get([
                     'id',
-                    'sub_strand_id',
+                    'indicator_id',
                     'student_id',
                     'mark',
                     'quarter',

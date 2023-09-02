@@ -15,12 +15,7 @@ return new class extends Migration
         Schema::create('sub_strands', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Strand::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('indicator', 500);
-            $table->text('highly_competent');
-            $table->text('competent');
-            $table->text('approaching_competence');
-            $table->text('needs_improvement');
+            $table->string('name')->unique();
         });
     }
 

@@ -25,9 +25,9 @@ class PriResult extends Model
         return $this->belongsTo(Exam::class);
     }
 
-    public function subStrand(): BelongsTo
+    public function indicator(): BelongsTo
     {
-        return $this->belongsTo(SubStrand::class);
+        return $this->belongsTo(Indicator::class);
     }
 
     /**
