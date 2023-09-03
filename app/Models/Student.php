@@ -74,12 +74,12 @@ class Student extends Model
         return $this->hasOne(PriCumulativeResult::class);
     }
 
-    public function results(): HasMany
+    public function secondaryResults(): HasMany
     {
         return $this->hasMany(Result::class);
     }
 
-    public function result(): HasOne
+    public function secondaryResult(): HasOne
     {
         return $this->hasOne(Result::class);
     }
@@ -92,5 +92,10 @@ class Student extends Model
     public function cumulativeResult(): HasOne
     {
         return $this->hasOne(CumulativeResult::class);
+    }
+
+    public function learningAreaAverages():HasMany
+    {
+        return $this->hasMany(LearningAreaAverage::class);
     }
 }

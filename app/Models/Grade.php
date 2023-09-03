@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Level;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,9 @@ class Grade extends Model
 
     protected $with = ['stream'];
     protected $appends = ['full_name'];
+    protected $casts = [
+        'level' => Level::class
+    ];
 
     /**
      * The "booted" method of the model.

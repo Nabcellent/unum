@@ -1,0 +1,70 @@
+{
+    array:1 [ // app/Http/Controllers/Api/ReportController.php:104
+    1 => array:2 [
+        "learning_area" => array:2 [
+            "id" => 1
+            "name" => "Art & Craft",
+            "strands" => array:1 [
+                112 => array:2 [
+                    "id" => 112
+                    "learning_area_id" => 1
+                    "name" => "Drawing",
+                    "sub_strands" => array:3 [
+                        126 => array:2 [
+                            "id" => 126
+                            "strand_id" => 112
+                            "name" => "Lines",
+                            "indicators" => array:1 [
+                                0 => array:9 [
+                                    "id" => 1
+                                    "sub_strand_id" => 126
+                                    "name" => "Lines"
+                                    "highly_competent" => "Competently identifies variety of lines types of line and different positions of straight line and able to draw them keenly using pencil crayons and paper."
+                                    "competent" => "Competently identifies variety of lines types of line and different positions of straight line and able to draw them using pencil crayons and paper."
+                                    "approaching_competence" => "Identifies variety of lines types of line and different positions of straight line and able to draw them using pencil crayons and paper."
+                                    "needs_improvement" => "Hardly identifies variety of lines types of line and different positions of straight line and not able to draw them using pencil crayons and paper."
+                                    "mark" => 56
+                                ]
+                            ]
+                        ]
+                        127 => array:2 [
+                            "id" => 127
+                            "strand_id" => 112
+                            "name" => "Shapes",
+                            "indicators" => array:1 [
+                                0 => array:9 [
+                                    "id" => 2
+                                    "sub_strand_id" => 127
+                                    "name" => "Shapes"
+                                    "highly_competent" => "Competently identifies variety of shapes in the environment and enjoys drawing elaborate shapes using pencils papers and crayons."
+                                    "competent" => "Identifies varied types of shapes in the environment and enjoys drawing shapes using pencils papers and crayons."
+                                    "approaching_competence" => "Identifies varied types of shapes but shows little interest to draw them using pencils papers and crayons."
+                                    "needs_improvement" => "Barely identify shapes in the environment and cannot draw shapes using pencils papers and crayons.",
+                                    "mark" => 68
+                                ]
+                            ]
+                        ]
+                        128 => array:2 [
+                            "id" => 128
+                            "strand_id" => 112
+                            "name" => "Texture",
+                            "indicators" => array:1 [
+                                0 => array:9 [
+                                    "id" => 3
+                                    "sub_strand_id" => 128
+                                    "name" => "Texture"
+                                    "highly_competent" => "Competently identifies variety of textures in the environment and enjoys creating detailed textures using textured surfaces pencils papers and crayons."
+                                    "competent" => "Competently identifies variety of textures in the environment and enjoys creating textures using textured surfaces pencils paper and crayons."
+                                    "approaching_competence" => "Identifies variety of textures in the environment and creates textures using textured surfaces pencils papers and crayons."
+                                    "needs_improvement" => "Barely identifies variety of textures in the environment and not able to create textures using textured surfaces pencils papers and crayons."
+                                    "mark" => 48
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+}

@@ -8,7 +8,7 @@
         "php": "^8.2",
         "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "^2.13",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10.20",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
@@ -31,7 +31,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Misc/helpers.php"
+            "app/Misc/helpers.php",
+            "app/Misc/report_html_templates.php"
         ]
     },
     "autoload-dev": {

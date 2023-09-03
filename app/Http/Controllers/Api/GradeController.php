@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Level;
 use App\Http\Controllers\Controller;
 use App\Models\Grade;
 use Illuminate\Http\JsonResponse;
@@ -51,7 +52,7 @@ class GradeController extends Controller
 
     public function getResults(Request $request, Grade $grade): JsonResponse
     {
-        $isPrimary = $grade->level === 'primary';
+        $isPrimary = $grade->level === Level::PRIMARY;
 
         $data = $grade->students()
             ->when(!$isPrimary, function ($qry) use ($request) {

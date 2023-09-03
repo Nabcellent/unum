@@ -25,7 +25,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE OR REPLACE VIEW learning_area_averages_view AS
-            SELECT YEAR(created_at) AS year, student_id, exam_id, la.id, la.name, ROUND(AVG(mark), 2) AS average
+            SELECT YEAR(created_at) AS year, student_id, exam_id, la.id AS learning_area_id, ROUND(AVG(mark), 2) AS average
             FROM pri_results
                 INNER JOIN unum.indicators i on pri_results.indicator_id = i.id
                 INNER JOIN unum.sub_strands ss on i.sub_strand_id = ss.id
