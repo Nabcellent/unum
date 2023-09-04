@@ -97,7 +97,7 @@
                                     </svg>
 
                                     <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Marks</span>
+                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Assessment</span>
                                 </div>
                                 <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'pri_marks'}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -109,10 +109,13 @@
                             </button>
                             <ul x-cloak x-show="activeDropdown === 'pri_marks'" x-collapse class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('admin.pri.marks', 'per-indicator') }}">Per Indicator</a>
+                                    <a href="{{ route('admin.pri.assess', 'per-indicator') }}">Per Class</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.pri.marks', 'per-student') }}">Per Student</a>
+                                    <a href="{{ route('admin.pri.assess', 'per-student') }}">Per Student</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.pri.assess', 'behaviour') }}">Assess Behaviours</a>
                                 </li>
                             </ul>
                         </li>

@@ -176,7 +176,7 @@ namespace App\Models{
  * @property int $id
  * @property int|null $stream_id
  * @property string $name
- * @property string|null $level
+ * @property \App\Enums\Level|null $level
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LearningArea> $learningAreas
  * @property-read int|null $learning_areas_count
  * @property-read \App\Models\Stream|null $stream
@@ -267,11 +267,79 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\LearningAreaAverage
+ *
+ * @property-read \App\Models\Exam $exam
+ * @property-read \App\Models\LearningArea|null $learningArea
+ * @property-read \App\Models\Student $student
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningAreaAverage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningAreaAverage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LearningAreaAverage query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperLearningAreaAverage {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PriCumulativeResult
+ *
+ * @property int $id
+ * @property int $student_id
+ * @property int $exam_id
+ * @property int|null $total
+ * @property array|null $behaviour
+ * @property int|null $rank
+ * @property string|null $conduct
+ * @property string|null $sports_grade
+ * @property int|null $attendance
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereAttendance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereBehaviour($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereConduct($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereExamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereRank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereSportsGrade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriCumulativeResult whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperPriCumulativeResult {}
+}
+
+namespace App\Models{
+/**
  * App\Models\PriResult
  *
+ * @property int $id
+ * @property int $student_id
+ * @property int $exam_id
+ * @property int $indicator_id
+ * @property int|null $mark
+ * @property int|null $rank
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Exam $exam
+ * @property-read \App\Models\Indicator $indicator
+ * @property-read \App\Models\Student $student
  * @method static \Illuminate\Database\Eloquent\Builder|PriResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PriResult newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PriResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereExamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereIndicatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereMark($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereRank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereStudentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PriResult whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 	class IdeHelperPriResult {}
@@ -378,9 +446,17 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CumulativeResult> $cumulativeResults
  * @property-read int|null $cumulative_results_count
  * @property-read \App\Models\Grade $grade
- * @property-read \App\Models\Result|null $result
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $results
- * @property-read int|null $results_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LearningAreaAverage> $learningAreaAverages
+ * @property-read int|null $learning_area_averages_count
+ * @property-read \App\Models\PriCumulativeResult|null $primaryCumulativeResult
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PriCumulativeResult> $primaryCumulativeResults
+ * @property-read int|null $primary_cumulative_results_count
+ * @property-read \App\Models\PriResult|null $primaryResult
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PriResult> $primaryResults
+ * @property-read int|null $primary_results_count
+ * @property-read \App\Models\Result|null $secondaryResult
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Result> $secondaryResults
+ * @property-read int|null $secondary_results_count
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Student newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Student newQuery()

@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(Indicator::class)->constrained()->cascadeOnUpdate();
             $table->tinyInteger('mark')->nullable();
-            $table->tinyInteger('quarter')->nullable();
             $table->tinyInteger('rank')->nullable();
             $table->timestamps();
 

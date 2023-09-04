@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Level;
 use App\Http\Controllers\Controller;
 use App\Models\Grade;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -69,6 +70,15 @@ class GradeController extends Controller
                         ->whereIndicatorId($request->integer('indicator_id'));
                 });
             })->get(['id', 'grade_id', 'user_id', 'class_no']);
+
+        return $this->successResponse($data);
+    }
+
+    public function getCumulativeResults(Request $request, Grade $grade): JsonResponse
+    {
+        $data = $grade->students()->with('primaryCumulativeResult', function(HasOne $qry) use ($request) {
+            $qry->select(['id', 'student_id', 'behaviour', 'conduct', 'sports_grade'])->whereExamId($request->integer('exam_id'));
+        })->get(['id', 'grade_id', 'user_id', 'class_no']);
 
         return $this->successResponse($data);
     }

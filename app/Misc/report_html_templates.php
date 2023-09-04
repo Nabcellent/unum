@@ -105,7 +105,7 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
     foreach ($student['learning_area_averages'] as $laAverage) {
         $html .= '<table border="0" cellspacing="3" cellpadding="0">
                     <tr style="font-family:times; font-size:14pt" nobr="true">
-                        <td rowspan="2" width="450px" style="font-size:17pt;"><b>' . $laAverage['learning_area']['name'] . '</b>
+                        <td rowspan="2" width="450px" style="font-size:17pt;"><b>' . $laAverage['learning_area'] . '</b>
                         </td>
                         <td align="center" width="197px" style="font-family: times; font-weight: bold; font-size: 11pt; background-color: ' . $laAverage['color'] . '">
                         ' . round($laAverage['average'], 0) . '
@@ -138,8 +138,9 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
                     <tr><td></td></tr>';
 
             foreach ($result['sub_strands'] as $subStrand) {
+                $counter = 0;
                 foreach ($subStrand['indicators'] as $indicator) {
-                    $subStrandName = $indicator['sub_strand_id'] === $subStrand['id'] ? $subStrand['name'] : " ";
+                    $subStrandName = $counter === 0 ? $subStrand['name'] : " ";
 
                     $html .= '
                         <tr style="font-size:9;font-family:times;">
@@ -154,6 +155,8 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
                         </tr>
                         <tr><td></td></tr>
                     ';
+
+                    $counter++;
                 }
             }
 

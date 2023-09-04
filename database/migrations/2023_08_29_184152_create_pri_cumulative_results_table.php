@@ -18,14 +18,11 @@ return new class extends Migration
             $table->foreignIdFor(Student::class)->constrained()->cascadeOnUpdate();
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnUpdate();
             $table->smallInteger('total')->nullable();
-            $table->decimal('average', 4)->nullable();
-            $table->tinyInteger('quarter')->nullable();
-            $table->tinyInteger('passes')->nullable();
+            $table->json('behaviour')->nullable();
             $table->tinyInteger('rank')->nullable();
             $table->char('conduct', 1)->nullable();
             $table->char('sports_grade', 1)->nullable();
-            $table->tinyInteger('days_attended')->nullable();
-            $table->tinyInteger('total_days')->nullable();
+            $table->tinyInteger('attendance')->nullable();
             $table->timestamps();
 
             $table->unique(['student_id', 'exam_id']);

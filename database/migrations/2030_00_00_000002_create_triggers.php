@@ -127,8 +127,8 @@ return new class extends Migration {
     {
         DB::statement("DROP TRIGGER IF EXISTS after_update_calculate_average_sec;");
         DB::statement("DROP TRIGGER IF EXISTS after_insert_calculate_average_sec;");
-        DB::statement("DROP TRIGGER IF EXISTS after_update_calculate_average_pri;");
-        DB::statement("DROP TRIGGER IF EXISTS after_insert_calculate_average_pri;");
+//        DB::statement("DROP TRIGGER IF EXISTS after_update_calculate_average_pri;");
+//        DB::statement("DROP TRIGGER IF EXISTS after_insert_calculate_average_pri;");
 
         Schema::dropIfExists('triggers');
     }

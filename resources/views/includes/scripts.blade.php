@@ -13,6 +13,20 @@
     document.addEventListener('alpine:init', () => {
         // main section
         Alpine.data('main', () => ({
+            str: {
+                headline: str => {
+                    if (!str) return "";
+
+                    str = str.replaceAll('_', ' ').replaceAll('-', ' ');
+
+                    return str.replaceAll(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.substring(1).toLowerCase());
+                },
+                ucFirst: str => {
+                    str = str.toLowerCase();
+
+                    return str.charAt(0).toUpperCase() + str.slice(1);
+                }
+            },
             showMessage(msg = '', type = 'success') {
                 const toast = window.Swal.mixin({
                     toast: true,
@@ -294,11 +308,11 @@
                     series: [
                         {
                             name: 'Income',
-                            data: [ 16800, 16800, 15500, 17800, 15500, 17000, 19000, 16000, 15000, 17000, 14000, 17000 ],
+                            data: [16800, 16800, 15500, 17800, 15500, 17000, 19000, 16000, 15000, 17000, 14000, 17000],
                         },
                         {
                             name: 'Expenses',
-                            data: [ 16500, 17500, 16200, 17300, 16000, 19500, 16000, 17000, 16000, 19000, 18000, 19000 ],
+                            data: [16500, 17500, 16200, 17300, 16000, 19500, 16000, 17000, 16000, 19000, 18000, 19000],
                         },
                     ],
                     chart: {
@@ -328,7 +342,7 @@
                         left: -7,
                         top: 22,
                     },
-                    colors: isDark ? [ '#2196f3', '#e7515a' ] : [ '#1b55e2', '#e7515a' ],
+                    colors: isDark ? ['#2196f3', '#e7515a'] : ['#1b55e2', '#e7515a'],
                     markers: {
                         discrete: [
                             {
@@ -347,7 +361,7 @@
                             },
                         ],
                     },
-                    labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     xaxis: {
                         axisBorder: {
                             show: false,
@@ -431,7 +445,7 @@
                             inverseColors: !1,
                             opacityFrom: isDark ? 0.19 : 0.28,
                             opacityTo: 0.05,
-                            stops: isDark ? [ 100, 100 ] : [ 45, 100 ],
+                            stops: isDark ? [100, 100] : [45, 100],
                         },
                     },
                 };
@@ -440,7 +454,7 @@
             // sales by category
             get salesByCategoryOptions() {
                 return {
-                    series: [ 985, 737, 270 ],
+                    series: [985, 737, 270],
                     chart: {
                         type: 'donut',
                         height: 460,
@@ -454,7 +468,7 @@
                         width: 25,
                         colors: isDark ? '#0e1726' : '#fff',
                     },
-                    colors: isDark ? [ '#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f' ] : [ '#e2a03f', '#5c1ac3', '#e7515a' ],
+                    colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
                     legend: {
                         position: 'bottom',
                         horizontalAlign: 'center',
@@ -503,7 +517,7 @@
                             },
                         },
                     },
-                    labels: [ 'Apparel', 'Sports', 'Others' ],
+                    labels: ['Apparel', 'Sports', 'Others'],
                     states: {
                         hover: {
                             filter: {
@@ -527,11 +541,11 @@
                     series: [
                         {
                             name: 'Sales',
-                            data: [ 44, 55, 41, 67, 22, 43, 21 ],
+                            data: [44, 55, 41, 67, 22, 43, 21],
                         },
                         {
                             name: 'Last Week',
-                            data: [ 13, 23, 20, 8, 13, 27, 33 ],
+                            data: [13, 23, 20, 8, 13, 27, 33],
                         },
                     ],
                     chart: {
@@ -551,7 +565,7 @@
                         show: true,
                         width: 1,
                     },
-                    colors: [ '#e2a03f', '#e0e6ed' ],
+                    colors: ['#e2a03f', '#e0e6ed'],
                     responsive: [
                         {
                             breakpoint: 480,
@@ -568,7 +582,7 @@
                         labels: {
                             show: false,
                         },
-                        categories: [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat' ],
+                        categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
                     },
                     yaxis: {
                         show: false,
@@ -608,7 +622,7 @@
                     series: [
                         {
                             name: 'Sales',
-                            data: [ 28, 40, 36, 52, 38, 60, 38, 52, 36, 40 ],
+                            data: [28, 40, 36, 52, 38, 60, 38, 52, 36, 40],
                         },
                     ],
                     chart: {
@@ -623,8 +637,8 @@
                         curve: 'smooth',
                         width: 2,
                     },
-                    colors: isDark ? [ '#00ab55' ] : [ '#00ab55' ],
-                    labels: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' ],
+                    colors: isDark ? ['#00ab55'] : ['#00ab55'],
+                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
                     yaxis: {
                         min: 0,
                         show: false,
@@ -646,7 +660,7 @@
                             inverseColors: !1,
                             opacityFrom: 0.3,
                             opacityTo: 0.05,
-                            stops: [ 100, 100 ],
+                            stops: [100, 100],
                         },
                     },
                     tooltip: {

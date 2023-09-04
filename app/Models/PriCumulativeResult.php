@@ -7,16 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
+/**
+ * @mixin IdeHelperPriCumulativeResult
+ */
 class PriCumulativeResult extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        "student_id",
+        "exam_id",
+        "behaviour",
         "conduct",
         "sports_grade",
-        "days_attended",
-        "total_days",
-        "passes"
+    ];
+
+    protected $casts = [
+        "behaviour" => "array"
     ];
 
     /**

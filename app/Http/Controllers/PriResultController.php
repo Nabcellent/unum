@@ -25,6 +25,6 @@ class PriResultController extends Controller
             $data['termDays'] = $termSetting->days;
         }
 
-        return view("pages.primary.marks.$view", $data);
+        return view("pages.primary.assess.$view", $data);
     }
 }

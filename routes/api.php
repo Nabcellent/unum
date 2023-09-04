@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LearningAreaController;
+use App\Http\Controllers\Api\PriCumulativeResultController;
 use App\Http\Controllers\Api\PriResultController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\StrandController;
@@ -34,8 +35,10 @@ Route::prefix('/grades')->group(function () {
         Route::get('/learning-areas', [GradeController::class, 'getLearningAreas']);
         Route::put('/learning-areas', [GradeController::class, 'syncLearningAreas']);
 
-        Route::get('/results', [GradeController::class, 'getResults']);
         Route::get('/students', [GradeController::class, 'getStudents']);
+
+        Route::get('/results', [GradeController::class, 'getResults']);
+        Route::get('/cumulative-results', [GradeController::class, 'getCumulativeResults']);
 
         Route::get('/attendances', [AttendanceController::class, 'index']);
         Route::put('/attendances', [AttendanceController::class, 'upsert']);
@@ -89,6 +92,7 @@ Route::prefix('/primary')->group(function () {
     });
 
     Route::put('/results', [PriResultController::class, 'upsertPerIndicator']);
+    Route::put('/cumulative-results', [PriCumulativeResultController::class, 'upsert']);
 });
 
 Route::prefix('/secondary')->group(function () {

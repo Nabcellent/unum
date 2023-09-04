@@ -61,10 +61,18 @@ class ReportController extends Controller
                     })
                     ->when($grade->level === Level::PRIMARY, function (Builder $qry) use ($examId) {
                         return $qry->whereHas('learningAreaAverages')->with([
-                            'learningAreaAverages:student_id,learning_area_id,average',
-                            'learningAreaAverages.learningArea:id,name',
-                            'primaryResults:id,student_id,exam_id,indicator_id,mark',
-                            'primaryResults.indicator.subStrand.strand.learningArea',
+                            'learningAreaAverages' => function(HasMany $qry) use ($examId) {
+                                $qry->select(['student_id', 'learning_area_id', 'average'])->whereExamId($examId);
+                            },
+                            'primaryResults' => function (HasMany $qry) use ($examId) {
+                                $qry->select([
+                                    'id',
+                                    'student_id',
+                                    'exam_id',
+                                    'indicator_id',
+                                    'mark'
+                                ])->whereExamId($examId)->with('indicator.subStrand.strand.learningArea');
+                            }
                         ]);
                     })
                     ->orderBy('class_no');
@@ -90,7 +98,11 @@ class ReportController extends Controller
                     [$indicator['competency'], $indicator['description'], $indicator['color']] = match (true) {
                         $item['mark'] >= 90 => ["Highly Competent", $indicator["highly_competent"], "#16b300"],
                         $item['mark'] >= 75 => ["Competent", $indicator["competent"], "#0496be"],
-                        $item['mark'] >= 60 => ["Approaching Competency", $indicator["approaching_competence"], "yellow"],
+                        $item['mark'] >= 60 => [
+                            "Approaching Competency",
+                            $indicator["approaching_competence"],
+                            "yellow"
+                        ],
                         $item['mark'] >= 1 => ["Needs Improvement", $indicator["needs_improvement"], "red"],
                         default => ["Not Assessed", "N/A", "darkgrey"],
                     };
@@ -174,7 +186,7 @@ class ReportController extends Controller
         }
 
         $grade->students->each(function (Student $student) use ($exam, $grade) {
-            if($grade->level === Level::PRIMARY) {
+            if ($grade->level === Level::PRIMARY) {
                 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
             } else {
                 $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);

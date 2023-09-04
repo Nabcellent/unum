@@ -29,20 +29,12 @@
                 </div>
                 <div class="mb-5">
                     <label for="student" class="mb-0">Student</label>
-                    <div class="flex">
-                        <select id="student" x-ref="studentSelect" class="ltr:rounded-r-none rtl:rounded-l-none w-100"
-                                id="student-select" x-model="student_id" @change="updatePreview" aria-label>
-                            <template x-for="student in students" :key="student.id">
-                                <option :value="student.id" x-text="student.name"></option>
-                            </template>
-                        </select>
-                        <button id="btn-clear-student" type="button" x-tooltip="Disable/Enable Student"
-                                :disabled="!student_id || fetchingReport" @click="disableStudentSelect()"
-                                class="btn btn-outline-primary ltr:rounded-l-none rtl:rounded-r-none">
-                            <i class="fa-solid fa-circle-xmark fa-xl" x-show="!buttonIcon"></i>
-                            <i class="fa-solid fa-circle-check fa-xl" x-show="buttonIcon"></i>
-                        </button>
-                    </div>
+                    <select id="student" x-ref="studentSelect" class="ltr:rounded-r-none rtl:rounded-l-none w-100"
+                            x-model="student_id" @change="updatePreview" aria-label>
+                        <template x-for="student in students" :key="student.id">
+                            <option :value="student.id" x-text="student.name"></option>
+                        </template>
+                    </select>
                 </div>
                 <div class="flex justify-end items-center">
                     <button id="addonsRight" type="button" class="btn btn-primary w-full"
@@ -98,34 +90,29 @@
                 },
 
                 updatePreview() {
-                    if (this.exam_id && this.grade_id) {
+                    if (this.exam_id && this.grade_id && this.student_id) {
                         this.fetchingReport = true
 
-                        let params = {}
+                        axios.get(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}/preview`, {
+                            params: {student_id: this.student_id}
+                        }).then(({data: {data, status}}) => {
+                            if (status) {
+                                this.reports = data
+                            } else {
+                                this.showMessage(data.msg, 'error')
+                            }
 
-                        if (this.student_id && !this.studentSelectDisabled) params.student_id = this.student_id
+                            this.fetchingReport = false
+                        }).catch(err => {
+                            console.error(err)
 
-                        axios.get(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}/preview`, {params: params})
-                            .then(({data: {data, status}}) => {
-                                if (status) {
-                                    this.reports = data
-                                } else {
-                                    this.showMessage(data.msg, 'error')
-                                }
-
-                                this.fetchingReport = false
-                            })
-                            .catch(err => {
-                                console.error(err)
-
-                                this.fetchingReport = false
-                            })
+                            this.fetchingReport = false
+                        })
                     }
                 },
 
                 updateClass() {
                     if (this.student_id) this.student_id = null
-                    this.studentSelectDisabled = false
 
                     axios.get(`/api/grades/${this.grade_id}/students`)
                         .then(({data: {data}}) => {
