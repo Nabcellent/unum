@@ -57,7 +57,7 @@ class GradeController extends Controller
 
         $data = $grade->students()
             ->when(!$isPrimary, function ($qry) use ($request) {
-                $qry->with('result', function ($qry) use ($request) {
+                $qry->with('secondaryResult', function ($qry) use ($request) {
                     $qry->select(['id', 'student_id', 'course_work_mark', 'exam_mark', 'average', 'quarter', 'rank'])
                         ->whereExamId($request->integer('exam_id'))
                         ->whereSubjectId($request->integer('subject_id'));

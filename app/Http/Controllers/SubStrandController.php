@@ -24,7 +24,7 @@ class SubStrandController extends Controller
             "strand" => Strand::find($request->integer('strand-id'), ['id', 'learning_area_id']),
         ];
 
-        return view('pages.sub-strands.index', $data);
+        return view('pages.primary.sub-strands.index', $data);
     }
 
     /**

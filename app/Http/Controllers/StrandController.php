@@ -23,7 +23,7 @@ class StrandController extends Controller
             "learningAreaId" => $request->integer('learning-area-id')
         ];
 
-        return view('pages.strands.index', $data);
+        return view('pages.primary.strands.index', $data);
     }
 
     /**

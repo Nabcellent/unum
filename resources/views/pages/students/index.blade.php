@@ -163,10 +163,10 @@
 
                 fetchStudents() {
                     if (this.grade_id) {
-                        axios.get(`/api/students/${this.grade_id}`).then(({data}) => {
-                            if (data.status) {
+                        axios.get(`/api/students/${this.grade_id}`).then(({data:{status, data}}) => {
+                            if (status) {
                                 this.datatable.destroy()
-                                this.initDT(data.students.map(s => [s.class_no, s.admission_no, s.name, s.dob, s.created_at]))
+                                this.initDT(data.map(s => [s.class_no, s.admission_no, s.name, s.dob, s.created_at]))
                             }
                         })
                     }

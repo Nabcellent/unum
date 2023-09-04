@@ -21,7 +21,7 @@ class PriResultController extends Controller
             "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];
 
-        if ($view === 'student') {
+        if ($view === 'per-student') {
             $data['termDays'] = $termSetting->days;
         }
 

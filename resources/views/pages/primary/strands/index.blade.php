@@ -68,7 +68,8 @@
                             <tr>
                                 <td x-text="s.name" class="whitespace-nowrap"></td>
                                 <td class="whitespace-nowrap">
-                                    <a :href="`/dashboard/sub-strands?strand-id=${s.id}`" x-text="s.sub_strands_count"></a>
+                                    <a :href="`/dashboard/sub-strands?strand-id=${s.id}`"
+                                       x-text="s.sub_strands_count"></a>
                                 </td>
                                 <td class="flex items-center justify-between">
                                     <button type="button" x-tooltip="Edit" @click="onEdit(s)">
@@ -136,9 +137,14 @@
                     this.fetchStrands()
                 },
                 fetchStrands() {
-                    if(this.learning_area_id) {
-                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({data}) => {
-                            if (data.status) this.strands = data.strands
+                    if (this.learning_area_id) {
+                        axios.get(`/api/learning-areas/${this.learning_area_id}/strands`).then(({
+                                                                                                    data: {
+                                                                                                        data,
+                                                                                                        status
+                                                                                                    }
+                                                                                                }) => {
+                            if (status) this.strands = data
                         })
                     }
                 },
@@ -187,13 +193,13 @@
                     this.loading = true
 
                     axios[this.update ? 'put' : 'post'](`/api/strands/${this.strandId || ''}`, this.form)
-                        .then(({data}) => {
-                            if (data.status) {
-                                this.showMessage(data.msg)
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
 
                                 this.fetchStrands()
                             } else {
-                                this.showMessage(data.msg, 'error')
+                                this.showMessage(msg, 'error')
                             }
 
                             this.loading = false

@@ -6,57 +6,10 @@ use Carbon\Carbon;
 
 function primary_report(array $student, string $grade, string $exam, Carbon $date)
 {
-//    dd($student);
     $html = '<!DOCTYPE html>
                 <html lang="en-gb">
                 <head>
                     <title>REPORTS</title>
-                    <style type="text/css">
-                        h1 {
-                            text-align: center;
-                        }
-                        form{
-                            text-align: center;
-                        }
-                        body{
-                            background: rgb(204,204,204);
-                            width: auto;
-                            margin: auto;
-                        }
-                        page[size="A4"] {
-                            background: white;
-                            display: block;
-                            margin: 0 auto 0.5cm;
-                            box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-                            padding: 50px;
-                            width: 21cm;
-                            height: 29.7cm;
-                        }
-                        .mainline {
-                            margin:20px auto auto;
-                            border: 0.4mm solid black;
-                            height: 0.1mm;
-                            background: black;
-                        }
-                        .mini_line {
-                            margin: auto auto auto 0;
-                            border-color: black;
-                        }
-                        .clear {
-                            clear: both;
-                            display: block;
-                            content: "";
-                            width: 100%;
-                        }
-                        h3, h5 {
-                            margin: auto;
-                        }
-                        h4 {
-                            display: inline;
-                            margin: auto;
-                            width: 85px;
-                        }
-                    </style>
                 </head>
                 <body>
                     <table border="0" cellspacing="3" cellpadding="2">
@@ -165,6 +118,62 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
 
         $html .= '</table>';
     }
+
+    $html .= '<table border="0" style="width: 550px; height: 230px;">
+            <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+            <tr><td colspan="3" style="font-size: 10pt; font-weight:bold; font-family:times;" height= "30px">ATTITUDE, BEHAVIOUR AND EFFORT</td></tr>';
+
+    foreach ($student['primary_cumulative_result']['behaviour'] as $key => $behaviour) {
+        $comment = match ($key) {
+            'work' => 'works to the best of his ability.',
+            'self_respect' => 'shows self-respect and care.',
+            'courtesy' => 'shows courtesy and respect for the rights of others.',
+            'participates' => 'participates responsibly in social and civic activities.',
+            'cooperates' => 'cooperates productively and builds positive relationships with others.',
+            'enthusiastic' => 'enthusiastic about learning',
+            'sets_goals' => 'sets goals and works towards them with perseverance.',
+            'confidence' => 'shows confidence in making positive choices and decisions.',
+            default => ''
+        };
+
+        $html .= '<tr>
+                <td width="20px">&nbsp;&nbsp;</td>
+                <td style="font-size: 10pt; font-weight:bold; font-family:times;" width="100px">
+                    <i>' . str($behaviour)->headline() . '</i>
+                </td>
+                <td style="font-size: 10pt;  font-family:times;" width="400px">' . $comment . '</td>
+            </tr>';
+    }
+
+    $html .= '<tr>
+                <td colspan="3" style="font-size: 10pt; font-weight:bold; font-family:times;" height= "20px">&nbsp;&nbsp;</td>
+            </tr>
+            <tr>
+                <td >&nbsp;&nbsp;</td>
+                <td  colspan="2" bgcolor="orange" style="font-size: 11pt;  text-align:center; font-weight:bold; font-family:times;" >
+                    ATTENDANCE: ' . $student['primary_cumulative_result']['attendance'] . '<i> of ' . app(TermSetting::class)->days . ' days.</i>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="font-size: 10pt; font-weight:bold; font-family:times;" height= "40px">&nbsp;&nbsp;</td>
+            </tr>
+        </table>
+
+        <table style="width: 3500px; height: 20px;">
+            <tr>
+                <td style="width: 200px; font-family: helvetica; font-size: 10pt; font-weight: bold; text-align:centre;" >';
+
+    if ($exam !== Exam::CAT_6->value) {
+        $html .= ' <u><img src="/images/signatures/rm.jpg"  alt="HoS sign..." align="left" height="50" ></u><br>Head of Primary Section';
+    } else {
+        $html .= ' <u><img src="/images/signatures/jm.jpg"  alt="Principal sign..." align="left" height="50"></u><br>Principal';
+    }
+
+    $html .= '</td><td style="width: 50px; font-family: helvetica; font-size: 10pt; font-weight: bold; text-align:centre;"></td>
+                </tr>
+            </table>
+        </body>
+    </html>';
 
     return $html;
 }

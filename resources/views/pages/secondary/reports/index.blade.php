@@ -106,11 +106,13 @@
                         if (this.student_id && !this.studentSelectDisabled) params.student_id = this.student_id
 
                         axios.get(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}/preview`, {params: params})
-                            .then(({data: {data, status}}) => {
+                            .then(({data: {data, status, msg}}) => {
                                 if (status) {
                                     this.reports = data
-                                } else {
-                                    this.showMessage(data.msg, 'error')
+                                }
+
+                                if(msg) {
+                                    this.showMessage(msg, 'error')
                                 }
 
                                 this.fetchingReport = false

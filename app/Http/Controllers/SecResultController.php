@@ -31,7 +31,7 @@ class SecResultController extends Controller
             $data['termDays'] = $termSetting->days;
         }
 
-        return view("pages.marks.secondary.$view", $data);
+        return view("pages.secondary.marks.$view", $data);
     }
 
     /**

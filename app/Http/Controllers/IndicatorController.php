@@ -21,6 +21,6 @@ class IndicatorController extends Controller
             "subStrand"     => SubStrand::with('strand')->find($request->integer('sub-strand-id'), ['id', 'strand_id']),
         ];
 
-        return view('pages.indicators.index', $data);
+        return view('pages.primary.indicators.index', $data);
     }
 }

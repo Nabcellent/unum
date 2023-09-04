@@ -21,7 +21,7 @@ class LearningAreaController extends Controller
             "grades" => Grade::select('name')->distinct()->primary()->get()
         ];
 
-        return view('pages.learning-areas.index', $data);
+        return view('pages.primary.learning-areas.index', $data);
     }
 
     /**

@@ -9,8 +9,8 @@
         <div class="panel">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div class="mb-5">
-                    <label for="class">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updateTable">
+                    <label for="cat">Cat</label>
+                    <select id="cat" class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
                             <option value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>
                                 {{ $exam->name }}
@@ -20,15 +20,15 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Class</label>
-                    <select class="selectize" x-model="grade_id" @change="updateClass">
+                    <select id="class" class="selectize" x-model="grade_id" @change="updateClass">
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-5">
-                    <label for="class">Subject</label>
-                    <select x-ref="subjectNice" x-model="subject_id" @change="updateTable">
+                    <label for="subject">Subject</label>
+                    <select id="subject" x-ref="subjectNice" x-model="subject_id" @change="updateTable">
                         <template x-for="subject in subjects" :key="subject.id">
                             <option :value="subject.id" x-text="subject.name" :selected="subject.selected"></option>
                         </template>
@@ -235,8 +235,8 @@
                             }
                         }).then(({data:{data}}) => {
                             this.students = data.map(s => {
-                                if (!s.result) {
-                                    s.result = {
+                                if (!s.secondary_result) {
+                                    s.secondary_result = {
                                         course_work_mark: null,
                                         exam_mark: null,
                                     }
@@ -266,7 +266,7 @@
 
                 saveMarks() {
                     for (const s of this.students) {
-                        if (!s.result.exam_mark) {
+                        if (!s.secondary_result.exam_mark) {
                             this.showMessage(`Please key in EXAM marks for ${s.class_no}. ${s.name}.`, 'error');
                             return true;
                         }
@@ -275,7 +275,7 @@
                     this.loading = true
 
                     axios.post(`/api/results/subject`, {
-                        marks: this.students.map(s => s.result),
+                        marks: this.students.map(s => s.secondary_result),
                         subject_id: this.subject_id,
                         exam_id: this.exam_id,
                         grade_id: this.grade_id

@@ -12,6 +12,7 @@ use App\Settings\TermSetting;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Str;
@@ -61,10 +62,10 @@ class ReportController extends Controller
                     })
                     ->when($grade->level === Level::PRIMARY, function (Builder $qry) use ($examId) {
                         return $qry->whereHas('learningAreaAverages')->with([
-                            'learningAreaAverages' => function(HasMany $qry) use ($examId) {
+                            'learningAreaAverages'    => function (HasMany $qry) use ($examId) {
                                 $qry->select(['student_id', 'learning_area_id', 'average'])->whereExamId($examId);
                             },
-                            'primaryResults' => function (HasMany $qry) use ($examId) {
+                            'primaryResults'          => function (HasMany $qry) use ($examId) {
                                 $qry->select([
                                     'id',
                                     'student_id',
@@ -72,6 +73,9 @@ class ReportController extends Controller
                                     'indicator_id',
                                     'mark'
                                 ])->whereExamId($examId)->with('indicator.subStrand.strand.learningArea');
+                            },
+                            'primaryCumulativeResult' => function (HasOne $qry) use ($examId) {
+                                $qry->select(['student_id', 'behaviour', 'attendance'])->whereExamId($examId);
                             }
                         ]);
                     })
@@ -175,6 +179,9 @@ class ReportController extends Controller
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function store(Request $request, Exam $exam, Grade $grade): JsonResponse
     {
         $request->validate(["student_id" => "sometimes|exists:students,id"]);
@@ -185,32 +192,26 @@ class ReportController extends Controller
             $grade = $this->processPrimaryResults($grade);
         }
 
-        $grade->students->each(function (Student $student) use ($exam, $grade) {
-            if ($grade->level === Level::PRIMARY) {
-                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
-            } else {
-                $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
-            }
+        $isPrimary = $grade->level === Level::PRIMARY;
+        if ($isPrimary) {
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
+            $pdf->SetFooterMargin(5);
+        } else {
+            $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
+        }
 
-            // set header and footer fonts
-            $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-            $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(10, 5, 10);
+        $pdf->SetHeaderMargin($isPrimary ? 4 : 15);
+        $pdf->SetAutoPageBreak(TRUE, 10);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont("times", "", $isPrimary ? 9 : 15);
 
-            // set default monospaced font
-            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $grade->students->each(function (Student $student) use ($isPrimary, $pdf, $exam, $grade) {
+            if ($isPrimary) $pdf->startPageGroup();
 
-            // set margins
-            $pdf->SetMargins(10, 5, 10);
-            $pdf->SetHeaderMargin(15);
-
-            // set auto page breaks
-            $pdf->SetAutoPageBreak(TRUE, 10);
-
-            // set image scale factor
-            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-            // set font
-            $pdf->SetFont("times", "", 15);
             $pdf->AddPage('P', 'A4');
 
             $html = $this->prepareHTML($student->toArray(), $grade, $exam);

@@ -19,10 +19,10 @@ class SubjectController extends Controller
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
-            "grades" => Grade::select('name')->distinct()->get()
+            "grades" => Grade::secondary()->select('name')->distinct()->get()
         ];
 
-        return view('pages.subjects.index', $data);
+        return view('pages.secondary.subjects.index', $data);
     }
 
     public function getSubjects(): JsonResponse

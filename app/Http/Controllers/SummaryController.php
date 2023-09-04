@@ -24,12 +24,12 @@ class SummaryController extends Controller
         $exams = Exam::get();
 
         $data = [
-            "grades"      => Grade::select('name')->distinct()->get(),
+            "grades"      => Grade::secondary()->select('name')->distinct()->get(),
             "exams"       => $exams,
             "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];
 
-        return view('pages.summaries.class-performance', $data);
+        return view('pages.secondary.summaries.class-performance', $data);
     }
 
     public function loadSummaries(string $grades, $examId): array
@@ -109,15 +109,12 @@ class SummaryController extends Controller
             ->get();
 
         try {
-            return response()->json([
-                "status"    => "success",
-                "summaries" => $grades->map(fn(Grade $grade) => [
-                    "grade_id" => $grade->id,
-                    "html"     => $this->prepareHTML($grade->toArray(), $classAverages, $belowPromotion)
-                ])
-            ]);
+            return $this->successResponse($grades->map(fn(Grade $grade) => [
+                "grade_id" => $grade->id,
+                "html"     => $this->prepareHTML($grade->toArray(), $classAverages, $belowPromotion)
+            ]));
         } catch (Exception $err) {
-            return response()->json(['status' => 'alert', 'msg' => $err->getMessage(), 'type' => 'error']);
+            return $this->errorResponse($err->getMessage());
         }
     }
 
@@ -178,13 +175,9 @@ class SummaryController extends Controller
 
         $pdf->Output($filePath, 'F');
 
-        if ($grades->count() > 1) {
-            $message = "Summaries saved successfully!";
-        } else {
-            $message = "Summary saved successfully!";
-        }
-
-        return response()->json(["status" => "success", "msg" => $message]);
+        return $this->successResponse(
+            msg: $grades->count() > 1 ? "Summaries saved successfully!" : "Summary saved successfully!"
+        );
     }
 
     private function prepareHTML(array $grade, $classAverages, \Illuminate\Support\Collection $belowPromotion): string

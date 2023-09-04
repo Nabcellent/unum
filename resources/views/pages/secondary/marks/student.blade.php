@@ -28,7 +28,8 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Student</label>
-                    <select x-ref="studentSelect" id="student-select" x-model="student_id" @change="updateForm" aria-label>
+                    <select x-ref="studentSelect" id="student-select" x-model="student_id" @change="updateForm"
+                            aria-label>
                         <template x-for="student in students" :key="student.id">
                             <option :value="student.id" x-text="student.name" :selected="student.selected"></option>
                         </template>
@@ -312,7 +313,7 @@
                 updateForm() {
                     if (this.exam_id && this.grade_id && this.student_id) {
                         axios.get(`/api/secondary/students/${this.student_id}/results`, {params: {exam_id: this.exam_id,}})
-                            .then(({data}) => {
+                            .then(({data: {data}}) => {
                                 this.results = data.results
                                 this.cumulative_result = data.cumulative_result
 
@@ -336,7 +337,7 @@
                     this.results = []
 
                     axios.get(`/api/grades/${this.grade_id}/students`)
-                        .then(({data}) => {
+                        .then(({data: {data}}) => {
                             this.students = data
 
                             if (data[0]) this.student_id = data[0].id
@@ -371,13 +372,11 @@
                         attendance: this.attendance
                     }
 
-                    axios.post(`/api/results/students/${this.student_id}`, data).then(({data}) => {
-                        if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error');
-
-                            console.error(data)
+                    axios.post(`/api/results/students/${this.student_id}`, data).then(({data: {status, msg}}) => {
+                        if (!status) {
+                            this.showMessage(msg, 'error');
                         } else {
-                            this.showMessage(data.msg)
+                            this.showMessage(msg)
 
                             this.updateForm()
                         }

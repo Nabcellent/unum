@@ -76,7 +76,7 @@ class StudentController extends Controller
     public function getResults(Request $request, Student $student): JsonResponse
     {
         $data = [
-            'results'           => $student->results()
+            'results'           => $student->secondaryResult()
                 ->whereExamId($request->integer('exam_id'))
                 ->with('subject')
                 ->get([
