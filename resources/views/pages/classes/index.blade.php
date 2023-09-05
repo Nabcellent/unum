@@ -21,6 +21,8 @@
                 </span>
             </div>
 
+            @include('components.error-alert')
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <select class="form-select" x-model="form.stream_id" aria-label>
                     <option value="" selected>Select Stream</option>
@@ -34,7 +36,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary mt-6">Submit</button>
+                <button type="submit" class="btn btn-primary mt-6" @click="save" :disabled="!form.name || loading">Submit</button>
             </div>
         </div>
 
@@ -50,7 +52,14 @@
                             <th>Stream</th>
                             <th>Level</th>
                             <th>No. of Students</th>
-                            <th>No. of Subjects/Learning Areas</th>
+                            <th class="flex">
+                                No. of Units
+                                <svg x-tooltip="Subject / Learning Area" class="ms-1" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.5"/>
+                                    <path d="M12 17V11" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+                                    <circle cx="1" cy="1" r="1" transform="matrix(1 0 0 -1 11 9)" fill="#1C274C"/>
+                                </svg>
+                            </th>
                             <th class="!text-center">Actions</th>
                         </tr>
                         </thead>
@@ -162,6 +171,7 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data("classes", () => ({
                 showModal: false,
+                loading: false,
                 update: false,
                 errors: {},
                 form: {
@@ -233,6 +243,40 @@
                         stream_id: null,
                         name: ''
                     }
+                },
+
+                save() {
+                    this.loading = true
+
+                    axios[this.update ? 'put' : 'post'](`/api/grades/${this.grade?.id || ''}`, this.form)
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
+
+                                this.form = {
+                                    stream_id: null,
+                                    name: ''
+                                }
+
+
+                                this.init()
+
+                                this.loading = false
+                            } else {
+                                this.showMessage(msg, 'error')
+                            }
+
+                            this.loading = false
+                        }).catch(err => {
+                        console.error(err)
+                        this.loading = false
+
+                        if (err?.response?.data?.errors) {
+                            this.errors = err.response.data.errors
+                        } else {
+                            this.showMessage(err.message, 'error')
+                        }
+                    })
                 },
 
                 toggleModal() {

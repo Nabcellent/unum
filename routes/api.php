@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/grades')->group(function () {
     Route::get('/', [GradeController::class, 'getGrades']);
+    Route::post('/', [GradeController::class, 'store']);
 
     Route::prefix('/{grade}')->group(function () {
         Route::get('/subjects', [GradeController::class, 'getSubjects']);

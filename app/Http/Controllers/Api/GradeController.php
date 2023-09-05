@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Level;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreGradeRequest;
+use App\Http\Requests\UpdateGradeRequest;
 use App\Models\Grade;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\JsonResponse;
@@ -11,6 +13,19 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
+    public function store(StoreGradeRequest $request): JsonResponse
+    {
+        Grade::create($request->validated());
+
+        return $this->successResponse(msg: 'Grade Created Successfully');
+    }
+
+    public function update(UpdateGradeRequest $request, Grade $grade): JsonResponse
+    {
+        $grade->update($request->validated());
+
+        return $this->successResponse(msg: 'Grade Updated Successfully');
+    }
 
     public function getGrades(): JsonResponse
     {
