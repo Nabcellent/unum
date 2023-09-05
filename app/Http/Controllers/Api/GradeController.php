@@ -102,4 +102,14 @@ class GradeController extends Controller
     {
         return $this->successResponse($grade->students);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Grade $grade): JsonResponse
+    {
+        $grade->delete();
+
+        return $this->successResponse(msg: 'Grade Deleted!');
+    }
 }

@@ -36,7 +36,9 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary mt-6" @click="save" :disabled="!form.name || loading">Submit</button>
+                <button type="submit" class="btn btn-primary mt-6" @click="save" :disabled="!form.name || loading">
+                    Submit
+                </button>
             </div>
         </div>
 
@@ -54,7 +56,8 @@
                             <th>No. of Students</th>
                             <th class="flex">
                                 No. of Units
-                                <svg x-tooltip="Subject / Learning Area" class="ms-1" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg x-tooltip="Subject / Learning Area" class="ms-1" width="17" height="17"
+                                     viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.5"/>
                                     <path d="M12 17V11" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
                                     <circle cx="1" cy="1" r="1" transform="matrix(1 0 0 -1 11 9)" fill="#1C274C"/>
@@ -102,7 +105,7 @@
                                                 fill="#1C274C"/>
                                         </svg>
                                     </button>
-                                    <button type="button" x-tooltip="Delete">
+                                    <button type="button" x-tooltip="Delete" @click="onDelete(g)">
                                         <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">
                                             <path opacity="0.5"
@@ -200,7 +203,7 @@
                     axios.get(`/api/grades/${g.id}/${g.level === 'primary' ? 'learning-areas' : 'subjects'}`)
                         .then(({data: {data, status}}) => {
                             if (status) {
-                                if(data) {
+                                if (data) {
                                     this.assignUnitsForm[g.level === 'primary' ? 'learning_areas' : 'subjects'] = data.map(d => d.id)
                                 }
 
@@ -245,19 +248,36 @@
                     }
                 },
 
-                save() {
-                    this.loading = true
-
-                    axios[this.update ? 'put' : 'post'](`/api/grades/${this.grade?.id || ''}`, this.form)
+                onDelete(g) {
+                    window.Swal.fire({
+                        title: 'Are you sure?',
+                        text: `You won't be able to revert this!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: `Yes, delete ${g.full_name}!`,
+                    }).then(res => res.isConfirmed && axios.delete(`/api/grades/${g.id}`)
                         .then(({data: {status, msg}}) => {
                             if (status) {
                                 this.showMessage(msg)
 
-                                this.form = {
-                                    stream_id: null,
-                                    name: ''
-                                }
+                                this.init()
+                            } else {
+                                this.showMessage(msg, 'error')
+                            }
+                        }));
+                },
 
+                save() {
+                    this.loading = true
+
+                    axios[this.update ? 'put' : 'post'](`/api/grades/${this.form?.id || ''}`, this.form)
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
+
+                                this.form = {stream_id: null, name: ''}
 
                                 this.init()
 

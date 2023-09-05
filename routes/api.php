@@ -32,6 +32,7 @@ Route::prefix('/grades')->group(function () {
 
     Route::prefix('/{grade}')->group(function () {
         Route::put('/', [GradeController::class, 'update']);
+        Route::delete('/', [GradeController::class, 'destroy']);
 
         Route::get('/subjects', [GradeController::class, 'getSubjects']);
         Route::put('/subjects', [GradeController::class, 'syncSubjects']);
