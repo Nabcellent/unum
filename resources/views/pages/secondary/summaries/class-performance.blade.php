@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Summaries')
-@push('links')
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-@endpush
 @section('content')
 
     <div x-data="classPerformance">
@@ -13,8 +10,8 @@
         <div class="panel mb-3">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:grid-cols-3">
                 <div class="mb-5">
-                    <label for="class">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updatePreview">
+                    <label for="cat">Cat</label>
+                    <select id="cat" class="selectize" x-model="exam_id" @change="updatePreview">
                         @foreach($exams as $exam)
                             <option value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>
                                 {{ $exam->name }}
@@ -62,7 +59,6 @@
 
 @endsection
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('classPerformance', () => ({
@@ -93,12 +89,11 @@
 
                         axios.get(`/api/summaries/exams/${this.exam_id}/preview`, {
                             params: {grade: this.grade}
-                        }).then(({data}) => {
-                            if (data.status === 'alert') {
-                                this.showMessage(data.msg, data.type)
-                            }
-                            if (data.status === 'success') {
-                                this.summaries = data.summaries
+                        }).then(({data: {status, data}}) => {
+                            if (status) {
+                                this.summaries = data
+                            } else {
+                                this.showMessage(msg, 'error')
                             }
 
                             this.fetchingReport = false

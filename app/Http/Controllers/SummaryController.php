@@ -41,7 +41,7 @@ class SummaryController extends Controller
                 'grade_id',
                 'user_id',
                 'class_no'
-            ])->whereHas('results')->with([
+            ])->whereHas('secondaryResults')->with([
                 'user:id,first_name,middle_name,last_name',
                 'cumulativeResult' => function ($qry) use ($examId) {
                     return $qry->select([
@@ -50,14 +50,11 @@ class SummaryController extends Controller
                         'exam_id',
                         'average',
                         'quarter',
-                        'sports_grade',
                         'conduct',
                         'passes',
-                        'days_attended',
-                        'total_days'
                     ])->whereExamId($examId)->with('cumulativeExamAverage');
                 },
-                'results'          => fn($qry) => $qry->select([
+                'secondaryResults' => fn($qry) => $qry->select([
                     'id',
                     'student_id',
                     'exam_id',
@@ -76,7 +73,7 @@ class SummaryController extends Controller
 
             $grades->mapWithKeys(function ($g) {
                 $count = $g->students->filter(function ($student) {
-                    $x = collect($student['results'])->filter(function ($result) {
+                    $x = collect($student['secondaryResults'])->filter(function ($result) {
                         return in_array($result['subject']['name'], [
                                 'ENGLISH',
                                 'KISWAHILI'
@@ -242,7 +239,7 @@ class SummaryController extends Controller
             $html .= "{$student['class_no']}. {$student['name']}</td>";
 
             $count = 0;
-            foreach ($student['results'] as $result) {
+            foreach ($student['secondary_results'] as $result) {
                 $bgc = getColorForMark($result['average']);
 
                 $cumulativeSubjectAve = $subjectAverages->first(function (CumulativeSubjectAverage $ave) use ($student, $result) {
@@ -253,7 +250,7 @@ class SummaryController extends Controller
                             <td align="center">' . $result['quarter'] . '</td>
                             <td align="center" style="background-color: lightgrey;">' . round($cumulativeSubjectAve->average) . '</td>';
 
-                if ($count === count($student['results']) - 1) {
+                if ($count === count($student['secondary_results']) - 1) {
                     $bgc = getColorForMark($student['cumulative_result']['average']);
 
                     $passes = $subjectAverages->filter(function (CumulativeSubjectAverage $ave) use ($student) {
@@ -276,7 +273,7 @@ class SummaryController extends Controller
         }
 
         $subjectAverages = $students
-            ->flatMap(fn($item) => $item['results'])
+            ->flatMap(fn($item) => $item['secondary_results'])
             ->groupBy('subject_id')
             ->map(fn($res) => round($res->sum('average') / $res->count(), 2))
             ->toArray();
@@ -316,7 +313,7 @@ class SummaryController extends Controller
                     if ($subject['short_name'] === "AVE") {
                         $ave = $s['cumulative_result']['average'];
                     } else {
-                        $ave = Arr::first($s['results'], function ($res) use ($subject) {
+                        $ave = Arr::first($s['secondary_results'], function ($res) use ($subject) {
                             return $res['subject']['short_name'] === $subject['short_name'];
                         })['average'];
                     }
@@ -373,6 +370,7 @@ class SummaryController extends Controller
 
                 $html .= '<td width="30" align="center" valign="middle" class="border-1" style="background-color: ' . $bgColor . ';">' . $col . '</td>';
 
+                //  Adds spaces between columns
                 if ($i === 0 && $key !== 0 && $key % 2 === 1) $html .= '<td width="20" rowspan="6" class="border-1" style="background-color: lightgrey;"></td>';
             }
 
