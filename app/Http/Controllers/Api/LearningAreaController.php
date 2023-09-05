@@ -14,7 +14,7 @@ class LearningAreaController extends Controller
 {
     public function getLearningAreas(): JsonResponse
     {
-        $learningAreas = LearningArea::with('grades')->withCount(['strands'])->get();
+        $learningAreas = LearningArea::with('grades')->withCount(['strands'])->latest('id')->get();
 
         return $this->successResponse($learningAreas);
     }
@@ -38,13 +38,13 @@ class LearningAreaController extends Controller
 
         $subject = LearningArea::create($data);
 
-        if(isset($data['classes'])) {
+        if (isset($data['classes'])) {
             $gradeIds = Grade::whereIn('name', $data['classes'])->pluck('id');
 
             $subject->grades()->attach($gradeIds);
         }
 
-        return response()->json(['status' => true, 'msg' => 'Learning area saved!']);
+        return $this->successResponse(msg: 'Learning area saved!');
     }
 
     public function update(Request $request, LearningArea $learningArea): JsonResponse
@@ -57,13 +57,13 @@ class LearningAreaController extends Controller
         $learningArea->update($data);
 
         $gradeIds = [];
-        if(isset($data['classes'])) {
+        if (isset($data['classes'])) {
             $gradeIds = Grade::whereIn('name', $data['classes'])->pluck('id');
         }
 
         $learningArea->grades()->sync($gradeIds);
 
-        return response()->json(['status' => true, 'msg' => 'Learning area saved!']);
+        return $this->successResponse(msg: 'Learning area saved!');
     }
 
     /**
@@ -71,6 +71,8 @@ class LearningAreaController extends Controller
      */
     public function destroy(LearningArea $learningArea): JsonResponse
     {
-        return response()->json(['status' => $learningArea->delete(), 'msg' => 'Learning area Deleted!']);
+        $learningArea->delete();
+
+        return $this->successResponse(msg: 'Learning area Deleted!');
     }
 }

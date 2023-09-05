@@ -24,3 +24,7 @@ table thead tr th {
     font-weight: bold;
     padding: .15rem .2rem;
 }
+
+table tbody tr td, table tfoot tr th, table thead tr th {
+    padding: .25rem 1rem;
+}

@@ -151,7 +151,7 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
             <tr>
                 <td >&nbsp;&nbsp;</td>
                 <td  colspan="2" bgcolor="orange" style="font-size: 11pt;  text-align:center; font-weight:bold; font-family:times;" >
-                    ATTENDANCE: ' . $student['primary_cumulative_result']['attendance'] . '<i> of ' . app(TermSetting::class)->days . ' days.</i>
+                    ATTENDANCE: ' . $student['primary_cumulative_result']['attendance'] . '<i> half days absent.</i>
                 </td>
             </tr>
             <tr>

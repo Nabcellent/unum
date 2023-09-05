@@ -3,40 +3,54 @@
 @section('content')
 
     <div x-data="learningAreas" class="xl:px-40 lg:px-32">
-        <div class="panel mb-3">
-            <div class="flex justify-between items-start">
-                <h5 class="text-lg font-semibold dark:text-white-light mb-5">
-                    <span x-text="update ? 'Edit':'Create'"></span> Learning Area
-                </h5>
-                <span class="cursor-pointer" x-show="update" x-tooltip="Create" @click="onCreate">
-                    <svg class="h-7 w-7" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.5"
-                              d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
-                              fill="#1C274C"/>
-                        <path
-                            d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z"
-                            fill="#1C274C"/>
-                    </svg>
-                </span>
-            </div>
+        <button type="button" class="btn btn-warning mb-3 text-end ml-auto" @click="onCreate">
+            Create Learning Area
+        </button>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <select x-ref="tomSelectGradesEl" x-model="form.classes" aria-label multiple>
-                    <option value="" selected>Select Grades</option>
-                    @foreach($grades as $grade)
-                        <option value="{{ $grade->name }}">{{ $grade->name }}</option>
-                    @endforeach
-                </select>
+        <!-- modal -->
+        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="openModal && '!block'">
+            <div class="flex items-start justify-center min-h-screen px-4" @click.self="openModal = false">
+                <div x-show="openModal" x-transition x-transition.duration.300
+                     class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                    <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                        <h5 class="font-bold text-lg">
+                            <span x-text="update ? 'Edit':'Create'"></span> Learning Area
+                        </h5>
+                        <button type="button" class="text-white-dark hover:text-dark" @click="toggleModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                 stroke-linejoin="round" class="h-6 w-6">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        @include('components.error-alert')
 
-                <input type="text" placeholder="Enter learning area name" class="form-input" required aria-label
-                       x-model="form.name"/>
-            </div>
+                        <div class="dark:text-white-dark/70 text-base font-medium text-[#1f2937]">
+                            <div class="grid grid-cols-1 gap-6">
+                                <select x-ref="tomSelectGradesEl" x-model="form.classes" aria-label multiple>
+                                    <option value="" selected>Select Grades</option>
+                                    @foreach($grades as $grade)
+                                        <option value="{{ $grade->name }}">{{ $grade->name }}</option>
+                                    @endforeach
+                                </select>
 
-            <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary mt-6" @click="saveLearningArea"
-                        :disabled="!form.name || loading">Submit
-                </button>
+                                <input type="text" placeholder="Enter learning area name" class="form-input" required
+                                       aria-label
+                                       x-model="form.name"/>
+                            </div>
+                        </div>
+                        <div class="flex justify-end items-center mt-8">
+                            <button type="button" class="btn btn-outline-danger" @click="toggleModal">Discard</button>
+                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4"
+                                    :disabled="!form.name || loading" @click="saveLearningArea">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -64,7 +78,7 @@
                                 <td class="flex items-center justify-between">
                                     <div x-data="{ dropdownOpen: false }" class="relative">
                                         <button @click="dropdownOpen=true"
-                                                class="inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                                                class="inline-flex items-center justify-center py-1 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                                             <svg class="me-2 h-5 w-5" width="24" height="24" viewBox="0 0 24 24"
                                                  fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <g opacity="0.3">
@@ -167,11 +181,13 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data("learningAreas", () => ({
+            Alpine.data("learningAreas", (initialOpenState = false) => ({
                 update: false,
                 loading: false,
+                errors: {},
                 learningAreas: [],
                 learningAreaId: null,
+                openModal: initialOpenState,
                 form: {
                     classes: [],
                     name: ''
@@ -200,6 +216,7 @@
                 },
                 onCreate() {
                     this.update = false
+                    this.openModal = true
                     this.learningAreaId = null
                     this.form = {
                         classes: [],
@@ -210,6 +227,7 @@
                 },
                 onEdit(learningArea) {
                     this.update = true
+                    this.openModal = true
                     this.learningAreaId = learningArea.id
                     this.form = {
                         classes: learningArea.grades.map(s => {
@@ -245,24 +263,40 @@
                     this.loading = true
 
                     axios[this.update ? 'put' : 'post'](`/api/learning-areas/${this.learningAreaId || ''}`, this.form)
-                        .then(({data}) => {
-                            if (data.status) {
-                                this.showMessage(data.msg)
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
+
+                                this.learningAreaId = null
+                                this.form = {
+                                    classes: [],
+                                    name: ''
+                                }
+
+                                this.tomSelectGradesInstance.clear()
 
                                 this.fetchLearningAreas()
+
+                                this.openModal = false
                             } else {
-                                this.showMessage(data.msg, 'error')
+                                this.showMessage(msg, 'error')
                             }
 
                             this.loading = false
                         }).catch(err => {
                         console.error(err)
-
                         this.loading = false
 
-                        this.showMessage(err.message, 'error')
+                        if (err?.response?.data?.errors) {
+                            this.errors = err.response.data.errors
+                        } else {
+                            this.showMessage(err.message, 'error')
+                        }
                     })
-                }
+                },
+                toggleModal() {
+                    this.openModal = !this.openModal;
+                },
             }));
         })
     </script>
