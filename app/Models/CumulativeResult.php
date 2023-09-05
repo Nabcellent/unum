@@ -23,7 +23,7 @@ class CumulativeResult extends Model
         "sports_grade",
         "conduct",
         "passes",
-        "days_attended",
+        "days_absent",
         "total_days",
     ];
 

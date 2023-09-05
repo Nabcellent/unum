@@ -22,7 +22,7 @@ class PriResultController extends Controller
         ];
 
         if ($view === 'per-student') {
-            $data['termDays'] = $termSetting->days;
+            $data['catDays'] = $termSetting->cat_days;
         }
 
         return view("pages.primary.assess.$view", $data);

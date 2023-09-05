@@ -20,6 +20,8 @@ class PriCumulativeResult extends Model
         "behaviour",
         "conduct",
         "sports_grade",
+        "days_absent",
+        "total_days"
     ];
 
     protected $casts = [

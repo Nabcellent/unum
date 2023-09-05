@@ -42,7 +42,7 @@ class ReportController extends Controller
                                     'sports_grade',
                                     'conduct',
                                     'passes',
-                                    'days_attended',
+                                    'days_absent',
                                     'total_days'
                                 ])->whereExamId($examId);
                             },
@@ -62,10 +62,10 @@ class ReportController extends Controller
                     })
                     ->when($grade->level === Level::PRIMARY, function (Builder $qry) use ($examId) {
                         return $qry->whereHas('learningAreaAverages')->with([
-                            'learningAreaAverages'    => function (HasMany $qry) use ($examId) {
+                            'learningAreaAverages' => function (HasMany $qry) use ($examId) {
                                 $qry->select(['student_id', 'learning_area_id', 'average'])->whereExamId($examId);
                             },
-                            'primaryResults'          => function (HasMany $qry) use ($examId) {
+                            'primaryResults' => function (HasMany $qry) use ($examId) {
                                 $qry->select([
                                     'id',
                                     'student_id',
@@ -75,7 +75,12 @@ class ReportController extends Controller
                                 ])->whereExamId($examId)->with('indicator.subStrand.strand.learningArea');
                             },
                             'primaryCumulativeResult' => function (HasOne $qry) use ($examId) {
-                                $qry->select(['student_id', 'behaviour', 'attendance'])->whereExamId($examId);
+                                $qry->select([
+                                    'student_id',
+                                    'behaviour',
+                                    'days_absent',
+                                    'total_days'
+                                ])->whereExamId($examId);
                             }
                         ]);
                     })
@@ -175,7 +180,7 @@ class ReportController extends Controller
                 "html"       => $this->prepareHTML($student->toArray(), $grade, $exam)
             ]));
         } catch (Exception $err) {
-            return $this->errorResponse($err->getMessage(), code: $err->getCode());
+            return $this->errorResponse($err->getMessage());
         }
     }
 

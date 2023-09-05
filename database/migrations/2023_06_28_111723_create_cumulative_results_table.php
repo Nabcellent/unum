@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->tinyInteger('rank')->nullable();
             $table->char('conduct', 1)->nullable();
             $table->char('sports_grade', 1)->nullable();
-            $table->tinyInteger('days_attended')->nullable();
+            $table->tinyInteger('days_absent')->nullable();
             $table->tinyInteger('total_days')->nullable();
             $table->timestamps();
 

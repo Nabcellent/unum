@@ -9,8 +9,8 @@
         <div class="panel">
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div class="mb-5">
-                    <label for="class">Cat</label>
-                    <select class="selectize" x-model="exam_id" @change="updateTable">
+                    <label for="cat">Cat</label>
+                    <select id="cat" class="selectize" x-model="exam_id" @change="updateTable">
                         @foreach($exams as $exam)
                             <option
                                 value="{{ $exam->id }}" @selected($exam->name === $currentExam->name)>{{ $exam->name }}</option>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="mb-5">
                     <label for="class">Class</label>
-                    <select class="selectize" x-model="grade_id" @change="updateTable">
+                    <select id="class" class="selectize" x-model="grade_id" @change="updateTable">
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
@@ -29,8 +29,8 @@
         </div>
 
         <div class="panel mt-5 border-0">
-            <h3 class="text-base font-bold text-center" x-show="term_days">
-                TOTAL TERM DAYS: <span class="font-extrabold" x-text="term_days"></span>
+            <h3 class="text-base font-bold text-center" x-show="cat_days">
+                TOTAL TERM DAYS: <span class="font-extrabold" x-text="cat_days"></span>
             </h3>
 
             <div class="table-responsive mb-3">
@@ -38,7 +38,7 @@
                     <thead>
                     <tr>
                         <th colspan="2" style="width: 206px">Name</th>
-                        <th>Days Attended</th>
+                        <th>Days Absent</th>
                         <th>Percentage</th>
                     </tr>
                     </thead>
@@ -51,19 +51,19 @@
                                 <input
                                     :tabindex="i"
                                     type="number"
-                                    :max="term_days"
+                                    :max="cat_days"
                                     min="0"
                                     step="1"
-                                    :placeholder="term_days"
+                                    :placeholder="cat_days"
                                     class="form-input w-20 px-2 py-1"
-                                    x-model="student.cumulative_result.days_attended"
+                                    x-model="student.result.days_absent"
                                     maxlength="2"
                                     @keyup="e => onAttendanceChange(e, student)"
                                     aria-label
                                 />
                             </td>
                             <td class="py-1"
-                                x-text="`${Math.round((student.cumulative_result.days_attended / term_days) * 100)}%`"></td>
+                                x-text="`${Math.round((student.result.days_absent / cat_days) * 100)}%`"></td>
                         </tr>
                     </template>
                     </tbody>
@@ -89,7 +89,7 @@
                 loading: false,
                 exam_id: '<?= $currentExam->id ?>',
                 grade_id: null,
-                term_days: null,
+                cat_days: null,
                 students: [],
 
                 init: () => {
@@ -98,20 +98,21 @@
 
                 updateTable() {
                     if (this.exam_id && this.grade_id) {
-                        axios.get(`/api/grades/${ this.grade_id }/attendances`, {
-                            params: { exam_id: this.exam_id, }
-                        }).then(({ data }) => {
+                        axios.get(`/api/grades/${this.grade_id}/attendances`, {
+                            params: {exam_id: this.exam_id,}
+                        }).then(({data: {data}}) => {
                             this.students = data.students.map(s => {
-                                if (!s.cumulative_result) {
-                                    s.cumulative_result = {
-                                        days_attended: null
-                                    }
-                                }
+                                if ('cumulative_result' in s) s.result = s.cumulative_result
+                                if ('primary_cumulative_result' in s) s.result = s.primary_cumulative_result
+
+                                if (!s.result) s.result = {student_id: s.id, days_absent: null}
 
                                 return s
                             })
 
-                            this.term_days = data.term_days
+                            console.log(data)
+
+                            this.cat_days = data.cat_days
                         }).catch(err => console.error(err))
                     }
                 },
@@ -122,24 +123,22 @@
                         let nextTab = currentTab.tabIndex + 1;
                         let nextElement = document.querySelector('[tabindex="' + nextTab + '"]');
 
-                        if (nextElement) {
-                            nextElement.focus();
-                        }
+                        if (nextElement) nextElement.focus();
                     }
 
-                    if (e.target.value > this.term_days) {
-                        e.target.value = this.term_days
-                        student.cumulative_result.days_attended = this.term_days
+                    if (e.target.value > this.cat_days) {
+                        e.target.value = this.cat_days
+                        student.result.days_absent = this.cat_days
 
-                        this.showMessage(`Attendance For ${ student.name } mustn't be above ${ this.term_days } days.`, 'error');
+                        this.showMessage(`Attendance For ${student.name} mustn't be above ${this.cat_days} days.`, 'error');
 
                         nextStudent()
                     } else if (e.target.value < 0) {
                         e.target.value = ''
-                        student.cumulative_result.days_attended = null
+                        student.result.days_absent = null
 
                         this.showMessage(`Attendance mustn't be a negative number.`, 'error');
-                    } else if (e.target.value.length === this.term_days.toString().length) {
+                    } else if (e.target.value.length === this.cat_days.toString().length) {
                         nextStudent()
                     }
                 },
@@ -147,19 +146,17 @@
                 saveAttendances() {
                     this.loading = true
 
-                    axios.put(`/api/grades/${ this.grade_id }/attendances`, this.students.map(s => ({
-                        ...s.cumulative_result,
-                        total_days: this.term_days
-                    }))).then(({ data }) => {
-                        if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error');
-
-                            console.log(data.error)
+                    axios.put(`/api/grades/${this.grade_id}/attendances`, {
+                        attendances: this.students.map(s => s.result),
+                        exam_id: this.exam_id
+                    }).then(({data: {status, msg}}) => {
+                        if (!status) {
+                            this.showMessage(msg, 'error');
                         } else {
-                            this.showMessage(data.msg)
+                            this.showMessage(msg)
 
                             this.updateTable()
-                            window.scrollTo({ top: 0 });
+                            window.scrollTo({top: 0});
                         }
 
                         this.loading = false

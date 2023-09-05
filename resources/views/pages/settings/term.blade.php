@@ -57,7 +57,7 @@
                 loading: false,
                 form: {
                     current: {{ $term->current }},
-                    days: {{ $term->days }},
+                    days: {{ $term->cat_days }},
                     current_exam: '{{ $term->current_exam }}',
                     report_exam_date: '{{ $term->report_exam_date?->toDateString() }}',
                     next_term_date: '{{ $term->next_term_date?->toDateString() }}',

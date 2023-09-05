@@ -9,7 +9,7 @@ return new class extends SettingsMigration
     public function up(): void
     {
         $this->migrator->inGroup('term', function(SettingsBlueprint $blueprint) {
-            $blueprint->add('days', 37);
+            $blueprint->add('cat_days', 37);
             $blueprint->add('current', 2);
             $blueprint->add('current_exam', Exam::CAT_1);
 

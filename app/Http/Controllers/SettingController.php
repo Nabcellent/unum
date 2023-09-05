@@ -77,7 +77,7 @@ class SettingController extends Controller
 
         if ($setting === Setting::TERM) {
             $settingModel->current = $request->integer('current');
-            $settingModel->days = $request->integer('days');
+            $settingModel->cat_days = $request->integer('days');
             $settingModel->current_exam = $request->enum('current_exam', Exam::class);
             $settingModel->report_exam_date = $request->date('report_exam_date');
             $settingModel->next_term_date = $request->date('next_term_date');

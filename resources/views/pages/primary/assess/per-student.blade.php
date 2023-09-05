@@ -113,7 +113,7 @@
                                     max="99"
                                     min="0"
                                     step="1"
-                                    :placeholder="term_days"
+                                    :placeholder="cat_days"
                                     :disabled="!results.length"
                                     class="form-input px-2 mr-2"
                                     x-model="cumulative_result.days_attended"
@@ -122,7 +122,7 @@
                                     @keyup="onAttendanceChange"
                                 />
                                 <span
-                                    x-text="`${Math.round(cumulative_result.days_attended / term_days * 100)}%`"></span>
+                                    x-text="`${Math.round(cumulative_result.days_attended / cat_days * 100)}%`"></span>
                             </div>
                         </td>
                         <td style="text-align: end">Passes</td>
@@ -173,7 +173,7 @@
             Alpine.data('marks', () => ({
                 exam_id: '{{ $currentExam->id }}',
                 grade_id: null,
-                term_days: {{ $termDays }},
+                cat_days: {{ $catDays }},
                 results: [],
                 cumulative_result: {
                     days_attended: null
@@ -220,11 +220,11 @@
                 },
 
                 onAttendanceChange(e) {
-                    if (e.target.value > this.term_days) {
-                        e.target.value = this.term_days
-                        this.cumulative_result.days_attended = this.term_days
+                    if (e.target.value > this.cat_days) {
+                        e.target.value = this.cat_days
+                        this.cumulative_result.days_attended = this.cat_days
 
-                        this.showMessage(`Attendance mustn't be above ${this.term_days} days.`, 'error');
+                        this.showMessage(`Attendance mustn't be above ${this.cat_days} days.`, 'error');
                     } else if (e.target.value < 0) {
                         e.target.value = ''
                         this.cumulative_result.days_attended = null
@@ -332,7 +332,7 @@
                             conduct: this.cumulative_result.conduct,
                             sports_grade: this.cumulative_result.sports_grade,
                             days_attended: this.cumulative_result.days_attended,
-                            total_days: this.cumulative_result.total_days ?? this.term_days,
+                            total_days: this.cumulative_result.total_days ?? this.cat_days,
                         },
                         attendance: this.attendance
                     }

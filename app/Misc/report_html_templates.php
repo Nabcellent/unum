@@ -151,7 +151,7 @@ function primary_report(array $student, string $grade, string $exam, Carbon $dat
             <tr>
                 <td >&nbsp;&nbsp;</td>
                 <td  colspan="2" bgcolor="orange" style="font-size: 11pt;  text-align:center; font-weight:bold; font-family:times;" >
-                    ATTENDANCE: ' . $student['primary_cumulative_result']['attendance'] . '<i> half days absent.</i>
+                    ATTENDANCE: ' . $student['primary_cumulative_result']['days_absent'] . '<i> half days absent.</i>
                 </td>
             </tr>
             <tr>
@@ -249,7 +249,7 @@ function lower_secondary_report(array $student, string $grade, string $exam, Car
 					</tr>';
 
     $h = 6;
-    foreach ($student['results'] as $result) {
+    foreach ($student['secondary_results'] as $result) {
         $html .= '<tr style="page-break-inside:avoid;height:22pt">
 						 <td width="421" style="background-color:#EAEBEC;font-size:13.0pt; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;' . $result['subject']['name'] . '</b></td>
 						 <td width="56" style="background-color:#EAEBEC;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>' . $result['course_work_mark'] . '</b></td>
@@ -311,7 +311,7 @@ function lower_secondary_report(array $student, string $grade, string $exam, Car
                     <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                     <td width="170" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTENDANCE:</b></td>
                     <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black">
-                        <b><i>' . $student['cumulative_result']['days_attended'] . ' of ' . $student['cumulative_result']['total_days'] . '</i> days</b>
+                        <b><i>' . $student['cumulative_result']['days_absent'] . ' of ' . $student['cumulative_result']['total_days'] . '</i> days</b>
                     </td>
                     <td width="50" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                 </tr>

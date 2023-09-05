@@ -28,7 +28,7 @@ class SecResultController extends Controller
         ];
 
         if ($view === 'student') {
-            $data['termDays'] = $termSetting->days;
+            $data['catDays'] = $termSetting->cat_days;
         }
 
         return view("pages.secondary.marks.$view", $data);

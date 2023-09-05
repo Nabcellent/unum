@@ -107,13 +107,8 @@
 
                         axios.get(`/api/reports/exams/${this.exam_id}/grades/${this.grade_id}/preview`, {params: params})
                             .then(({data: {data, status, msg}}) => {
-                                if (status) {
-                                    this.reports = data
-                                }
-
-                                if(msg) {
-                                    this.showMessage(msg, 'error')
-                                }
+                                if (status && data) this.reports = data
+                                if(msg) this.showMessage(msg, 'error')
 
                                 this.fetchingReport = false
                             })

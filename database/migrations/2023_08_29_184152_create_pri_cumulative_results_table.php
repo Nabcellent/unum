@@ -22,7 +22,8 @@ return new class extends Migration
             $table->tinyInteger('rank')->nullable();
             $table->char('conduct', 1)->nullable();
             $table->char('sports_grade', 1)->nullable();
-            $table->tinyInteger('attendance')->nullable();
+            $table->tinyInteger('days_absent')->nullable();
+            $table->tinyInteger('total_days')->nullable();
             $table->timestamps();
 
             $table->unique(['student_id', 'exam_id']);
