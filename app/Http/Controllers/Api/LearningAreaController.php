@@ -21,7 +21,8 @@ class LearningAreaController extends Controller
 
     public function getStrands(int $learningAreaId): JsonResponse
     {
-        $strands = Strand::whereLearningAreaId($learningAreaId)->with('learningArea')->withCount(['subStrands'])->get();
+        $strands = Strand::whereLearningAreaId($learningAreaId)->with('learningArea')
+            ->withCount(['subStrands'])->latest('id')->get();
 
         return $this->successResponse($strands);
     }

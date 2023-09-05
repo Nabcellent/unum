@@ -192,25 +192,23 @@ class ReportController extends Controller
             $grade = $this->processPrimaryResults($grade);
         }
 
-        $isPrimary = $grade->level === Level::PRIMARY;
-        if ($isPrimary) {
-            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
-            $pdf->SetFooterMargin(5);
-        } else {
-            $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
-        }
+        $grade->students->each(function (Student $student) use ($exam, $grade) {
+            $isPrimary = $grade->level === Level::PRIMARY;
+            if ($isPrimary) {
+                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
+                $pdf->SetFooterMargin(5);
+            } else {
+                $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "A4", true, "UTF-8", false);
+            }
 
-        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetMargins(10, 5, 10);
-        $pdf->SetHeaderMargin($isPrimary ? 4 : 15);
-        $pdf->SetAutoPageBreak(TRUE, 10);
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->SetFont("times", "", $isPrimary ? 9 : 15);
-
-        $grade->students->each(function (Student $student) use ($isPrimary, $pdf, $exam, $grade) {
-            if ($isPrimary) $pdf->startPageGroup();
+            $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            $pdf->SetMargins(10, 5, 10);
+            $pdf->SetHeaderMargin($isPrimary ? 4 : 15);
+            $pdf->SetAutoPageBreak(TRUE, 10);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            $pdf->SetFont("times", "", $isPrimary ? 9 : 15);
 
             $pdf->AddPage('P', 'A4');
 

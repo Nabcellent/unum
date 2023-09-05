@@ -11,7 +11,7 @@
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div>
                     <label for="cat" class="mb-0">Cat</label>
-                    <select id="cat" class="selectize" x-model="exam_id" @change="updatePreview" aria-label>
+                    <select id="cat" class="selectize" x-model="exam_id" @change="updatePreview">
                         @foreach($exams as $exam)
                             <option value="{{ $exam->id }}" @selected($exam->id === $currentExam->id)>
                                 {{ $exam->name }}
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <label for="class" class="mb-0">Class</label>
-                    <select id="class" class="selectize" x-model="grade_id" @change="updateClass" aria-label>
+                    <select id="class" class="selectize" x-model="grade_id" @change="updateClass">
                         @foreach($grades as $grade)
                             <option value="{{ $grade->id }}">{{ $grade->full_name }}</option>
                         @endforeach
@@ -29,8 +29,7 @@
                 </div>
                 <div class="mb-5">
                     <label for="student" class="mb-0">Student</label>
-                    <select id="student" x-ref="studentSelect" class="ltr:rounded-r-none rtl:rounded-l-none w-100"
-                            x-model="student_id" @change="updatePreview" aria-label>
+                    <select id="student" x-ref="studentSelect" x-model="student_id" @change="updatePreview">
                         <template x-for="student in students" :key="student.id">
                             <option :value="student.id" x-text="student.name"></option>
                         </template>

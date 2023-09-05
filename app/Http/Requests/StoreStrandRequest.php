@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreStrandRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreStrandRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,12 @@ class StoreStrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'             => [
+                'required',
+                'string',
+                Rule::unique('strands')->where('learning_area_id', $this->integer('learning_area_id'))
+            ],
+            'learning_area_id' => 'required|integer|exists:learning_areas,id'
         ];
     }
 }

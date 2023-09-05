@@ -7,7 +7,7 @@
             Create Learning Area
         </button>
 
-        <!-- modal -->
+        <!-- Start modal -->
         <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="openModal && '!block'">
             <div class="flex items-start justify-center min-h-screen px-4" @click.self="openModal = false">
                 <div x-show="openModal" x-transition x-transition.duration.300
@@ -53,6 +53,7 @@
                 </div>
             </div>
         </div>
+        <!-- End modal -->
 
         <div class="panel">
             <h5 class="text-lg font-semibold dark:text-white-light">Learning Areas</h5>
@@ -278,6 +279,7 @@
                                 this.fetchLearningAreas()
 
                                 this.openModal = false
+                                this.loading = false
                             } else {
                                 this.showMessage(msg, 'error')
                             }
