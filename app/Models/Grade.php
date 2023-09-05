@@ -18,6 +18,13 @@ class Grade extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        "stream_id",
+        "name"
+    ];
+
     protected $with = ['stream'];
     protected $appends = ['full_name'];
     protected $casts = [

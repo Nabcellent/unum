@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateGradeRequest extends FormRequest
 {
@@ -22,7 +23,8 @@ class UpdateGradeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "stream_id" => "nullable|integer|exists:streams,id",
+            "name"      => ["required", Rule::unique("grades")->ignore($this->route("grade"))]
         ];
     }
 }

@@ -31,6 +31,8 @@ Route::prefix('/grades')->group(function () {
     Route::post('/', [GradeController::class, 'store']);
 
     Route::prefix('/{grade}')->group(function () {
+        Route::put('/', [GradeController::class, 'update']);
+
         Route::get('/subjects', [GradeController::class, 'getSubjects']);
         Route::put('/subjects', [GradeController::class, 'syncSubjects']);
         Route::get('/learning-areas', [GradeController::class, 'getLearningAreas']);
