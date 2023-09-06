@@ -109,17 +109,13 @@
                     this.loading = true
 
                     axios.post(`/api/summaries/exams/${this.exam_id}`, {grade: this.grade, grade_id})
-                        .then(({data}) => {
-                            if (data.status === 'success') {
-                                this.showMessage(data.msg)
-                            } else if (data.status === 'error') {
-                                this.showMessage(data.msg, 'error')
-
-                                console.log(data)
+                        .then(({data: {status, msg}}) => {
+                            if (status) {
+                                this.showMessage(msg)
+                            } else if (msg) {
+                                this.showMessage(msg, 'error')
                             } else {
                                 this.showMessage('Something went wrong', 'error')
-
-                                console.log(data)
                             }
 
                             this.loading = false
