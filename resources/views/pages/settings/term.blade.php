@@ -5,14 +5,10 @@
 <div x-data="term_settings">
     <div class="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 dark:border-[#191e3a] dark:bg-[#0e1726]">
         <h6 class="mb-5 text-lg font-bold">General Information</h6>
-        <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2">
+        <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
             <div>
                 <label for="profession">Current Term</label>
                 <input id="profession" type="number" placeholder="3" class="form-input" x-model="form.current"/>
-            </div>
-            <div>
-                <label for="name">No. of school days in the term</label>
-                <input id="name" type="number" placeholder="37" class="form-input" x-model="form.days"/>
             </div>
             <div>
                 <label for="current_exam">Current Exam</label>
@@ -22,6 +18,10 @@
                             value="{{$exam->name}}" @selected($exam->name === $term->current_exam)>{{ $exam->name }}</option>
                     @endforeach
                 </select>
+            </div>
+            <div>
+                <label for="name">No. of school days in the CAT</label>
+                <input id="name" type="number" placeholder="37" class="form-input" x-model="form.cat_days"/>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                 loading: false,
                 form: {
                     current: {{ $term->current }},
-                    days: {{ $term->cat_days }},
+                    cat_days: {{ $term->cat_days }},
                     current_exam: '{{ $term->current_exam }}',
                     report_exam_date: '{{ $term->report_exam_date?->toDateString() }}',
                     next_term_date: '{{ $term->next_term_date?->toDateString() }}',
@@ -73,10 +73,8 @@
                 saveSettings() {
                     this.loading = true
 
-                    axios.put('/dashboard/settings/term', this.form).then(({data}) => {
-                        if (data.status === 'success') {
-                            this.showMessage(data.msg)
-                        }
+                    axios.put('/dashboard/settings/term', this.form).then(({data: {status, msg}}) => {
+                        if (status) this.showMessage(msg)
 
                         this.loading = false
                     }).catch(err => {
