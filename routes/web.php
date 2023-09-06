@@ -33,7 +33,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->name('admin')->gr
     Route::get('/', [DashboardController::class, 'index'])->name('.dashboard');
 
     Route::prefix('/primary')->name('.pri')->group(function() {
-        Route::get('/assess/{view}', [PriResultController::class, 'getView'])->name('.assess');
+        Route::get('/assess', [PriResultController::class, 'getView'])->name('.assess');
         Route::get('/reports', [ReportController::class, 'indexPri'])->name('.reports');
     });
     Route::prefix('/secondary')->name('.sec')->group(function() {

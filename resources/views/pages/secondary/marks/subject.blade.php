@@ -66,7 +66,7 @@
                                     step="1"
                                     placeholder="%"
                                     class="form-input w-16 px-2 py-1"
-                                    x-model="student.result.course_work_mark"
+                                    x-model="student.secondary_result.course_work_mark"
                                 />
                             </td>
                             <td class="py-1">
@@ -80,12 +80,12 @@
                                     step="1"
                                     placeholder="%"
                                     class="form-input w-16 px-2 py-1"
-                                    x-model="student.result.exam_mark"
+                                    x-model="student.secondary_result.exam_mark"
                                 />
                             </td>
-                            <td class="py-1" x-text="student.result?.average"></td>
-                            <td class="py-1" x-text="student.result?.quarter"></td>
-                            <td class="py-1" x-text="student.result?.rank"></td>
+                            <td class="py-1" x-text="student.secondary_result?.average"></td>
+                            <td class="py-1" x-text="student.secondary_result?.quarter"></td>
+                            <td class="py-1" x-text="student.secondary_result?.rank"></td>
                         </tr>
                     </template>
                     </tbody>
@@ -279,17 +279,14 @@
                         subject_id: this.subject_id,
                         exam_id: this.exam_id,
                         grade_id: this.grade_id
-                    }).then(({data:{data}}) => {
-                        console.log(data)
-                        if (data.status === 'error') {
-                            this.showMessage(data.msg, 'error');
-
-                            console.log(data.error)
-                        } else {
-                            this.showMessage(data.msg)
+                    }).then(({data:{status, msg}}) => {
+                        if (status) {
+                            this.showMessage(msg)
 
                             this.updateTable()
                             window.scrollTo({top: 0});
+                        } else {
+                            this.showMessage(msg, 'error');
                         }
 
                         this.loading = false

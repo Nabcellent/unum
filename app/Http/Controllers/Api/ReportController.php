@@ -43,7 +43,6 @@ class ReportController extends Controller
                                     'conduct',
                                     'passes',
                                     'days_absent',
-                                    'total_days'
                                 ])->whereExamId($examId);
                             },
                             'secondaryResults' => function ($qry) use ($examId) {

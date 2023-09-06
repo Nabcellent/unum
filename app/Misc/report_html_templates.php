@@ -308,12 +308,11 @@ function lower_secondary_report(array $student, string $grade, string $exam, Car
     }
 
     $html .= '</td>
-                    <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
+                    <td width="150" colspan="2" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                     <td width="170" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTENDANCE:</b></td>
-                    <td width="120" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black">
-                        <b><i>' . $student['cumulative_result']['days_absent'] . ' of ' . $student['cumulative_result']['total_days'] . '</i> days</b>
+                    <td width="150" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:black">
+                        <b><i>' . $student['cumulative_result']['days_absent'] . ' half days absent</i></b>
                     </td>
-                    <td width="50" style="background-color:#FFFFFF;font-size:13.0pt; text-align:center; font-family: Times;color:#2E74B5"><b>&nbsp;</b></td>
                 </tr>
             </table>
         </html>';

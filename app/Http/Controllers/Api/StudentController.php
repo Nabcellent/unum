@@ -49,7 +49,7 @@ class StudentController extends Controller
                 'passes',
                 'conduct',
                 'sports_grade',
-                'days_attended',
+                'days_absent',
                 'total_days'
             ])->firstWhere([
                 'exam_id'    => $request->integer('exam_id'),
@@ -95,7 +95,7 @@ class StudentController extends Controller
                 'passes',
                 'conduct',
                 'sports_grade',
-                'days_attended',
+                'days_absent',
                 'total_days'
             ])->firstWhere([
                 'exam_id'    => $request->integer('exam_id'),

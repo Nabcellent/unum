@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 
 class PriResultController extends Controller
 {
-    public function getView(string $view, TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
+    public function getView(TermSetting $termSetting): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $exams = Exam::get();
 
@@ -21,10 +21,6 @@ class PriResultController extends Controller
             "currentExam" => $exams->firstWhere('name', $termSetting->current_exam),
         ];
 
-        if ($view === 'per-student') {
-            $data['catDays'] = $termSetting->cat_days;
-        }
-
-        return view("pages.primary.assess.$view", $data);
+        return view("pages.primary.assess.index", $data);
     }
 }

@@ -123,7 +123,10 @@
                         <td class="w-1/5" x-text="cumulative_result.average? `${cumulative_result.average}%` : '-'">
                     </tr>
                     <tr>
-                        <td class="py-1" style="text-align: end">Attendance</td>
+                        <td class="py-1" style="text-align: end">
+                            <span class="block">Attendance</span>
+                            <small><i>(Days Absent)</i></small>
+                        </td>
                         <td class="py-1 w-1/5">
                             <div class="flex items-center">
                                 <input
@@ -135,13 +138,13 @@
                                     :placeholder="cat_days"
                                     :disabled="!results.length"
                                     class="form-input px-2 mr-2"
-                                    x-model="cumulative_result.days_attended"
+                                    x-model="cumulative_result.days_absent"
                                     maxlength="2"
                                     aria-label
                                     @keyup="onAttendanceChange"
                                 />
                                 <span
-                                    x-text="`${Math.round(cumulative_result.days_attended / cat_days * 100)}%`"></span>
+                                    x-text="`${Math.round(cumulative_result.days_absent / cat_days * 100)}%`"></span>
                             </div>
                         </td>
                         <td style="text-align: end">Passes</td>
@@ -195,13 +198,13 @@
                 cat_days: {{ $catDays }},
                 results: [],
                 cumulative_result: {
-                    days_attended: null
+                    days_absent: null
                 },
                 student_id: null,
                 students: [],
                 student: {},
                 studentSelectInstance: null,
-                grades: ['A', 'B', 'C', 'D', 'E'],
+                grades: ['A', 'B', 'C', 'D'],
                 loading: false,
                 canFirstStudent: false,
                 canLastStudent: false,
@@ -246,12 +249,12 @@
                 onAttendanceChange(e) {
                     if (e.target.value > this.cat_days) {
                         e.target.value = this.cat_days
-                        this.cumulative_result.days_attended = this.cat_days
+                        this.cumulative_result.days_absent = this.cat_days
 
                         this.showMessage(`Attendance mustn't be above ${this.cat_days} days.`, 'error');
                     } else if (e.target.value < 0) {
                         e.target.value = ''
-                        this.cumulative_result.days_attended = null
+                        this.cumulative_result.days_absent = null
 
                         this.showMessage(`Attendance mustn't be a negative number.`, 'error');
                     }
@@ -319,7 +322,7 @@
 
                                 if (!this.cumulative_result) {
                                     this.cumulative_result = {
-                                        days_attended: null
+                                        days_absent: null
                                     }
                                 }
 
@@ -366,7 +369,7 @@
                         cumulative_result: {
                             conduct: this.cumulative_result.conduct,
                             sports_grade: this.cumulative_result.sports_grade,
-                            days_attended: this.cumulative_result.days_attended,
+                            days_absent: this.cumulative_result.days_absent,
                             total_days: this.cumulative_result.total_days ?? this.cat_days,
                         },
                         attendance: this.attendance
